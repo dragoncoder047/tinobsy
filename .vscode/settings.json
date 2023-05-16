@@ -1,0 +1,15 @@
+{
+    "cSpell.words": [
+        "stobject",
+        "stthread",
+        "talloc",
+        "tdecref",
+        "tfinalize",
+        "tflag",
+        "tfptr",
+        "tincref",
+        "tobject",
+        "tptrkind",
+        "tthread"
+    ]
+}

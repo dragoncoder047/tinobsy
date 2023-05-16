@@ -6,11 +6,12 @@ extern "C" {
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <stdint.h>
 #include <string.h>
 #include <setjmp.h>
-    
+
 typedef enum {
     NOTHING,
     OBJECT,
@@ -24,21 +25,21 @@ typedef const struct {
 } ttype;
 
 typedef uint16_t tflags;
-    
+
 typedef enum {
     GC_MARKED
 } tflag;
-    
+
 typedef struct stobject tobject;
 typedef struct stthread tthread;
 
 typedef tobject* (*tfptr)(tthread*, tobject*, tobject*, tobject*);
 
 struct stobject {
-    ttype* const type;
+    ttype* type;
     size_t refcount;
     tflags flags;
-    stobject* const next;
+    struct stobject* next;
     union {
         int64_t as_integer;
         double as_double;
@@ -71,10 +72,10 @@ typedef struct {
     size_t num_objects;
     size_t next_gc;
     tobject* nil;
-    othread* threads;
+    tthread* threads;
 } tvm;
 
-tobject* talloc(tvm* vm, const ttype type) {
+tobject* talloc(tvm* vm, const ttype* type) {
     tobject* newobject;
     for (newobject = vm->first; newobject != NULL; newobject = newobject->next) {
         if (newobject->type == NULL) goto gotgarbage;
@@ -90,7 +91,7 @@ tobject* talloc(tvm* vm, const ttype type) {
 }
 
 // Forward reference
-inline void tdecref(tobject* x);
+void tdecref(tobject* x);
 
 void tfinalize(tobject* x) {
     ttype* xt = x->type;
