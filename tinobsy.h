@@ -52,6 +52,7 @@ typedef struct stthread {
     tobject* gc_stack;
     jmp_buf* trycatch;
     jmp_buf top_try;
+    void* thread_handle;
 } tthread;
 
 typedef struct {
