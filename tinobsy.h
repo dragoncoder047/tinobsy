@@ -10,11 +10,17 @@ extern "C" {
 #include <stdint.h>
 #include <string.h>
 #include <setjmp.h>
+    
+typedef enum {
+    NOTHING,
+    OBJECT,
+    OWNED_PTR
+} tptrkind;
 
 typedef const struct {
     const char* const name;
-    const int car_objects;
-    const int cdr_objects;
+    const tptrkind car;
+    const tptrkind cdr;
 } ttype;
 
 typedef uint16_t tflags;
