@@ -72,6 +72,8 @@ tobject* talloc(tvm* vm, const ttype type) {
     newobject->type = type;
     return newobject;
 }
+    
+#define SET(x, y) do{tdecref(x);tincref(y);(x)=(y);}while(0);
 
 #ifdef __cplusplus
 }
