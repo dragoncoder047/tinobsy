@@ -24,8 +24,17 @@ typedef const struct {
 } ttype;
 
 typedef uint16_t tflags;
+    
+typedef enum {
+    GC_MARKED
+} tflag;
+    
+typedef struct stobject tobject;
+typedef struct stthread tthread;
 
-typedef struct stobject {
+typedef tobject* (*tfptr)(tthread*, tobject*, tobject*, tobject*);
+
+struct stobject {
     ttype* const type;
     size_t refcount;
     tflags flags;
@@ -37,23 +46,25 @@ typedef struct stobject {
             union {
                 struct stobject* car;
                 void* car_ptr;
+                char* car_str;
             };
             union {
                 struct stobject* cdr;
                 void* cdr_ptr;
+                tfptr func;
             };
         };
     };
-} tobject;
+};
 
-typedef struct stthread {
-    unsigned int pid;
+struct stthread {
+    unsigned int vpid;
     struct stthread* const next_thread;
     tobject* gc_stack;
     jmp_buf* trycatch;
     jmp_buf top_try;
     void* thread_handle;
-} tthread;
+};
 
 typedef struct {
     tobject* first;
