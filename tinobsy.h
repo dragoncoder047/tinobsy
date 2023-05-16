@@ -63,17 +63,45 @@ typedef struct {
 } tvm;
 
 tobject* talloc(tvm* vm, const ttype type) {
-    // TODO: reuse garbage
-    tobject* newobject = malloc(sizeof(struct stobject));
+    tobject* newobject;
+    for (newobject = vm->first; newobject != NULL; newobject = newobject->next) {
+        if (newobject->type == NULL) goto gotgarbage;
+    }
+    newobject = malloc(sizeof(struct stobject));
     newobject->next = vm->first;
     vm->first = newobject;
     vm->num_objects++;
+    gotgarbage:
     newobject->refcount = 1;
     newobject->type = type;
     return newobject;
 }
-    
-#define SET(x, y) do{tdecref(x);tincref(y);(x)=(y);}while(0);
+
+// Forward reference
+inline void tdecref(tobject* x);
+
+void tfinalize(tobject* x) {
+    ttype* xt = x->type;
+    if (xt == NULL) return; // Already finalized
+    if (xt->car == OWNED_PTR) free(x->car_ptr);
+    else if (xt->car == OBJECT) tdecref(x->car);
+    if (xt->cdr == OWNED_PTR) free(x->cdr_ptr);
+    else if (xt->cdr == OBJECT) tdecref(x->cdr);
+    x->type = NULL;
+}
+
+inline void tdecref(tobject* x) {
+    if (x != NULL && x->refcount > 0) {
+        x->refcount--;
+        if (x->refcount <= 0) tfinalize(x);
+    }
+}
+
+inline void tincref(tobject* x) {
+    if (x != NULL) x->refcount++;
+}
+
+#define SET(x, y) do{tdecref(x);tincref(y);(x)=(y);}while(0)
 
 #ifdef __cplusplus
 }
