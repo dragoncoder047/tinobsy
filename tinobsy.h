@@ -19,7 +19,7 @@ typedef int bool;
 #include <setjmp.h>
 
 #ifdef TINOBSY_DEBUG
-#define DBG(s, ...) printf("[%s line %i, in %s] " s "\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+#define DBG(s, ...) printf("[%s:%i-%s] " s "\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__)
 #define ASSERT(cond, ...) do { \
     if (!(cond)) { \
         DBG("Assertion failed: %s", #cond); \
@@ -63,21 +63,26 @@ struct stobject {
     size_t refcount;
     tflags flags;
     struct stobject* next;
+    struct stobject* meta;
     union {
-        int64_t as_integer;
-        double as_double;
         struct {
             union {
                 struct stobject* car;
                 void* car_ptr;
                 char* car_str;
+                int32_t car_int;
+                float car_float;
             };
             union {
                 struct stobject* cdr;
                 void* cdr_ptr;
                 tfptr func;
+                uint32_t cdr_uint;
+                float cdr_float;
             };
         };
+        int64_t as_integer;
+        double as_double;
     };
 };
 
@@ -85,7 +90,7 @@ struct stthread {
     unsigned int vpid;
     struct stthread* next_thread;
     tobject* gc_stack;
-    tobject* locals;
+    tobject* env;
     jmp_buf* trycatch;
     jmp_buf top_try;
     void* thread_handle;
@@ -96,8 +101,10 @@ struct stvm {
     size_t num_objects;
     tobject* nil;
     tthread* threads;
-    tobject* globals;
+    tobject* env;
     tobject* gc_stack;
+    jmp_buf* trycatch;
+    jmp_buf top_try;
 };
 
 tobject* talloc(tvm* vm, const ttype* type) {
@@ -194,14 +201,16 @@ void tmarkobject(tobject* x) {
     }
 }
 
-void tmarksweep(tvm* vm) {
-    DBG("garbage collect start, %zu objects {", vm->num_objects);
+size_t tmarksweep(tvm* vm) {
+    size_t start = vm->num_objects;
+    DBG("garbage collect start, %zu objects {", start);
     for (tthread* t = vm->threads; t != NULL; t = t->next_thread) {
         tmarkobject(t->gc_stack);
+        tmarkobject(t->env);
     }
     DBG("marking globals");
     tmarkobject(vm->gc_stack);
-    tmarkobject(vm->globals);
+    tmarkobject(vm->env);
     tmarkobject(vm->nil);
     tobject** x = &vm->first;
     DBG("garbage collect sweeping");
@@ -217,7 +226,9 @@ void tmarksweep(tvm* vm) {
             x = &(*x)->next;
         }
     }
-    DBG("garbage collect end, %zu objects }", vm->num_objects);
+    size_t freed = start - vm->num_objects;
+    DBG("garbage collect end, %zu objects, %zu freed }", vm->num_objects, freed);
+    return freed;
 }
 
 ttype tnil_type = {"nil", NOTHING, NOTHING};
@@ -225,6 +236,7 @@ ttype tnil_type = {"nil", NOTHING, NOTHING};
 tvm* tnewvm() {
     tvm* vm = (tvm*)calloc(1, sizeof(struct stvm));
     vm->nil = talloc(vm, &tnil_type);
+    vm->trycatch = &vm->top_try;
     return vm;
 }
 
@@ -242,7 +254,7 @@ void tfreevm(tvm* vm) {
         #endif
     }
     DBG("freed %zu threads", th);
-    vm->nil = vm->globals = vm->gc_stack = NULL;
+    vm->nil = vm->env = vm->gc_stack = NULL;
     tmarksweep(vm);
     ASSERT(vm->num_objects == 0, "gc bugged");
     free(vm);
@@ -265,6 +277,7 @@ tthread* tpushthread(tvm* vm) {
     new_->vpid = tnextvpid(vm);
     new_->next_thread = vm->threads;
     vm->threads = new_;
+    new_->trycatch = &new_->top_try;
     return new_;
 }
 
@@ -278,11 +291,11 @@ void tfreethread(tvm* vm, tthread* th) {
         }
     }
     tdecref(th->gc_stack);
-    tdecref(th->locals);
+    tdecref(th->env);
     free(th);
 }
 
-#define SET(x, y) do{tdecref(x);tincref(y);(x)=(y);}while(0)
+#define SET(x, y) do{tincref(y);tdecref(x);(x)=(y);}while(0)
 
 #ifdef __cplusplus
 }

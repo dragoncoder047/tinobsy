@@ -8,7 +8,6 @@ inline void divider() {
 }
 
 ttype dummy_type = {"dummy", NOTHING, NOTHING};
-ttype cons_type = {"cons", OBJECT, OBJECT};
 
 void test_gc_1() {
     divider();
@@ -25,6 +24,7 @@ void test_gc_1() {
     tfreevm(vm);
 }
 
+ttype cons_type = {"cons", OBJECT, OBJECT};
 tobject* cons(tvm* vm, tobject* x, tobject* y) {
     tobject* cell = talloc(vm, &cons_type);
     SET(cell->car, x);
@@ -36,7 +36,7 @@ tobject* cons(tvm* vm, tobject* x, tobject* y) {
 
 void test_gc_2() {
     divider();
-    DBG("test mark-sweep collector: objects aren't swept when owned by a thread and thread are freed properly");
+    DBG("test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly");
     tvm* vm = tnewvm();
     tthread* t = tpushthread(vm);
     PUSH(vm, talloc(vm, &dummy_type), t->gc_stack);

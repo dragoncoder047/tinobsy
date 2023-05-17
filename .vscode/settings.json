@@ -18,11 +18,13 @@
         "tnewvm",
         "tnextvpid",
         "tnil",
+        "tobj",
         "tobject",
         "tptrkind",
         "tpushthread",
         "tthread",
         "ttstflag",
+        "ttype",
         "vpid"
     ]
 }
