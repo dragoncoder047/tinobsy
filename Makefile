@@ -1,10 +1,12 @@
-.PHONY: test builtest testtest
+.PHONY: test builtest valgrind clean
 
 buildtest:
-	gcc tinobsy_test.c -o ttest
+	gcc tinobsy_test.c -g -o ttest
 
-testtest: buildtest
-	valgrind ./ttest > test/out.txt 2> test/valgrind.txt
+valgrind: buildtest
+	valgrind --track-origins=yes ./ttest > test/out.txt 2> test/valgrind.txt
 
-test: testtest
-	rm ttest
+clean:
+	rm -f ttest
+
+test: buildtest valgrind clean

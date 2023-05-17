@@ -2,14 +2,27 @@
     "cSpell.words": [
         "stobject",
         "stthread",
+        "stvm",
         "talloc",
+        "tclrflag",
         "tdecref",
         "tfinalize",
         "tflag",
         "tfptr",
+        "tfreethread",
+        "tfreevm",
         "tincref",
+        "TINOBSY",
+        "tmarkobject",
+        "tmarksweep",
+        "tnewvm",
+        "tnextvpid",
+        "tnil",
         "tobject",
         "tptrkind",
-        "tthread"
+        "tpushthread",
+        "tthread",
+        "ttstflag",
+        "vpid"
     ]
 }
