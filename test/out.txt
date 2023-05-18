@@ -1,16 +1,25 @@
-[tinobsy_test.c:119-main] Begin Tinobsy test suite
+[tinobsy_test.c:134-main] Begin Tinobsy test suite
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a nil
 [tinobsy.h:123-talloc] need new memory
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:19-test_threads_stack] test threads stack
-[tinobsy_test.c:26-test_threads_stack] Assertion succeeded: VM->threads == NULL
+[tinobsy_test.c:20-test_threads_stack] test threads stack
+[tinobsy.h:308-tpushthread] Allocating a new thread, next vpid is 0
+[tinobsy.h:308-tpushthread] Allocating a new thread, next vpid is 1
+[tinobsy.h:308-tpushthread] Allocating a new thread, next vpid is 2
+[tinobsy.h:316-tfreethread] Freeing thread 1 {
+[tinobsy.h:329-tfreethread] }
+[tinobsy.h:316-tfreethread] Freeing thread 2 {
+[tinobsy.h:329-tfreethread] }
+[tinobsy.h:316-tfreethread] Freeing thread 0 {
+[tinobsy.h:329-tfreethread] }
+[tinobsy_test.c:27-test_threads_stack] Assertion succeeded: VM->threads == NULL
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:30-test_gc_1] test mark-sweep collector: objects are swept when not put into a thread
+[tinobsy_test.c:31-test_sweep] test mark-sweep collector: objects are swept when not put into a thread
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a nothing
 [tinobsy.h:123-talloc] need new memory
@@ -32,33 +41,41 @@
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a nothing
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:39-test_gc_1] Begin sweep of everything
+[tinobsy_test.c:40-test_sweep] Begin sweep of everything
 [tinobsy.h:206-tmarksweep] garbage collect start, 8 objects {
 [tinobsy.h:211-tmarksweep] marking globals
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:194-tmarkobject] marking a nil
 [tinobsy.h:216-tmarksweep] garbage collect sweeping
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a nothing {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a nothing {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a nothing {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a nothing {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a nothing {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a nothing {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a nothing {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:247-tmarksweep] garbage collect end, 1 objects, 7 freed }
-[tinobsy_test.c:41-test_gc_1] Assertion succeeded: VM->num_objects == oldobj
+[tinobsy.h:260-tmarksweep] garbage collect end, 1 objects, 7 freed }
+[tinobsy_test.c:42-test_sweep] Assertion succeeded: VM->num_objects == oldobj
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:55-test_gc_2] test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly
+[tinobsy_test.c:56-test_mark_no_sweep] test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly
+[tinobsy.h:308-tpushthread] Allocating a new thread, next vpid is 0
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a nothing
 [tinobsy.h:123-talloc] need new memory
@@ -234,8 +251,9 @@
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:194-tmarkobject] marking a nil
 [tinobsy.h:216-tmarksweep] garbage collect sweeping
-[tinobsy.h:247-tmarksweep] garbage collect end, 21 objects, 0 freed }
-[tinobsy_test.c:64-test_gc_2] Assertion succeeded: VM->num_objects == oldobj
+[tinobsy.h:260-tmarksweep] garbage collect end, 21 objects, 0 freed }
+[tinobsy_test.c:65-test_mark_no_sweep] Assertion succeeded: VM->num_objects == oldobj
+[tinobsy.h:316-tfreethread] Freeing thread 0 {
 [tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
 [tinobsy.h:159-tdecref] decref'ed a nothing, now have 0 refs
@@ -296,10 +314,11 @@
 [tinobsy.h:150-tfinalize] }
 [tinobsy.h:150-tfinalize] }
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:329-tfreethread] }
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:69-test_gc_3] test refcount collector: can reuse garbage
+[tinobsy_test.c:70-test_reuse_garbage] test refcount collector: can reuse garbage
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a nothing
 [tinobsy.h:116-talloc] reusing garbage
@@ -360,11 +379,11 @@
 [tinobsy.h:159-tdecref] decref'ed a nothing, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a nothing {
 [tinobsy.h:150-tfinalize] }
-[tinobsy_test.c:75-test_gc_3] Assertion succeeded: VM->num_objects - origobj < times
+[tinobsy_test.c:76-test_reuse_garbage] Assertion succeeded: VM->num_objects - origobj < times
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:79-test_gc_4] test refcount collector: refs are counted properly
+[tinobsy_test.c:80-test_refcounting] test refcount collector: refs are counted properly
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:116-talloc] reusing garbage
@@ -472,141 +491,180 @@
 [tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
 [tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
 [tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
-[tinobsy_test.c:84-test_gc_4] Assertion succeeded: VM->nil->refcount - oldrefs == times
+[tinobsy_test.c:85-test_refcounting] Assertion succeeded: VM->nil->refcount - oldrefs == times
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 10 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 9 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 8 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 7 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 6 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 5 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 4 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 3 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 2 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:159-tdecref] decref'ed a nil, now have 1 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
 [tinobsy.h:206-tmarksweep] garbage collect start, 21 objects {
 [tinobsy.h:211-tmarksweep] marking globals
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:194-tmarkobject] marking a nil
 [tinobsy.h:216-tmarksweep] garbage collect sweeping
-[tinobsy.h:231-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 10 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:231-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 9 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:231-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 8 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:231-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 7 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:231-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 6 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:231-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 5 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:231-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 4 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:231-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 3 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:231-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 2 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 1 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:247-tmarksweep] garbage collect end, 1 objects, 20 freed }
+[tinobsy.h:260-tmarksweep] garbage collect end, 1 objects, 20 freed }
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:94-test_freeing_things] Test owned pointers, are freed
+[tinobsy_test.c:95-test_freeing_things] Test owned pointers, are freed
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is puqyrj
+[tinobsy_test.c:101-test_freeing_things] Random atom is eqhteg
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is wffeqq
+[tinobsy_test.c:101-test_freeing_things] Random atom is ykvoui
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is lqisfv
+[tinobsy_test.c:101-test_freeing_things] Random atom is rymslv
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is hsrduk
+[tinobsy_test.c:101-test_freeing_things] Random atom is olgczi
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is kqozye
+[tinobsy_test.c:101-test_freeing_things] Random atom is acmsij
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is rzdxly
+[tinobsy_test.c:101-test_freeing_things] Random atom is gmggpp
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is lonrzv
+[tinobsy_test.c:101-test_freeing_things] Random atom is giqcoj
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is offyum
+[tinobsy_test.c:101-test_freeing_things] Random atom is gelori
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is mavgii
+[tinobsy_test.c:101-test_freeing_things] Random atom is eexidb
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a atom
 [tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:100-test_freeing_things] Random atom is pmtihs
+[tinobsy_test.c:101-test_freeing_things] Random atom is ulgsle
 [tinobsy.h:206-tmarksweep] garbage collect start, 11 objects {
 [tinobsy.h:211-tmarksweep] marking globals
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:194-tmarkobject] marking a nil
 [tinobsy.h:216-tmarksweep] garbage collect sweeping
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a atom {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:247-tmarksweep] garbage collect end, 1 objects, 10 freed }
-[tinobsy_test.c:103-test_freeing_things] Check Valgrind output to make sure stuff was freed
+[tinobsy.h:260-tmarksweep] garbage collect end, 1 objects, 10 freed }
+[tinobsy_test.c:104-test_freeing_things] Check Valgrind output to make sure stuff was freed
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:126-main] end of tests
+[tinobsy_test.c:108-test_reference_cycle] Test reference cycle, collected
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:123-talloc] need new memory
+[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:168-tincref] incref'ed a cons, now have 3 refs
+[tinobsy.h:159-tdecref] decref'ed a cons, now have 2 refs
+[tinobsy_test.c:114-test_reference_cycle] Assertion succeeded: a->type != NULL
+[tinobsy_test.c:115-test_reference_cycle] Assertion succeeded: a->refcount > 0
+[tinobsy.h:206-tmarksweep] garbage collect start, 2 objects {
+[tinobsy.h:211-tmarksweep] marking globals
+[tinobsy.h:187-tmarkobject] marking a NULL
+[tinobsy.h:187-tmarkobject] marking a NULL
+[tinobsy.h:194-tmarkobject] marking a nil
+[tinobsy.h:216-tmarksweep] garbage collect sweeping
+[tinobsy.h:227-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
+[tinobsy.h:232-tmarksweep] Assertion succeeded: !ttstflag(p, GC_MARKED)
+[tinobsy.h:240-tmarksweep] Cyclic garbage detected
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:260-tmarksweep] garbage collect end, 1 objects, 1 freed }
+[tinobsy_test.c:117-test_reference_cycle] Assertion succeeded: VM->num_objects == oldobj
 
 -------------------------------------------------------------
 
-[tinobsy.h:261-tfreevm] free vm
-[tinobsy.h:273-tfreevm] freed 0 threads
+[tinobsy_test.c:141-main] end of tests
+
+-------------------------------------------------------------
+
+[tinobsy.h:274-tfreevm] free vm
+[tinobsy.h:286-tfreevm] freed 0 threads
 [tinobsy.h:206-tmarksweep] garbage collect start, 1 objects {
 [tinobsy.h:211-tmarksweep] marking globals
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:187-tmarkobject] marking a NULL
 [tinobsy.h:216-tmarksweep] garbage collect sweeping
+[tinobsy.h:246-tmarksweep] 1 dangling pointers detected
 [tinobsy.h:145-tfinalize] finalizing a nil {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:247-tmarksweep] garbage collect end, 0 objects, 1 freed }
-[tinobsy.h:276-tfreevm] Assertion succeeded: vm->num_objects == 0
+[tinobsy.h:260-tmarksweep] garbage collect end, 0 objects, 1 freed }
+[tinobsy.h:289-tfreevm] Assertion succeeded: vm->num_objects == 0

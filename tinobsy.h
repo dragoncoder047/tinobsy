@@ -217,24 +217,37 @@ size_t tmarksweep(tvm* vm) {
     while (*x != NULL) {
         if (!ttstflag(*x, GC_MARKED)) {
             tobject* u = *x;
-            *x = u->next;
             // Kill all pointers to this object
             if (u->refcount > 0) {
+                size_t realrefs = 0;
                 tobject* p = vm->first;
                 while (p != NULL) {
                     if (p->type != NULL) {
                         if (p->type->car == OBJECT && p->car == u) {
                             ASSERT(!ttstflag(p, GC_MARKED), "Unmarked object pointed to by marked object");
                             p->car = NULL;
+                            realrefs++;
                         }
                         if (p->type->cdr == OBJECT && p->cdr == u) {
                             ASSERT(!ttstflag(p, GC_MARKED), "Unmarked object pointed to by marked object");
                             p->cdr = NULL;
+                            realrefs++;
                         }
                     }
                     p = p->next;
                 }
+                if (realrefs == u->refcount) {
+                    DBG("Cyclic garbage detected");
+                }
+                else {
+                    #ifndef TINOBSY_IGNORE_DANGLING_POINTERS
+                    fprintf(stderr, "WARNING, %zu dangling pointers detected\n", u->refcount - realrefs);
+                    #else
+                    DBG("%zu dangling pointers detected", u->refcount - realrefs);
+                    #endif
+                }
             }
+            *x = u->next;
             tfinalize(u);
             free(u);
             vm->num_objects--;
@@ -292,6 +305,7 @@ unsigned int tnextvpid(tvm* vm) {
 tthread* tpushthread(tvm* vm) {
     tthread* new_ = (tthread*)calloc(1, sizeof(struct stthread));
     new_->vpid = tnextvpid(vm);
+    DBG("Allocating a new thread, next vpid is %u", new_->vpid);
     new_->next_thread = vm->threads;
     vm->threads = new_;
     new_->trycatch = &new_->top_try;
@@ -299,10 +313,12 @@ tthread* tpushthread(tvm* vm) {
 }
 
 void tfreethread(tvm* vm, tthread* th) {
+    DBG("Freeing thread %u {", th->vpid);
     tthread** x = &vm->threads;
     while (*x != NULL) {
         if (*x == th) {
             *x = th->next_thread;
+            break;
         } else {
             x = &(*x)->next_thread;
         }
@@ -310,6 +326,7 @@ void tfreethread(tvm* vm, tthread* th) {
     tdecref(th->gc_stack);
     tdecref(th->env);
     free(th);
+    DBG("}");
 }
 
 #define SET(x, y) do{tincref(y);tdecref(x);(x)=(y);}while(0)

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #define TINOBSY_DEBUG
+#define TINOBSY_IGNORE_DANGLING_POINTERS
 #include "tinobsy.h"
 
 tvm* VM;
@@ -26,7 +27,7 @@ void test_threads_stack() {
     ASSERT(VM->threads == NULL, "did not remove all threads");
 }
 
-void test_gc_1() {
+void test_sweep() {
     DBG("test mark-sweep collector: objects are swept when not put into a thread");
     size_t oldobj = VM->num_objects;
     talloc(VM, &nothing_type);
@@ -51,7 +52,7 @@ tobject* cons(tvm* vm, tobject* x, tobject* y) {
 
 #define PUSH(vm, x, y) do{tobject* cell__=cons((vm),(x),(y));SET(y,cell__);tdecref(cell__);}while(0)
 
-void test_gc_2() {
+void test_mark_no_sweep() {
     DBG("test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly");
     tthread* t = tpushthread(VM);
     for (int i = 0; i < times; i++) {
@@ -65,7 +66,7 @@ void test_gc_2() {
     tfreethread(VM, t);
 }
 
-void test_gc_3() {
+void test_reuse_garbage() {
     DBG("test refcount collector: can reuse garbage");
     size_t origobj = VM->num_objects;
     for (int i = 0; i < times; i++) {
@@ -75,14 +76,14 @@ void test_gc_3() {
     ASSERT(VM->num_objects - origobj < times, "didn't reuse objects");
 }
 
-void test_gc_4() {
+void test_refcounting() {
     DBG("test refcount collector: refs are counted properly");
     size_t oldrefs = VM->nil->refcount;
     for (int i = 0; i < times; i++) {
         PUSH(VM, VM->nil, VM->gc_stack);
     }
     ASSERT(VM->nil->refcount - oldrefs == times, "nil not referenced %i times", times);
-    VM->gc_stack = NULL;
+    SET(VM->gc_stack, NULL);
     tmarksweep(VM);
 }
 
@@ -103,14 +104,28 @@ void test_freeing_things() {
     DBG("Check Valgrind output to make sure stuff was freed");
 }
 
+void test_reference_cycle() {
+    DBG("Test reference cycle, collected");
+    size_t oldobj = VM->num_objects;
+    tobject* a = talloc(VM, &cons_type);
+    SET(a->car, a);
+    SET(a->cdr, a);
+    tdecref(a);
+    ASSERT(a->type != NULL, "A shouldn't be finalized");
+    ASSERT(a->refcount > 0, "A is not in reference cycle");
+    tmarksweep(VM);
+    ASSERT(VM->num_objects == oldobj, "A was collected");
+}
+
 typedef void (*test)(void);
 test tests[] = {
     test_threads_stack,
-    test_gc_1,
-    test_gc_2,
-    test_gc_3,
-    test_gc_4,
-    test_freeing_things
+    test_sweep,
+    test_mark_no_sweep,
+    test_reuse_garbage,
+    test_refcounting,
+    test_freeing_things,
+    test_reference_cycle,
 };
 const int num_tests = sizeof(tests) / sizeof(tests[0]);
 
