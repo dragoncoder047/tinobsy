@@ -394,4 +394,24 @@
 [tinobsy.h:150-tfinalize] }
 [tinobsy.h:230-tmarksweep] garbage collect end, 0 objects, 11 freed }
 [tinobsy.h:259-tfreevm] Assertion succeeded: vm->num_objects == 0
-[tinobsy_test.c:83-main] end of tests
+
+-------------------------------------------------------------
+
+[tinobsy_test.c:80-test_threads_stack] test threads stack
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a nil
+[tinobsy.h:123-talloc] need new memory
+[tinobsy_test.c:88-test_threads_stack] Assertion succeeded: vm->threads == NULL
+[tinobsy.h:244-tfreevm] free vm
+[tinobsy.h:256-tfreevm] freed 0 threads
+[tinobsy.h:206-tmarksweep] garbage collect start, 1 objects {
+[tinobsy.h:211-tmarksweep] marking globals
+[tinobsy.h:187-tmarkobject] marking a NULL
+[tinobsy.h:187-tmarkobject] marking a NULL
+[tinobsy.h:187-tmarkobject] marking a NULL
+[tinobsy.h:216-tmarksweep] garbage collect sweeping
+[tinobsy.h:145-tfinalize] finalizing a nil {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:230-tmarksweep] garbage collect end, 0 objects, 1 freed }
+[tinobsy.h:259-tfreevm] Assertion succeeded: vm->num_objects == 0
+[tinobsy_test.c:98-main] end of tests

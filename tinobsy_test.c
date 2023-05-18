@@ -75,11 +75,26 @@ void test_gc_4() {
     tfreevm(vm);
 }
 
+void test_threads_stack() {
+    divider();
+    DBG("test threads stack");
+    tvm* vm = tnewvm();
+    tthread* a = tpushthread(vm);
+    tthread* b = tpushthread(vm);
+    tthread* c = tpushthread(vm);
+    tfreethread(vm, b);
+    tfreethread(vm, c);
+    tfreethread(vm, a);
+    ASSERT(vm->threads == NULL, "did not remove all threads");
+    tfreevm(vm);
+}
+
 int main() {
     test_gc_1();
     test_gc_2();
     test_gc_3();
     test_gc_4();
+    test_threads_stack();
     DBG("end of tests");
     return 0;
 }
