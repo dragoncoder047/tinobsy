@@ -153,8 +153,7 @@ void tfinalize(tobject* x) {
 }
 
 inline void tdecref(tobject* x) {
-    if (x != NULL && x->refcount > 0) {
-        ASSERT(x->type != NULL, "null type object not at 0 refs");
+    if (x != NULL && x->refcount > 0 && x->type != NULL) {
         x->refcount--;
         DBG("decref'ed a %s, now have %zu refs", x->type->name, x->refcount);
         if (x->refcount <= 0) tfinalize(x);

@@ -1,417 +1,523 @@
-
--------------------------------------------------------------
-
-[tinobsy_test.c:14-test_gc_1] test mark-sweep collector: objects are swept when not put into a thread
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a nil
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:23-test_gc_1] Begin sweep of everything
-[tinobsy.h:244-tfreevm] free vm
-[tinobsy.h:256-tfreevm] freed 0 threads
-[tinobsy.h:206-tmarksweep] garbage collect start, 8 objects {
-[tinobsy.h:211-tmarksweep] marking globals
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:216-tmarksweep] garbage collect sweeping
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a nil {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:230-tmarksweep] garbage collect end, 0 objects, 8 freed }
-[tinobsy.h:259-tfreevm] Assertion succeeded: vm->num_objects == 0
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:39-test_gc_2] test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a nil
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a cons
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a dummy, now have 2 refs
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a cons
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a dummy, now have 2 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a cons
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a dummy, now have 2 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a cons
-[tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a dummy, now have 2 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
-[tinobsy.h:206-tmarksweep] garbage collect start, 9 objects {
-[tinobsy.h:194-tmarkobject] marking a cons
-[tinobsy.h:194-tmarkobject] marking a dummy
-[tinobsy.h:194-tmarkobject] marking a cons
-[tinobsy.h:194-tmarkobject] marking a dummy
-[tinobsy.h:194-tmarkobject] marking a cons
-[tinobsy.h:194-tmarkobject] marking a dummy
-[tinobsy.h:194-tmarkobject] marking a cons
-[tinobsy.h:194-tmarkobject] marking a dummy
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:211-tmarksweep] marking globals
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:194-tmarkobject] marking a nil
-[tinobsy.h:216-tmarksweep] garbage collect sweeping
-[tinobsy.h:230-tmarksweep] garbage collect end, 9 objects, 0 freed }
-[tinobsy_test.c:48-test_gc_2] Assertion succeeded: vm->num_objects == oldobj
-[tinobsy.h:244-tfreevm] free vm
-[tinobsy.h:256-tfreevm] freed 1 threads
-[tinobsy.h:206-tmarksweep] garbage collect start, 9 objects {
-[tinobsy.h:211-tmarksweep] marking globals
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:216-tmarksweep] garbage collect sweeping
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 1 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 1 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 1 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 1 refs
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a nil {
-[tinobsy.h:150-tfinalize] }
-[tinobsy.h:230-tmarksweep] garbage collect end, 0 objects, 9 freed }
-[tinobsy.h:259-tfreevm] Assertion succeeded: vm->num_objects == 0
+[tinobsy_test.c:17-test_threads_stack] test threads stack
+[tinobsy_test.c:24-test_threads_stack] Assertion succeeded: VM->threads == NULL
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:54-test_gc_3] test refcount collector: can reuse garbage
+[tinobsy_test.c:29-test_gc_1] test mark-sweep collector: objects are swept when not put into a thread
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a nil
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
 [tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a dummy
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:116-talloc] reusing garbage
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:116-talloc] reusing garbage
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:116-talloc] reusing garbage
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
-[tinobsy.h:145-tfinalize] finalizing a dummy {
-[tinobsy.h:150-tfinalize] }
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:116-talloc] reusing garbage
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:123-talloc] need new memory
+[tinobsy_test.c:38-test_gc_1] Begin sweep of everything
+[tinobsy.h:205-tmarksweep] garbage collect start, 8 objects {
+[tinobsy.h:210-tmarksweep] marking globals
+[tinobsy.h:186-tmarkobject] marking a NULL
+[tinobsy.h:186-tmarkobject] marking a NULL
+[tinobsy.h:193-tmarkobject] marking a nil
+[tinobsy.h:215-tmarksweep] garbage collect sweeping
 [tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:116-talloc] reusing garbage
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:116-talloc] reusing garbage
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:116-talloc] reusing garbage
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:116-talloc] reusing garbage
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a dummy
-[tinobsy.h:116-talloc] reusing garbage
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a dummy, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
-[tinobsy_test.c:61-test_gc_3] Assertion succeeded: vm->num_objects - origobj == 1
-[tinobsy.h:244-tfreevm] free vm
-[tinobsy.h:256-tfreevm] freed 0 threads
-[tinobsy.h:206-tmarksweep] garbage collect start, 2 objects {
-[tinobsy.h:211-tmarksweep] marking globals
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:216-tmarksweep] garbage collect sweeping
-[tinobsy.h:145-tfinalize] finalizing a nil {
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:230-tmarksweep] garbage collect end, 0 objects, 2 freed }
-[tinobsy.h:259-tfreevm] Assertion succeeded: vm->num_objects == 0
+[tinobsy.h:229-tmarksweep] garbage collect end, 1 objects, 7 freed }
+[tinobsy_test.c:40-test_gc_1] Assertion succeeded: VM->num_objects == oldobj
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:67-test_gc_4] test refcount collector: refs are counted properly
+[tinobsy_test.c:55-test_gc_2] test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a nil
+[tinobsy.h:112-talloc] allocating a dummy
 [tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 3 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 4 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 5 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 6 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 7 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 8 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 9 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 10 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:123-talloc] need new memory
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:112-talloc] allocating a cons
 [tinobsy.h:123-talloc] need new memory
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a nil, now have 11 refs
-[tinobsy.h:166-tincref] Assertion succeeded: x->type != NULL
-[tinobsy.h:168-tincref] incref'ed a cons, now have 2 refs
-[tinobsy_test.c:74-test_gc_4] Assertion succeeded: vm->nil->refcount - oldrefs == times
-[tinobsy.h:244-tfreevm] free vm
-[tinobsy.h:256-tfreevm] freed 0 threads
-[tinobsy.h:206-tmarksweep] garbage collect start, 11 objects {
-[tinobsy.h:211-tmarksweep] marking globals
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:216-tmarksweep] garbage collect sweeping
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a dummy, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 1 refs
+[tinobsy.h:205-tmarksweep] garbage collect start, 21 objects {
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:193-tmarkobject] marking a cons
+[tinobsy.h:193-tmarkobject] marking a dummy
+[tinobsy.h:186-tmarkobject] marking a NULL
+[tinobsy.h:186-tmarkobject] marking a NULL
+[tinobsy.h:210-tmarksweep] marking globals
+[tinobsy.h:186-tmarkobject] marking a NULL
+[tinobsy.h:186-tmarkobject] marking a NULL
+[tinobsy.h:193-tmarkobject] marking a nil
+[tinobsy.h:215-tmarksweep] garbage collect sweeping
+[tinobsy.h:229-tmarksweep] garbage collect end, 21 objects, 0 freed }
+[tinobsy_test.c:64-test_gc_2] Assertion succeeded: VM->num_objects == oldobj
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 10 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 9 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 8 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 7 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 6 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 5 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 4 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 3 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 2 refs
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 0 refs
 [tinobsy.h:145-tfinalize] finalizing a cons {
-[tinobsy.h:157-tdecref] Assertion succeeded: x->type != NULL
-[tinobsy.h:159-tdecref] decref'ed a nil, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:145-tfinalize] finalizing a nil {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:230-tmarksweep] garbage collect end, 0 objects, 11 freed }
-[tinobsy.h:259-tfreevm] Assertion succeeded: vm->num_objects == 0
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:150-tfinalize] }
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:80-test_threads_stack] test threads stack
+[tinobsy_test.c:70-test_gc_3] test refcount collector: can reuse garbage
 [tinobsy.h:111-talloc] Assertion succeeded: type != NULL
-[tinobsy.h:112-talloc] allocating a nil
-[tinobsy.h:123-talloc] need new memory
-[tinobsy_test.c:88-test_threads_stack] Assertion succeeded: vm->threads == NULL
-[tinobsy.h:244-tfreevm] free vm
-[tinobsy.h:256-tfreevm] freed 0 threads
-[tinobsy.h:206-tmarksweep] garbage collect start, 1 objects {
-[tinobsy.h:211-tmarksweep] marking globals
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:187-tmarkobject] marking a NULL
-[tinobsy.h:216-tmarksweep] garbage collect sweeping
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a dummy
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:158-tdecref] decref'ed a dummy, now have 0 refs
+[tinobsy.h:145-tfinalize] finalizing a dummy {
+[tinobsy.h:150-tfinalize] }
+[tinobsy_test.c:76-test_gc_3] Assertion succeeded: VM->num_objects - origobj < times
+
+-------------------------------------------------------------
+
+[tinobsy_test.c:81-test_gc_4] test refcount collector: refs are counted properly
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 3 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 4 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 5 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 6 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 7 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 8 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 9 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 10 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:111-talloc] Assertion succeeded: type != NULL
+[tinobsy.h:112-talloc] allocating a cons
+[tinobsy.h:116-talloc] reusing garbage
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a nil, now have 11 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:165-tincref] Assertion succeeded: x->type != NULL
+[tinobsy.h:167-tincref] incref'ed a cons, now have 2 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy.h:158-tdecref] decref'ed a cons, now have 1 refs
+[tinobsy_test.c:86-test_gc_4] Assertion succeeded: VM->nil->refcount - oldrefs == times
+
+-------------------------------------------------------------
+
+[tinobsy_test.c:103-main] end of tests
+
+-------------------------------------------------------------
+
+[tinobsy.h:243-tfreevm] free vm
+[tinobsy.h:255-tfreevm] freed 0 threads
+[tinobsy.h:205-tmarksweep] garbage collect start, 21 objects {
+[tinobsy.h:210-tmarksweep] marking globals
+[tinobsy.h:186-tmarkobject] marking a NULL
+[tinobsy.h:186-tmarkobject] marking a NULL
+[tinobsy.h:186-tmarkobject] marking a NULL
+[tinobsy.h:215-tmarksweep] garbage collect sweeping
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 10 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 9 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 8 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 7 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 6 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 5 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 4 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 3 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 2 refs
+[tinobsy.h:150-tfinalize] }
+[tinobsy.h:145-tfinalize] finalizing a cons {
+[tinobsy.h:158-tdecref] decref'ed a nil, now have 1 refs
+[tinobsy.h:150-tfinalize] }
 [tinobsy.h:145-tfinalize] finalizing a nil {
 [tinobsy.h:150-tfinalize] }
-[tinobsy.h:230-tmarksweep] garbage collect end, 0 objects, 1 freed }
-[tinobsy.h:259-tfreevm] Assertion succeeded: vm->num_objects == 0
-[tinobsy_test.c:98-main] end of tests
+[tinobsy.h:229-tmarksweep] garbage collect end, 0 objects, 21 freed }
+[tinobsy.h:258-tfreevm] Assertion succeeded: vm->num_objects == 0
