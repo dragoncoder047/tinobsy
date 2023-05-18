@@ -149,6 +149,7 @@ void tfinalize(tobject* x) {
     else if (xt->cdr == OBJECT) tdecref(x->cdr);
     DBG("}");
     x->type = NULL;
+    x->car = x->cdr = NULL;
     tclrflag(x, GC_MARKED);
 }
 
@@ -217,6 +218,23 @@ size_t tmarksweep(tvm* vm) {
         if (!ttstflag(*x, GC_MARKED)) {
             tobject* u = *x;
             *x = u->next;
+            // Kill all pointers to this object
+            if (u->refcount > 0) {
+                tobject* p = vm->first;
+                while (p != NULL) {
+                    if (p->type != NULL) {
+                        if (p->type->car == OBJECT && p->car == u) {
+                            ASSERT(!ttstflag(p, GC_MARKED), "Unmarked object pointed to by marked object");
+                            p->car = NULL;
+                        }
+                        if (p->type->cdr == OBJECT && p->cdr == u) {
+                            ASSERT(!ttstflag(p, GC_MARKED), "Unmarked object pointed to by marked object");
+                            p->cdr = NULL;
+                        }
+                    }
+                    p = p->next;
+                }
+            }
             tfinalize(u);
             free(u);
             vm->num_objects--;
