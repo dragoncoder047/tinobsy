@@ -132,17 +132,20 @@ tobject* talloc(tvm* vm, const ttype* type) {
 }
 
 // Forward reference
+
 void tdecref(tobject* x);
 void tincref(tobject* x);
 void tsetflag(tobject* x, tflag f);
 void tclrflag(tobject* x, tflag f);
 bool ttstflag(tobject* x, tflag f);
+void tfreethread(tvm* vm, tthread* th);
 
 void tfinalize(tobject* x) {
     if (x == NULL) return;
     ttype* xt = x->type;
     if (xt == NULL) return; // Already finalized
     DBG("finalizing a %s {", xt->name);
+    tdecref(x->meta);
     if (xt->car == OWNED_PTR) free(x->car_ptr);
     else if (xt->car == OBJECT) tdecref(x->car);
     if (xt->cdr == OWNED_PTR) free(x->cdr_ptr);
@@ -192,6 +195,7 @@ void tmarkobject(tobject* x) {
     ttype* xt = x->type;
     if (xt != NULL) {
         DBG("marking a %s", xt->name);
+        tmarkobject(x->meta);
         if (xt->car == OBJECT) tmarkobject(x->car);
         if (xt->cdr == OBJECT) {
             x = x->cdr;
@@ -276,14 +280,15 @@ void tfreevm(tvm* vm) {
     size_t th = 0;
     #endif
     while (vm->threads != NULL) {
-        tthread* t = vm->threads;
-        vm->threads = t->next_thread;
-        free(t);
+        tfreethread(vm, vm->threads);
         #ifdef TINOBSY_DEBUG
         th++;
         #endif
     }
     DBG("freed %zu threads", th);
+    tdecref(vm->nil);
+    tdecref(vm->env);
+    tdecref(vm->gc_stack);
     vm->nil = vm->env = vm->gc_stack = NULL;
     tmarksweep(vm);
     ASSERT(vm->num_objects == 0, "gc bugged");
