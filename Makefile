@@ -24,6 +24,7 @@ deps:
 	sudo apt-get update
 	sudo apt-get install valgrind --yes
 	sudo apt-get install gcc-multilib --yes
+	sudo apt-get install libgcc-s1:i386 --yes
 	sudo apt-get install libc6-dbg:i386 --yes
 
 show:
