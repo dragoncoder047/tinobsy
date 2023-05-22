@@ -22,7 +22,9 @@
         "tobject",
         "tptrkind",
         "tpushthread",
+        "traise",
         "tthread",
+        "tthrow",
         "ttstflag",
         "ttype",
         "vpid"

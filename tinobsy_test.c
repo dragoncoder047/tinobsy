@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <setjmp.h>
 #define TINOBSY_DEBUG
 #define TINOBSY_IGNORE_DANGLING_POINTERS
 #include "tinobsy.h"
@@ -21,9 +22,9 @@ void test_threads_stack() {
     tthread* a = tpushthread(VM);
     tthread* b = tpushthread(VM);
     tthread* c = tpushthread(VM);
-    tfreethread(VM, b);
-    tfreethread(VM, c);
-    tfreethread(VM, a);
+    tfreethread(b);
+    tfreethread(c);
+    tfreethread(a);
     ASSERT(VM->threads == NULL, "did not remove all threads");
 }
 
@@ -43,27 +44,29 @@ void test_sweep() {
 }
 
 ttype cons_type = {"cons", OBJECT, OBJECT};
-tobject* cons(tvm* vm, tobject* x, tobject* y) {
+tobject* cons(tobject* x, tobject* y) {
+    ASSERT(x != NULL || y != NULL);
+    tvm* vm = x == NULL ? y->owner : x->owner;
     tobject* cell = talloc(vm, &cons_type);
     SET(cell->car, x);
     SET(cell->cdr, y);
     return cell;
 }
 
-#define PUSH(vm, x, y) do{tobject* cell__=cons((vm),(x),(y));SET(y,cell__);tdecref(cell__);}while(0)
+#define PUSH(x, y) do{tobject* cell__=cons((x),(y));SET(y,cell__);tdecref(cell__);}while(0)
 
 void test_mark_no_sweep() {
     DBG("test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly");
     tthread* t = tpushthread(VM);
     for (int i = 0; i < times; i++) {
         tobject* foo = talloc(VM, &nothing_type);
-        PUSH(VM, foo, t->gc_stack);
+        PUSH(foo, t->gc_stack);
         tdecref(foo); // done with it
     }
     size_t oldobj = VM->num_objects;
     tmarksweep(VM);
     ASSERT(VM->num_objects == oldobj, "swept some by mistake");
-    tfreethread(VM, t);
+    tfreethread(t);
 }
 
 void test_reuse_garbage() {
@@ -79,11 +82,13 @@ void test_reuse_garbage() {
 void test_refcounting() {
     DBG("test refcount collector: refs are counted properly");
     size_t oldrefs = VM->nil->refcount;
+    tthread* x = tpushthread(VM);
     for (int i = 0; i < times; i++) {
-        PUSH(VM, VM->nil, VM->gc_stack);
+        PUSH(VM->nil, x->gc_stack);
     }
     ASSERT(VM->nil->refcount - oldrefs == times, "nil not referenced %i times", times);
-    SET(VM->gc_stack, NULL);
+    SET(x->gc_stack, NULL);
+    tfreethread(x);
     tmarksweep(VM);
 }
 
@@ -117,6 +122,20 @@ void test_reference_cycle() {
     ASSERT(VM->num_objects == oldobj, "A was collected");
 }
 
+void test_setjmp() {
+    DBG("Test try-catch setjmp");
+    tthread* t = tpushthread(VM);
+    TRYCATCH(t, {
+        tobject* x = talloc(VM, &atom_type);
+        x->car_str = strdup("foobar");
+        RAISE(t, x);
+        ASSERT(false, "unreachable");
+    }, {
+        ASSERT(t->error != NULL && !strcmp(t->error->car_str, "foobar"), "bad error");
+    });
+    tfreethread(t);
+}
+
 typedef void (*test)(void);
 test tests[] = {
     test_threads_stack,
@@ -126,12 +145,14 @@ test tests[] = {
     test_refcounting,
     test_freeing_things,
     test_reference_cycle,
+    test_setjmp,
 };
 const int num_tests = sizeof(tests) / sizeof(tests[0]);
 
 int main() {
     srand(time(NULL));
     DBG("Begin Tinobsy test suite");
+    DBG("sizeof(tobject) = %zu, sizeof(tthread) = %zu, sizeof(tvm) = %zu", sizeof(tobject), sizeof(tthread), sizeof(tvm));
     VM = tnewvm();
     for (int i = 0; i < num_tests; i++) {
         divider();

@@ -5,7 +5,7 @@ A tiny object system and garbage collector written in C. No included scripting l
 ## features
 
 * Infinitely possible types.
-* Lightweight. Each object is only 32/56 bytes (on 32/64-bit systems, respectively).
+* Lightweight. Each object is less than 100 bytes.
 * Garbage-collected. Includes both a reference-counting collector (for speed) and a full mark-and-sweep (to prevent memory leaks).
 * Includes thread management support. (OS-agnostic, thread spawn/kill support not implemented here.)
 * Includes `setjmp`-based non-local control flow capabilities.
@@ -38,7 +38,7 @@ The payload of the object is a large `union`, which is divided into two `car` an
 
 * The `car` cell can be a `tobject*`, `void*`, `char*`, `int32_t`, or `float`.
 * Similarly, the `cdr` can be a `tobject*`, `void*`, `tfptr`, `uint32_t`, or `float`.
-    * A `tfptr` is a function pointer, that takes 5 arguments `(tvm* vm, tthread* thread, tobject* self, tobject* args, tobject* env)` and returns a `tobject*`.
+    * A `tfptr` is a function pointer, that takes 4 arguments `(tthread* thread, tobject* self, tobject* args, tobject* env)` and returns a `tobject*`.
 * Additionally, `int64_t` and `double` fields span both `car` and `cdr` fields.
 
 ### types

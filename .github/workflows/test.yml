@@ -11,12 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: install valgrind
-      run: sudo apt-get install valgrind -y
+    - name: install dependencies
+      run: make deps
     - name: test
       run: make test
     - name: show files
-      run: cat test/out.txt test/valgrind.txt
+      run: make show
     - name: check for leaks
-      run: cat test/valgrind.txt | grep "no leaks are possible" >/dev/null
-      # grep returns 1 if no match, 0 if match
+      run: make checkleaks
