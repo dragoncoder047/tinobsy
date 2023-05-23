@@ -1,5 +1,5 @@
-[tinobsy_test.c:154-main] Begin Tinobsy test suite
-[tinobsy_test.c:155-main] sizeof(tobject) = 56, sizeof(tthread) = 64, sizeof(tvm) = 32
+[tinobsy_test.c:167-main] Begin Tinobsy test suite
+[tinobsy_test.c:168-main] sizeof(tobject) = 56, sizeof(tthread) = 64, sizeof(tvm) = 32
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a nil
 [tinobsy.h:159-talloc] need new memory
@@ -581,43 +581,43 @@
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is tipynq
+[tinobsy_test.c:106-test_freeing_things] Random atom is xlmpea
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is azokjh
+[tinobsy_test.c:106-test_freeing_things] Random atom is lofrnz
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is nfxtgw
+[tinobsy_test.c:106-test_freeing_things] Random atom is dygqnz
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is rvcwsl
+[tinobsy_test.c:106-test_freeing_things] Random atom is qorneb
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is lgkfzl
+[tinobsy_test.c:106-test_freeing_things] Random atom is jelnxv
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is qmqljz
+[tinobsy_test.c:106-test_freeing_things] Random atom is djjlhy
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is swbljt
+[tinobsy_test.c:106-test_freeing_things] Random atom is lmlaad
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is kmjeea
+[tinobsy_test.c:106-test_freeing_things] Random atom is qpdzla
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is wkjezh
+[tinobsy_test.c:106-test_freeing_things] Random atom is asneun
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy_test.c:106-test_freeing_things] Random atom is aesxsv
+[tinobsy_test.c:106-test_freeing_things] Random atom is pwmuin
 [tinobsy.h:267-tmarksweep] garbage collect start, 11 objects {
 [tinobsy.h:273-tmarksweep] marking globals
 [tinobsy.h:251-tmarkobject] marking a nil
@@ -674,17 +674,16 @@
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:126-test_setjmp] Test try-catch setjmp
+[tinobsy_test.c:126-test_setjmp] Test try-catch setjmp with error object
 [tinobsy.h:377-tpushthread] Allocating a new thread, next vpid is 0
 [tinobsy.h:147-talloc] Assertion succeeded: type != NULL
 [tinobsy.h:148-talloc] allocating a atom
 [tinobsy.h:159-talloc] need new memory
-[tinobsy.h:437-traise] Throwing an error on thread 0
-[tinobsy.h:438-traise] Assertion succeeded: th->trycatch != NULL
+[tinobsy.h:434-traise] Throwing an error on thread 0
+[tinobsy.h:435-traise] Assertion succeeded: th->trycatch != NULL
 [tinobsy.h:211-tincref] Assertion succeeded: x->type != NULL
 [tinobsy.h:213-tincref] incref'ed a atom, now have 2 refs
 [tinobsy.h:202-tdecref] decref'ed a atom, now have 1 refs
-[tinobsy_test.c:128-test_setjmp] Assertion succeeded: (t)->error != NULL
 [tinobsy_test.c:134-test_setjmp] Assertion succeeded: t->error != NULL && !strcmp(t->error->car_str, "foobar")
 [tinobsy.h:388-tfreethread] Freeing thread 0 {
 [tinobsy.h:202-tdecref] decref'ed a atom, now have 0 refs
@@ -694,7 +693,17 @@
 
 -------------------------------------------------------------
 
-[tinobsy_test.c:162-main] end of tests
+[tinobsy_test.c:140-test_catch_code] Test try-catch setjmp wth custom error code
+[tinobsy.h:377-tpushthread] Allocating a new thread, next vpid is 0
+[tinobsy.h:434-traise] Throwing an error on thread 0
+[tinobsy.h:435-traise] Assertion succeeded: th->trycatch != NULL
+[tinobsy_test.c:146-test_catch_code] Assertion succeeded: sig == 22
+[tinobsy.h:388-tfreethread] Freeing thread 0 {
+[tinobsy.h:402-tfreethread] }
+
+-------------------------------------------------------------
+
+[tinobsy_test.c:175-main] end of tests
 
 -------------------------------------------------------------
 

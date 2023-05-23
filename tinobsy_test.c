@@ -123,7 +123,7 @@ void test_reference_cycle() {
 }
 
 void test_setjmp() {
-    DBG("Test try-catch setjmp");
+    DBG("Test try-catch setjmp with error object");
     tthread* t = tpushthread(VM);
     TRYCATCH(t, {
         tobject* x = talloc(VM, &atom_type);
@@ -132,6 +132,18 @@ void test_setjmp() {
         ASSERT(false, "unreachable");
     }, {
         ASSERT(t->error != NULL && !strcmp(t->error->car_str, "foobar"), "bad error");
+    });
+    tfreethread(t);
+}
+
+void test_catch_code() {
+    DBG("Test try-catch setjmp wth custom error code");
+    tthread* t = tpushthread(VM);
+    TRYCATCH(t, {
+        traise(t, NULL, 22);
+        ASSERT(false, "unreachable");
+    }, {
+        ASSERT(sig == 22, "didn't throw code 22");
     });
     tfreethread(t);
 }
@@ -146,6 +158,7 @@ test tests[] = {
     test_freeing_things,
     test_reference_cycle,
     test_setjmp,
+    test_catch_code,
 };
 const int num_tests = sizeof(tests) / sizeof(tests[0]);
 

@@ -420,10 +420,7 @@ void tfreethread(tthread* th) {
     if (!(sig = setjmp(dynamic))) { tc; } \
     else { thrown = true; SET((t)->gc_stack, old_st); } \
     (t)->trycatch = prev; \
-    if (thrown) { \
-        ASSERT((t)->error != NULL); \
-        cc; \
-    } \
+    if (thrown) { cc; } \
 } while (0)
 
 #ifdef __cplusplus
