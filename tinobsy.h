@@ -24,6 +24,7 @@ typedef int bool;
     if (!(cond)) { \
         DBG("Assertion failed: %s", #cond); \
         DBG(__VA_ARGS__); \
+        fprintf(stderr, "Assert failed, causing a deliberate segfault now.\n"); \
         *((int*)0) = 1; \
     } else { \
         DBG("Assertion succeeded: %s", #cond); \
@@ -401,12 +402,14 @@ void tfreethread(tthread* th) {
     DBG("}");
 }
 
+/// @def Set X to Y, while updating reference counts.
 #define SET(x, y) do { \
     tincref(y); \
     tdecref(x); \
     (x)=(y); \
 } while (0)
 
+/// @def On therad t, set up the jmp_buf and run tc, if it throws, run cc.
 #define TRYCATCH(t, tc, cc) do { \
     jmp_buf dynamic; \
     jmp_buf* prev = (t)->trycatch; \
@@ -426,6 +429,10 @@ void tfreethread(tthread* th) {
 #ifdef __cplusplus
 [[noreturn]]
 #endif
+/// @brief Raise an error on the thread by longjmp()'ing back to the last saved try-catch point. This function does not return.
+/// @param th The thread to use.
+/// @param error The error object to be thrown.
+/// @param sig The value to be returned by setjmp().
 void traise(tthread* th, tobject* error, int sig) {
     DBG("Throwing an error on thread %u", th->vpid);
     ASSERT(th->trycatch != NULL, "No try-catch set");
@@ -435,7 +442,8 @@ void traise(tthread* th, tobject* error, int sig) {
     longjmp(*(th->trycatch), sig);
 }
 
-#define RAISE(th, err) traise(th, err, 1)
+/// @def Short for traise(th, err, 1).
+#define RAISE(th, err) traise((th), (err), 1)
 
 #ifdef __cplusplus
 }
