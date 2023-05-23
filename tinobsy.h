@@ -24,7 +24,7 @@ typedef int bool;
     if (!(cond)) { \
         DBG("Assertion failed: %s", #cond); \
         DBG(__VA_ARGS__); \
-        exit(72); \
+        *((int*)0) = 1; \
     } else { \
         DBG("Assertion succeeded: %s", #cond); \
     } \
@@ -34,36 +34,55 @@ typedef int bool;
 #define ASSERT(...)
 #endif
 
+/// @brief What is stored in the cell of the object.
 typedef enum {
+    /// @brief There is nothing in the cell or the value is stored inline.
     NOTHING,
+    /// @brief The cell points to another object.
     OBJECT,
+    /// @brief The cell points to a block of memory that this object "owns".
     OWNED_PTR
 } tptrkind;
 
+/// @brief Information about the contents of the object struct.
 typedef const struct {
+    /// @brief The "name" of the object's type.
     const char* const name;
+    /// @brief The contents of the "car" cell.
     const tptrkind car;
+    /// @brief The contents of the "cdr" cell.
     const tptrkind cdr;
 } ttype;
 
+/// @brief A bit-field to store flags information.
 typedef uint16_t tflags;
 
+/// @brief The enum of flags currently in use by Tinobsy.
 typedef enum {
     GC_MARKED
 } tflag;
 
+/// @brief The base object type for everything in Tinobsy.
 typedef struct stobject tobject;
+/// @brief The struct used to store thread-specific data for Tinobsy coroutines.
 typedef struct stthread tthread;
+/// @brief The main Tinobsy VM type used to manage all of the objects and threads.
 typedef struct stvm tvm;
 
+/// @brief The minimum function pointer needed to call Tinobsy programs.
 typedef tobject* (*tfptr)(tthread* thread, tobject* self, tobject* args, tobject* env);
 
+/// @brief The struct that makes up all Tinobsy objects.
 struct stobject {
+    /// @brief A pointer to this object's type information. NULL if this object is a "tombstone" that has been finalized already.
     ttype* type;
+    /// @brief How many other things point to this object (C pointers or other objects)
     size_t refcount;
+    /// @brief FLags about this object.
     tflags flags;
+    /// @brief INTERNAL POINTER - DO NOT MODIFY - The most recent object allocated in the linked list of all objects.
     struct stobject* next;
-    struct stvm* owner;
+    /// @brief A pointer to metadata about this object. Can be NULL.
     struct stobject* meta;
     union {
         struct {
@@ -87,25 +106,42 @@ struct stobject {
     };
 };
 
+/// @brief The struct that is used to manage virtual threads in Tinobsy.
 struct stthread {
+    /// @brief The "virtual process ID" used to identify this thread.
     unsigned int vpid;
+    /// @brief The next thread in the linked list of all threads.
     struct stthread* next_thread;
+    /// @brief A pointer to the VM that created this thread.
     tvm* owner;
+    /// @brief The stack of objects that must not be collected by the garbage collector.
     tobject* gc_stack;
+    /// @brief The current local environment (variables, etc).
     tobject* env;
+    /// @brief NULL normally, but used to pass up an error when one is thrown.
     tobject* error;
+    /// @brief The pointer to the current jmp_buf used to handle errors.
     jmp_buf* trycatch;
-    jmp_buf top_try;
+    /// @brief An opaque pointer to an OS-specific structure used to manage this thread.
     void* thread_handle;
 };
 
+/// @brief The struct used to manage all objects and threads.
 struct stvm {
+    /// @brief The most recent object allocated.
     tobject* first;
+    /// @brief The current number of objects that have been allocated.
     size_t num_objects;
+    /// @brief An object that can be used to represent the NIL value and differentiate it from a NULL pointer.
     tobject* nil;
+    /// @brief The linked list of all active threads.
     tthread* threads;
 };
 
+/// @brief Allocate a new object on this VM.
+/// @param vm The owner VM.
+/// @param type The pointer to the type information struct. Must not be NULL.
+/// @return The newly allocated object.
 tobject* talloc(tvm* vm, const ttype* type) {
     ASSERT(type != NULL, "tried to initialize a null type");
     DBG("allocating a %s", type->name);
@@ -116,14 +152,12 @@ tobject* talloc(tvm* vm, const ttype* type) {
             tobject* oldnext = newobject->next;
             memset(newobject, 0, sizeof(struct stobject));
             newobject->next = oldnext;
-            newobject->owner = vm;
             goto gotgarbage;
         }
     }
     DBG("need new memory");
     newobject = (tobject*)calloc(1, sizeof(struct stobject));
     newobject->next = vm->first;
-    newobject->owner = vm;
     vm->first = newobject;
     vm->num_objects++;
     gotgarbage:
@@ -132,7 +166,7 @@ tobject* talloc(tvm* vm, const ttype* type) {
     return newobject;
 }
 
-// Forward reference
+// Forward references
 
 void tdecref(tobject* x);
 void tincref(tobject* x);
@@ -141,6 +175,8 @@ void tclrflag(tobject* x, tflag f);
 bool ttstflag(tobject* x, tflag f);
 void tfreethread(tthread* th);
 
+/// @brief Finalize the object, that is, free any owned memory and decrement references to any pointed-to objects.
+/// @param x The object to be finalized.
 void tfinalize(tobject* x) {
     if (x == NULL) return;
     ttype* xt = x->type;
@@ -157,6 +193,8 @@ void tfinalize(tobject* x) {
     tclrflag(x, GC_MARKED);
 }
 
+/// @brief Decrement the reference count of the object, and if it is now 0, finalize the object.
+/// @param x The object that has lost a reference.
 inline void tdecref(tobject* x) {
     if (x != NULL && x->refcount > 0 && x->type != NULL) {
         x->refcount--;
@@ -165,6 +203,8 @@ inline void tdecref(tobject* x) {
     }
 }
 
+/// @brief Increment the reference count of the object.
+/// @param x The object that has gained a reference.
 inline void tincref(tobject* x) {
     if (x != NULL) {
         ASSERT(x->type != NULL, "null type object incref'ed");
@@ -173,18 +213,30 @@ inline void tincref(tobject* x) {
     }
 }
 
+/// @brief Test if a flag is set on the object.
+/// @param x The object to test.
+/// @param f The flag to look at.
+/// @return Whether the flag is set.
 inline bool ttstflag(tobject* x, tflag f) {
-    return x != NULL && x->flags & (1<<f) != 0;
+    return x != NULL && (x->flags & (1<<f)) != 0;
 }
 
+/// @brief Set a flag on an object.
+/// @param x The object to set the flag on.
+/// @param f The flag to set.
 inline void tsetflag(tobject* x, tflag f) {
     if (x != NULL) x->flags |= 1 << f;
 }
 
+/// @brief Clear a flag on an object.
+/// @param x The object to clear the flag on.
+/// @param f The flag to clear.
 inline void tclrflag(tobject* x, tflag f) {
     if (x != NULL) x->flags &= ~(1 << f);
 }
 
+/// @brief Recursively marks the object, following pointers to other objects.
+/// @param x The object to be marked.
 void tmarkobject(tobject* x) {
     mark:
     if (x == NULL) {
@@ -206,6 +258,9 @@ void tmarkobject(tobject* x) {
     }
 }
 
+/// @brief Garbage-collects all objects that don't have any active references, freeing their memory.
+/// @param vm The VM to run the garbage-collector on.
+/// @return The number of objects swept.
 size_t tmarksweep(tvm* vm) {
     size_t start = vm->num_objects;
     DBG("garbage collect start, %zu objects {", start);
@@ -265,14 +320,19 @@ size_t tmarksweep(tvm* vm) {
     return freed;
 }
 
+/// @brief The typeinfo for the vm->nil member.
 ttype tnil_type = {"nil", NOTHING, NOTHING};
 
+/// @brief Allocates a new VM and sets it up.
+/// @return The newly allocated VM.
 tvm* tnewvm() {
     tvm* vm = (tvm*)calloc(1, sizeof(struct stvm));
     vm->nil = talloc(vm, &tnil_type);
     return vm;
 }
 
+/// @brief Destroys the VM, frees all associated objects and threads, and releases the memory.
+/// @param vm The VM to be freed.
 void tfreevm(tvm* vm) {
     DBG("free vm");
     #ifdef TINOBSY_DEBUG
@@ -292,6 +352,9 @@ void tfreevm(tvm* vm) {
     free(vm);
 }
 
+/// @brief Gets the next unused VPID for threads on this VM.
+/// @param vm The VM whose threads to search.
+/// @return The next open VPID.
 unsigned int tnextvpid(tvm* vm) {
     unsigned int p = 0;
     while (true) {
@@ -304,17 +367,21 @@ unsigned int tnextvpid(tvm* vm) {
     }
 }
 
+/// @brief Pushes a new thread onto the VM's thread stack, and returns it.
+/// @param vm The VM to push the thread onto.
+/// @return The new thread.
 tthread* tpushthread(tvm* vm) {
     tthread* new_ = (tthread*)calloc(1, sizeof(struct stthread));
     new_->vpid = tnextvpid(vm);
     DBG("Allocating a new thread, next vpid is %u", new_->vpid);
     new_->next_thread = vm->threads;
     vm->threads = new_;
-    new_->trycatch = &new_->top_try;
     new_->owner = vm;
     return new_;
 }
 
+/// @brief Deletes the thread and all associated memory, and splices it out of the owner VM's list of threads.
+/// @param th The thread to delete.
 void tfreethread(tthread* th) {
     tvm* vm = th->owner;
     DBG("Freeing thread %u {", th->vpid);
@@ -361,6 +428,7 @@ void tfreethread(tthread* th) {
 #endif
 void traise(tthread* th, tobject* error, int sig) {
     DBG("Throwing an error on thread %u", th->vpid);
+    ASSERT(th->trycatch != NULL, "No try-catch set");
     SET(th->error, error);
     SET(th->gc_stack, NULL);
     tdecref(error);

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <time.h>
 #include <setjmp.h>
@@ -44,23 +45,22 @@ void test_sweep() {
 }
 
 ttype cons_type = {"cons", OBJECT, OBJECT};
-tobject* cons(tobject* x, tobject* y) {
+tobject* cons(tvm* vm, tobject* x, tobject* y) {
     ASSERT(x != NULL || y != NULL);
-    tvm* vm = x == NULL ? y->owner : x->owner;
     tobject* cell = talloc(vm, &cons_type);
     SET(cell->car, x);
     SET(cell->cdr, y);
     return cell;
 }
 
-#define PUSH(x, y) do{tobject* cell__=cons((x),(y));SET(y,cell__);tdecref(cell__);}while(0)
+#define PUSH(vm, x, y) do{tobject* cell__=cons((vm), (x),(y));SET(y,cell__);tdecref(cell__);}while(0)
 
 void test_mark_no_sweep() {
     DBG("test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly");
     tthread* t = tpushthread(VM);
     for (int i = 0; i < times; i++) {
         tobject* foo = talloc(VM, &nothing_type);
-        PUSH(foo, t->gc_stack);
+        PUSH(VM, foo, t->gc_stack);
         tdecref(foo); // done with it
     }
     size_t oldobj = VM->num_objects;
@@ -84,7 +84,7 @@ void test_refcounting() {
     size_t oldrefs = VM->nil->refcount;
     tthread* x = tpushthread(VM);
     for (int i = 0; i < times; i++) {
-        PUSH(VM->nil, x->gc_stack);
+        PUSH(VM, VM->nil, x->gc_stack);
     }
     ASSERT(VM->nil->refcount - oldrefs == times, "nil not referenced %i times", times);
     SET(x->gc_stack, NULL);
