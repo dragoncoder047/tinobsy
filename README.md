@@ -70,3 +70,26 @@ Circular references are the Achilles' heel of reference-counting collectors, so 
 The garbage collector is invoked by the function `size_t tmarksweep(tvm* vm)`. It marks everything reachable, sweeps everything that isn't, and returns the number of swept objects.
 
 To protect intermediate structures from being garbage-collected, both the VM and `tthread`s include a `gc_stack` member for this purpose. This can be made to point to the temporary objects, so they will end up being marked.
+
+### error handling
+
+Tinobsy threads have an included `jmp_buf*` member to allow for error handling. Note that this is a *pointer* to a `jump_buf`, not an actual `jmp_buf`, so you must allocate your own `jmp_buf` and assign the pointer and pass the buffer to `setjmp()`.
+
+The function `tthrow(tthread* thread, tobject* error, int signal)` throws the error back to the `setjmp()`'ed point, using the `jmp_buf*` pointer stored in the `thread`. The `error` parameter is stored in the `thread->error` member to be inspected. The `signal` parameter is the code to be passed to `longjmp()`, which can be inspected (see below). There is also a macro `THROW(thread, error)` that expands to a call of `tthrow()` with the last parameter set to 1 (the most common value).
+
+The easiest way to handle the `setjmp()`, `jmp_buf`, and return code detection easily in Tinobsy is with the macro `TRYCATCH(thread, code_that_might_throw, code_to_handle_error)` macro. The last two parameters are **blocks of code** (pretty unusual for a macro). They are used like this:
+
+```c
+tthread* t = some_thread();
+TRYCATCH(t, {
+    do_something_that_might_throw(t);
+    // or, explicitly raise an error:
+    traise(t, get_error_object(), 22);
+}, {
+    // This code runs if traise() was called
+    cleanup(t->error);
+    // You can see what signal code was passed to traise()
+    // by inspecting the "sig" variable
+    if (sig == 22) fprintf(stderr, "Catch-22!");
+});
+```
