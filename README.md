@@ -75,7 +75,7 @@ To protect intermediate structures from being garbage-collected, both the VM and
 
 Tinobsy threads have an included `jmp_buf*` member to allow for error handling. Note that this is a *pointer* to a `jump_buf`, not an actual `jmp_buf`, so you must allocate your own `jmp_buf` and assign the pointer and pass the buffer to `setjmp()`.
 
-The function `tthrow(tthread* thread, tobject* error, int signal)` throws the error back to the `setjmp()`'ed point, using the `jmp_buf*` pointer stored in the `thread`. The `error` parameter is stored in the `thread->error` member to be inspected. The `signal` parameter is the code to be passed to `longjmp()`, which can be inspected (see below). There is also a macro `THROW(thread, error)` that expands to a call of `tthrow()` with the last parameter set to 1 (the most common value).
+The function `traise(tthread* thread, tobject* error, int signal)` throws the error back to the `setjmp()`'ed point, using the `jmp_buf*` pointer stored in the `thread`. The `error` parameter is stored in the `thread->error` member to be inspected. The `signal` parameter is the code to be passed to `longjmp()`, which can be inspected (see below). There is also a macro `THROW(thread, error)` that expands to a call of `tthrow()` with the last parameter set to 1 (the most common value). **As with a bare `longjmp()`, the `jmp_buf` must have been initialized before use or bad things will happen!!**
 
 The easiest way to handle the `setjmp()`, `jmp_buf`, and return code detection easily in Tinobsy is with the macro `TRYCATCH(thread, code_that_might_throw, code_to_handle_error)` macro. The last two parameters are **blocks of code** (pretty unusual for a macro). They are used like this:
 
