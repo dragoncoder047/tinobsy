@@ -38,14 +38,17 @@ typedef enum {
 } pointer_kind;
 
 // Information about the contents of the object struct.
-typedef const struct {
-    // The "name" of the object's type.
-    const char* const name;
+class object_schema {
+    public:
+    // The "name" of the object's schema.
+    char* name;
     // The contents of the "car" cell.
-    const pointer_kind car;
+    pointer_kind car;
     // The contents of the "cdr" cell.
-    const pointer_kind cdr;
-} object_schema;
+    pointer_kind cdr;
+    object_schema(const char* const name, const pointer_kind car, const pointer_kind cdr);
+    ~object_schema();
+};
 
 // A bit-field to store flags information.
 typedef uint16_t flag_field;
@@ -55,39 +58,40 @@ typedef enum {
     GC_MARKED
 } flag;
 
-// The base object type for everything in Tinobsy.
-typedef struct s_obj object;
+// The base object schema for everything in Tinobsy.
+class object;
 // The struct used to store thread-specific data for Tinobsy coroutines.
-typedef struct s_thr thread;
-// The main Tinobsy VM type used to manage all of the objects and threads.
-typedef struct s_vm vm;
+class thread;
+// The main Tinobsy VM schema used to manage all of the objects and threads.
+class vm;
 
 // The minimum function pointer needed to call Tinobsy programs.
 typedef object* (*function_pointer)(thread* thread, object* self, object* args, object* env);
 
 // The struct that makes up all Tinobsy objects.
-struct s_obj {
-    // A pointer to this object's type information. NULL if this object is a "tombstone" that has been finalized already.
-    object_schema* type;
+class object {
+    public:
+    // A pointer to this object's schema information. NULL if this object is a "tombstone" that has been finalized already.
+    object_schema* schema;
     // How many other things point to this object (C pointers or other objects)
     size_t refcount;
     // Flags about this object.
     flag_field flags;
     // INTERNAL POINTER - DO NOT MODIFY - The most recent object allocated in the linked list of all objects.
-    struct s_obj* next;
+    object* next;
     // A pointer to metadata about this object. Can be NULL.
-    struct s_obj* meta;
+    object* meta;
     union {
         struct {
             union {
-                struct s_obj* car;
+                object* car;
                 void* car_ptr;
                 char* car_str;
                 int32_t car_int;
                 float car_float;
             };
             union {
-                struct s_obj* cdr;
+                object* cdr;
                 void* cdr_ptr;
                 function_pointer func;
                 uint32_t cdr_uint;
@@ -97,14 +101,43 @@ struct s_obj {
         int64_t as_integer;
         double as_double;
     };
+
+    // Decrement the reference count of the object, and if it is now 0, finalize the object.
+    inline void decref();
+
+    // Increment the reference count of the object.
+    inline void incref();
+
+    // Test if a flag is set on the object.
+    inline bool tst_flag(flag f);
+
+    // Set a flag on an object.
+    inline void set_flag(flag f);
+
+    // Clear a flag on an object.
+    inline void clr_flag(flag f);
+
+    private:
+    object(const object_schema* schema, object* next);
+    ~object();
+    // Finalize the object, that is, free any owned memory and decrement references to any pointed-to objects.
+    void finalize();
+
+    // Recursively marks the object, following pointers to other objects.
+    void mark();
+
+    void init(const object_schema* schema, object* next);
+
+    friend class vm;
 };
 
 // The struct that is used to manage virtual threads in Tinobsy.
-struct s_thr {
+class thread {
+    public:
     // The "virtual process ID" used to identify this thread.
     unsigned int vpid;
     // The next thread in the linked list of all threads.
-    struct s_thr* next_thread;
+    thread* next_thread;
     // A pointer to the VM that created this thread.
     vm* owner;
     // The stack of objects that must not be collected by the garbage collector.
@@ -117,10 +150,19 @@ struct s_thr {
     jmp_buf* trycatch;
     // An opaque pointer to an OS-specific structure used to manage this thread.
     void* thread_handle;
+    ~thread();
+
+    // Raise an error on the thread by longjmp()'ing back to the last saved try-catch point. This function does not return.
+    [[noreturn]] void raise(object* error, int sig);
+
+    private:
+    thread(vm* vm, unsigned int vpid, void* handle);
+    friend class vm;
 };
 
 // The struct used to manage all objects and threads.
-struct s_vm {
+class vm {
+    public:
     // The most recent object allocated.
     object* first;
     // The current number of objects that have been allocated.
@@ -129,57 +171,35 @@ struct s_vm {
     object* nil;
     // The linked list of all active threads.
     thread* threads;
+
+    vm();
+    ~vm();
+
+    // Allocate a new object on this VM.
+    object* allocate(const object_schema* schema);
+
+    // Garbage-collects all objects that don't have any active references, freeing their memory.
+    size_t gc();
+
+    // Gets the next unused VPID for threads on this VM.
+    unsigned int next_vpid();
+
+    // Pushes a new thread onto the VM's thread stack, and returns it.
+    thread* push_thread();
 };
 
-// Allocate a new object on this VM.
-object* allocate(vm* vm, const object_schema* type);
-
-// Finalize the object, that is, free any owned memory and decrement references to any pointed-to objects.
-void finalize(object* x);
-
-// Decrement the reference count of the object, and if it is now 0, finalize the object.
-inline void decref(object* x);
-
-// Increment the reference count of the object.
-inline void incref(object* x);
-
-// Test if a flag is set on the object.
-inline bool tst_flag(object* x, flag f);
-
-// Set a flag on an object.
-inline void set_flag(object* x, flag f);
-
-// Clear a flag on an object.
-inline void clr_flag(object* x, flag f);
-
-// Recursively marks the object, following pointers to other objects.
-void mark_object(object* x);
-
-// Garbage-collects all objects that don't have any active references, freeing their memory.
-size_t gc(vm* vm);
-
 // The typeinfo for the vm->nil member.
-object_schema nil_schema = {"nil", NOTHING, NOTHING};
-
-// Allocates a new VM and sets it up.
-vm* new_vm();
-
-// Destroys the VM, frees all associated objects and threads, and releases the memory.
-void free_vm(vm* vm);
-
-// Gets the next unused VPID for threads on this VM.
-unsigned int next_vpid(vm* vm);
-
-// Pushes a new thread onto the VM's thread stack, and returns it.
-thread* push_thread(vm* vm);
-
-// Deletes the thread and all associated memory, and splices it out of the owner VM's list of threads.
-void free_thread(thread* th);
+object_schema nil_schema("nil", NOTHING, NOTHING);
 
 #define SET(x, y) do { \
-    incref(y); \
-    decref(x); \
+    (y)->incref(); \
+    (x)->decref(); \
     (x)=(y); \
+} while (0)
+
+#define UNSET(x) do { \
+    (x)->decref(); \
+    (x) = NULL; \
 } while (0)
 
 #define TRYCATCH(t, tc, cc) do { \
@@ -195,10 +215,7 @@ void free_thread(thread* th);
     if (thrown) { cc; } \
 } while (0)
 
-// Raise an error on the thread by longjmp()'ing back to the last saved try-catch point. This function does not return.
-[[noreturn]] void raise(thread* th, object* error, int sig);
-
-#define RAISE(th, err) raise((th), (err), 1)
+#define RAISE(th, err) (th)->raise((err), 1)
 
 }
 

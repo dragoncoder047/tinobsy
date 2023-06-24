@@ -22,61 +22,61 @@ object_schema atom_type = {"atom", OWNED_PTR, NOTHING};
 
 void test_threads_stack() {
     DBG("test threads stack");
-    thread* a = push_thread(VM);
-    thread* b = push_thread(VM);
-    thread* c = push_thread(VM);
-    free_thread(b);
-    free_thread(c);
-    free_thread(a);
+    thread* a = VM->push_thread();
+    thread* b = VM->push_thread();
+    thread* c = VM->push_thread();
+    delete b;
+    delete c;
+    delete a;
     ASSERT(VM->threads == NULL, "did not remove all threads");
 }
 
 void test_sweep() {
     DBG("test mark-sweep collector: objects are swept when not put into a thread");
     size_t oldobj = VM->num_objects;
-    allocate(VM, &nothing_type);
-    allocate(VM, &nothing_type);
-    allocate(VM, &nothing_type);
-    allocate(VM, &nothing_type);
-    allocate(VM, &nothing_type);
-    allocate(VM, &nothing_type);
-    allocate(VM, &nothing_type);
+    VM->allocate(&nothing_type);
+    VM->allocate(&nothing_type);
+    VM->allocate(&nothing_type);
+    VM->allocate(&nothing_type);
+    VM->allocate(&nothing_type);
+    VM->allocate(&nothing_type);
+    VM->allocate(&nothing_type);
     DBG("Begin sweep of everything");
-    gc(VM);
+    VM->gc();
     ASSERT(VM->num_objects == oldobj, "did not sweep right objects");
 }
 
-object_schema cons_type = {"cons", OBJECT, OBJECT};
+object_schema cons_type("cons", OBJECT, OBJECT);
 object* cons(vm* vm, object* x, object* y) {
     ASSERT(x != NULL || y != NULL);
-    object* cell = allocate(vm, &cons_type);
+    object* cell = VM->allocate(&cons_type);
     SET(cell->car, x);
     SET(cell->cdr, y);
     return cell;
 }
 
-#define PUSH(vm, x, y) do{object* cell__=cons((vm), (x),(y));SET(y,cell__);decref(cell__);}while(0)
+#define PUSH(vm, x, y) do{object* cell__=cons((vm),(x),(y));SET(y,cell__);(cell__)->decref();}while(0)
 
 void test_mark_no_sweep() {
     DBG("test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly");
-    thread* t = push_thread(VM);
+    thread* t = VM->push_thread();
     for (int i = 0; i < times; i++) {
-        object* foo = allocate(VM, &nothing_type);
+        object* foo = VM->allocate(&nothing_type);
         PUSH(VM, foo, t->gc_stack);
-        decref(foo); // done with it
+        foo->decref(); // done with it
     }
     size_t oldobj = VM->num_objects;
-    gc(VM);
+    VM->gc();
     ASSERT(VM->num_objects == oldobj, "swept some by mistake");
-    free_thread(t);
+    delete t;
 }
 
 void test_reuse_garbage() {
     DBG("test refcount collector: can reuse garbage");
     size_t origobj = VM->num_objects;
     for (int i = 0; i < times; i++) {
-        object* foo = allocate(VM, &nothing_type);
-        decref(foo);
+        object* foo = VM->allocate(&nothing_type);
+        foo->decref();
     }
     ASSERT(VM->num_objects - origobj < times, "didn't reuse objects");
 }
@@ -84,14 +84,13 @@ void test_reuse_garbage() {
 void test_refcounting() {
     DBG("test refcount collector: refs are counted properly");
     size_t oldrefs = VM->nil->refcount;
-    thread* x = push_thread(VM);
+    thread* x = VM->push_thread();
     for (int i = 0; i < times; i++) {
         PUSH(VM, VM->nil, x->gc_stack);
     }
     ASSERT(VM->nil->refcount - oldrefs == times, "nil not referenced %i times", times);
-    SET(x->gc_stack, NULL);
-    free_thread(x);
-    gc(VM);
+    delete x;
+    VM->gc();
 }
 
 char randchar() {
@@ -103,51 +102,51 @@ void test_freeing_things() {
     char buffer[64];
     for (int i = 0; i < times; i++) {
         snprintf(buffer, sizeof(buffer), "%c%c%c%c%c%c", randchar(),randchar(),randchar(),randchar(),randchar(),randchar());
-        object* foo = allocate(VM, &atom_type);
+        object* foo = VM->allocate(&atom_type);
         foo->car_str = strdup(buffer);
         DBG("Random atom is %s", buffer);
     }
-    gc(VM);
+    VM->gc();
     DBG("Check Valgrind output to make sure stuff was freed");
 }
 
 void test_reference_cycle() {
     DBG("Test reference cycle, collected");
     size_t oldobj = VM->num_objects;
-    object* a = allocate(VM, &cons_type);
+    object* a = VM->allocate(&cons_type);
     SET(a->car, a);
     SET(a->cdr, a);
-    decref(a);
-    ASSERT(a->type != NULL, "A shouldn't be finalized");
+    a->decref();
+    ASSERT(a->schema != NULL, "A shouldn't be finalized");
     ASSERT(a->refcount > 0, "A is not in reference cycle");
-    gc(VM);
+    VM->gc();
     ASSERT(VM->num_objects == oldobj, "A was collected");
 }
 
 void test_setjmp() {
     DBG("Test try-catch setjmp with error object");
-    thread* t = push_thread(VM);
+    thread* t = VM->push_thread();
     TRYCATCH(t, {
-        object* x = allocate(VM, &atom_type);
+        object* x = VM->allocate(&atom_type);
         x->car_str = strdup("foobar");
         RAISE(t, x);
         ASSERT(false, "unreachable");
     }, {
         ASSERT(t->error != NULL && !strcmp(t->error->car_str, "foobar"), "bad error");
     });
-    free_thread(t);
+    delete t;
 }
 
 void test_catch_code() {
     DBG("Test try-catch setjmp wth custom error code");
-    thread* t = push_thread(VM);
+    thread* t = VM->push_thread();
     TRYCATCH(t, {
-        raise(t, NULL, 22);
+        t->raise(NULL, 22);
         ASSERT(false, "unreachable");
     }, {
         ASSERT(sig == 22, "didn't throw code 22");
     });
-    free_thread(t);
+    delete t;
 }
 
 typedef void (*test)(void);
@@ -168,14 +167,14 @@ int main() {
     srand(time(NULL));
     DBG("Begin Tinobsy test suite");
     DBG("sizeof(object) = %zu, sizeof(thread) = %zu, sizeof(vm) = %zu", sizeof(object), sizeof(thread), sizeof(vm));
-    VM = new_vm();
+    VM = new vm();
     for (int i = 0; i < num_tests; i++) {
         divider();
         tests[i]();
     }
     divider();
     DBG("end of tests");
+    delete VM;
     divider();
-    free_vm(VM);
     return 0;
 }

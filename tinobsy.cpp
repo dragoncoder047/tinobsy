@@ -2,87 +2,138 @@
 
 namespace tinobsy {
 
-object* allocate(vm* vm, const object_schema* type) {
-    ASSERT(type != NULL, "tried to initialize a null type");
-    DBG("allocating a %s", type->name);
-    object* newobject;
-    for (newobject = vm->first; newobject != NULL; newobject = newobject->next) {
-        if (newobject->type == NULL) {
+object_schema::object_schema(const char* const name, const pointer_kind car, const pointer_kind cdr) {
+    this->name = (char*)name;
+    this->car = car;
+    this->cdr = cdr;
+}
+
+object_schema::~object_schema() {}
+
+object::object(const object_schema* schema, object* next) {
+    this->init(schema, next);
+}
+
+void object::init(const object_schema* schema, object* next) {
+    this->next = next;
+    this->schema = (object_schema*)schema;
+    this->car = this->cdr = this->meta = NULL;
+    this->flags = 0;
+    this->refcount = 1;
+}
+
+object::~object() {
+    if (this->schema == NULL) return;
+    DBG("object::~object() for a %s begin {", this->schema->name);
+    this->finalize();
+    DBG("}");
+}
+
+thread::thread(vm* vm, unsigned int vpid, void* handle) {
+    this->owner = vm;
+    this->vpid = vpid;
+    this->thread_handle = handle;
+    this->next_thread = NULL;
+    this->env = this->gc_stack = this->error = NULL;
+}
+
+thread::~thread() {
+    vm* vm = this->owner;
+    DBG("thread::~thread() no. %u {", this->vpid);
+    thread** x = &vm->threads;
+    while (*x != NULL) {
+        if (*x == this) {
+            *x = this->next_thread;
+            break;
+        } else {
+            x = &(*x)->next_thread;
+        }
+    }
+    this->env->decref();
+    this->gc_stack->decref();
+    this->error->decref();
+    DBG("}");
+}
+
+object* vm::allocate(const object_schema* schema) {
+    ASSERT(schema != NULL, "tried to initialize a null schema");
+    DBG("vm::allocate() a %s", schema->name);
+    object* newobject = NULL;
+    for (newobject = this->first; newobject != NULL; newobject = newobject->next) {
+        if (newobject->schema == NULL) {
             DBG("reusing garbage");
             object* oldnext = newobject->next;
-            memset(newobject, 0, sizeof(struct s_obj));
-            newobject->next = oldnext;
-            goto gotgarbage;
+            memset(newobject, 0, sizeof(object));
+            newobject->init(schema, oldnext);
+            return newobject;
         }
     }
     DBG("need new memory");
-    newobject = (object*)calloc(1, sizeof(struct s_obj));
-    newobject->next = vm->first;
-    vm->first = newobject;
-    vm->num_objects++;
-    gotgarbage:
-    newobject->refcount = 1;
-    newobject->type = type;
+    newobject = new object(schema, this->first);
+    newobject->next = this->first;
+    this->first = newobject;
+    this->num_objects++;
     return newobject;
 }
 
-void finalize(object* x) {
-    if (x == NULL) return;
-    object_schema* xt = x->type;
+void object::finalize() {
+    if (this == NULL) return;
+    object_schema* xt = this->schema;
     if (xt == NULL) return; // Already finalized
-    DBG("finalizing a %s {", xt->name);
-    decref(x->meta);
-    if (xt->car == OWNED_PTR) free(x->car_ptr);
-    else if (xt->car == OBJECT) decref(x->car);
-    if (xt->cdr == OWNED_PTR) free(x->cdr_ptr);
-    else if (xt->cdr == OBJECT) decref(x->cdr);
+    DBG("object::finalize() for a %s {", xt->name);
+    this->meta->decref();
+    if (xt->car == OWNED_PTR) free(this->car_ptr);
+    else if (xt->car == OBJECT) this->car->decref();
+    if (xt->cdr == OWNED_PTR) free(this->cdr_ptr);
+    else if (xt->cdr == OBJECT) this->cdr->decref();
     DBG("}");
-    x->type = NULL;
-    x->car = x->cdr = NULL;
-    clr_flag(x, GC_MARKED);
+    this->schema = NULL;
+    this->car = this->cdr = NULL;
+    this->clr_flag(GC_MARKED);
 }
 
-inline void decref(object* x) {
-    if (x != NULL && x->refcount > 0 && x->type != NULL) {
-        x->refcount--;
-        DBG("decref'ed a %s, now have %zu refs", x->type->name, x->refcount);
-        if (x->refcount <= 0) finalize(x);
+inline void object::decref() {
+    if (this != NULL && this->refcount > 0 && this->schema != NULL) {
+        this->refcount--;
+        DBG("object::decref() on a %s, now have %zu refs", this->schema->name, this->refcount);
+        if (this->refcount <= 0) this->finalize();
     }
 }
 
-inline void incref(object* x) {
-    if (x != NULL) {
-        ASSERT(x->type != NULL, "null type object incref'ed");
-        x->refcount++;
-        DBG("incref'ed a %s, now have %zu refs", x->type->name, x->refcount);
+inline void object::incref() {
+    if (this != NULL) {
+        ASSERT(this->schema != NULL, "<already finalized>::incref() happened");
+        this->refcount++;
+        DBG("object::incref() on a %s, now have %zu refs", this->schema->name, this->refcount);
     }
 }
 
-inline bool tst_flag(object* x, flag f) {
-    return x != NULL && (x->flags & (1<<f)) != 0;
+inline bool object::tst_flag(flag f) {
+    return this != NULL && (this->flags & (1<<f)) != 0;
 }
 
-inline void set_flag(object* x, flag f) {
-    if (x != NULL) x->flags |= 1 << f;
+inline void object::set_flag(flag f) {
+    if (this != NULL) this->flags |= 1 << f;
 }
 
-inline void clr_flag(object* x, flag f) {
-    if (x != NULL) x->flags &= ~(1 << f);
+inline void object::clr_flag(flag f) {
+    if (this != NULL) this->flags &= ~(1 << f);
 }
 
-void mark_object(object* x) {
+void object::mark() {
+    object* x = this;
     mark:
     if (x == NULL) {
-        DBG("marking a NULL");
+        DBG("NULL::mark()");
         return;
     }
-    if (tst_flag(x, GC_MARKED)) return;
-    set_flag(x, GC_MARKED);
-    object_schema* xt = x->type;
+    if (x->tst_flag(GC_MARKED)) return;
+    x->set_flag(GC_MARKED);
+    object_schema* xt = x->schema;
     if (xt != NULL) {
-        DBG("marking a %s", xt->name);
-        mark_object(x->meta);
-        if (xt->car == OBJECT) mark_object(x->car);
+        DBG("object::mark() a %s", xt->name);
+        x->meta->mark();
+        if (xt->car == OBJECT) x->car->mark();
         if (xt->cdr == OBJECT) {
             x = x->cdr;
             goto mark;
@@ -91,35 +142,35 @@ void mark_object(object* x) {
     }
 }
 
-size_t gc(vm* vm) {
-    size_t start = vm->num_objects;
-    DBG("garbage collect start, %zu objects {", start);
-    for (thread* t = vm->threads; t != NULL; t = t->next_thread) {
-        mark_object(t->gc_stack);
-        mark_object(t->env);
-        mark_object(t->error);
+size_t vm::gc() {
+    size_t start = this->num_objects;
+    DBG("vm::gc() begin, %zu objects {", start);
+    for (thread* t = this->threads; t != NULL; t = t->next_thread) {
+        t->gc_stack->mark();
+        t->env->mark();
+        t->error->mark();
     }
     DBG("marking globals");
-    mark_object(vm->nil);
-    object** x = &vm->first;
+    this->nil->mark();
+    object** x = &this->first;
     DBG("garbage collect sweeping");
     size_t dangling = 0;
     while (*x != NULL) {
-        if (!tst_flag(*x, GC_MARKED)) {
+        if (!(*x)->tst_flag(GC_MARKED)) {
             object* u = *x;
             // Kill all pointers to this object
             if (u->refcount > 0) {
                 size_t realrefs = 0;
-                object* p = vm->first;
+                object* p = this->first;
                 while (p != NULL) {
-                    if (p->type != NULL) {
-                        if (p->type->car == OBJECT && p->car == u) {
-                            ASSERT(!tst_flag(p, GC_MARKED), "Unmarked object pointed to by marked object");
+                    if (p->schema != NULL) {
+                        if (p->schema->car == OBJECT && p->car == u) {
+                            ASSERT(!p->tst_flag(GC_MARKED), "Unmarked object pointed to by marked object");
                             p->car = NULL;
                             realrefs++;
                         }
-                        if (p->type->cdr == OBJECT && p->cdr == u) {
-                            ASSERT(!tst_flag(p, GC_MARKED), "Unmarked object pointed to by marked object");
+                        if (p->schema->cdr == OBJECT && p->cdr == u) {
+                            ASSERT(!p->tst_flag(GC_MARKED), "Unmarked object pointed to by marked object");
                             p->cdr = NULL;
                             realrefs++;
                         }
@@ -134,51 +185,50 @@ size_t gc(vm* vm) {
                 }
             }
             *x = u->next;
-            finalize(u);
-            free(u);
-            vm->num_objects--;
+            delete u;
+            this->num_objects--;
         } else {
-            clr_flag(*x, GC_MARKED);
+            (*x)->clr_flag(GC_MARKED);
             x = &(*x)->next;
         }
     }
     #ifndef TINOBSY_IGNORE_DANGLING_POINTERS
     fprintf(stderr, "\nWARNING!! %zu dangling pointers detected!!\n", dangling);
     #endif
-    size_t freed = start - vm->num_objects;
-    DBG("garbage collect end, %zu objects, %zu freed, %zu dangling pointers }", vm->num_objects, freed, dangling);
+    size_t freed = start - this->num_objects;
+    DBG("vm::gc() end, %zu objects, %zu freed, %zu dangling pointers }", this->num_objects, freed, dangling);
     return freed;
 }
 
-vm* new_vm() {
-    vm* new_vm = (vm*)calloc(1, sizeof(struct s_vm));
-    new_vm->nil = allocate(new_vm, &nil_schema);
-    return new_vm;
+vm::vm() {
+    this->first = NULL;
+    this->num_objects = 0;
+    this->threads = NULL;
+    this->nil = this->allocate(&nil_schema);
 }
 
-void free_vm(vm* vm) {
-    DBG("free vm");
+vm::~vm() {
+    DBG("vm::~vm()");
     #ifdef TINOBSY_DEBUG
     size_t th = 0;
     #endif
-    while (vm->threads != NULL) {
-        free_thread(vm->threads);
+    while (this->threads != NULL) {
+        delete this->threads;
         #ifdef TINOBSY_DEBUG
         th++;
         #endif
     }
     DBG("freed %zu threads", th);
-    decref(vm->nil);
-    vm->nil = NULL;
-    gc(vm);
-    ASSERT(vm->num_objects == 0, "gc bugged");
-    free(vm);
+    this->nil->decref();
+    this->nil = NULL;
+    this->gc();
+    ASSERT(this->num_objects == 0, "gc bugged");
 }
 
-unsigned int next_vpid(vm* vm) {
+unsigned int vm::next_vpid() {
     unsigned int p = 0;
     while (true) {
-        for (thread* t = vm->threads; t != NULL; t = t->next_thread) {
+        for (thread* t = this->threads; t != NULL; t = t->next_thread) {
             if (t->vpid == p) goto next;
         }
         return p;
@@ -187,42 +237,21 @@ unsigned int next_vpid(vm* vm) {
     }
 }
 
-thread* push_thread(vm* vm) {
-    thread* new_ = (thread*)calloc(1, sizeof(struct s_thr));
-    new_->vpid = next_vpid(vm);
-    DBG("Allocating a new thread, next vpid is %u", new_->vpid);
-    new_->next_thread = vm->threads;
-    vm->threads = new_;
-    new_->owner = vm;
+thread* vm::push_thread() {
+    thread* new_ = new thread(this, this->next_vpid(), NULL);
+    DBG("vm::push_thread(), next vpid is %u", new_->vpid);
+    new_->next_thread = this->threads;
+    this->threads = new_;
     return new_;
 }
 
-void free_thread(thread* th) {
-    vm* vm = th->owner;
-    DBG("Freeing thread %u {", th->vpid);
-    thread** x = &vm->threads;
-    while (*x != NULL) {
-        if (*x == th) {
-            *x = th->next_thread;
-            break;
-        } else {
-            x = &(*x)->next_thread;
-        }
-    }
-    decref(th->gc_stack);
-    decref(th->env);
-    decref(th->error);
-    free(th);
-    DBG("}");
-}
-
-void raise(thread* th, object* error, int sig) {
-    DBG("Throwing an error on thread %u", th->vpid);
-    ASSERT(th->trycatch != NULL, "No try-catch set");
-    SET(th->error, error);
-    SET(th->gc_stack, NULL);
-    decref(error);
-    longjmp(*(th->trycatch), sig);
+[[noreturn]] void thread::raise(object* error, int sig) {
+    DBG("thread::raise() on thread %u", this->vpid);
+    ASSERT(this->trycatch != NULL, "No try-catch set");
+    SET(this->error, error);
+    UNSET(this->gc_stack);
+    error->decref();
+    longjmp(*(this->trycatch), sig);
 }
 
 }
