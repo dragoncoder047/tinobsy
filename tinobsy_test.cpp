@@ -17,8 +17,8 @@ inline void divider() {
     printf("\n-------------------------------------------------------------\n\n");
 }
 
-object_schema nothing_type = {"nothing", NOTHING, NOTHING};
-object_schema atom_type = {"atom", OWNED_PTR, NOTHING};
+object_schema nothing_type("nothing", NOTHING, NOTHING);
+object_schema atom_type("atom", OWNED_PTR, NOTHING);
 
 void test_threads_stack() {
     DBG("test threads stack");
@@ -47,9 +47,9 @@ void test_sweep() {
 }
 
 object_schema cons_type("cons", OBJECT, OBJECT);
-object* cons(vm* vm, object* x, object* y) {
+object* cons(vm* v, object* x, object* y) {
     ASSERT(x != NULL || y != NULL);
-    object* cell = VM->allocate(&cons_type);
+    object* cell = v->allocate(&cons_type);
     SET(cell->car, x);
     SET(cell->cdr, y);
     return cell;
@@ -98,7 +98,7 @@ char randchar() {
 }
 
 void test_freeing_things() {
-    DBG("Test owned pointers, are freed");
+    DBG("Test owned pointers are freed");
     char buffer[64];
     for (int i = 0; i < times; i++) {
         snprintf(buffer, sizeof(buffer), "%c%c%c%c%c%c", randchar(),randchar(),randchar(),randchar(),randchar(),randchar());
@@ -111,7 +111,7 @@ void test_freeing_things() {
 }
 
 void test_reference_cycle() {
-    DBG("Test reference cycle, collected");
+    DBG("Test unreachable reference cycle gets collected");
     size_t oldobj = VM->num_objects;
     object* a = VM->allocate(&cons_type);
     SET(a->car, a);
@@ -149,7 +149,7 @@ void test_catch_code() {
     delete t;
 }
 
-typedef void (*test)(void);
+typedef void (*test)();
 test tests[] = {
     test_threads_stack,
     test_sweep,
