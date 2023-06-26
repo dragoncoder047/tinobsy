@@ -2,16 +2,18 @@
 
 namespace tinobsy {
 
-object_schema::object_schema(const char* const name, init_function init, mark_function mark, finalize_function finalize) {
-    this->name = (char*)name;
-    this->init = init;
-    this->mark = mark;
-    this->finalize = finalize;
-}
+object_schema::object_schema(const char* const name, init_function init, mark_function mark, finalize_function finalize)
+: name((char*)name),
+  init(init),
+  mark(mark),
+  finalize(finalize) {}
 
 object_schema::~object_schema() {}
 
-object::object(const object_schema* schema, object* next, void* arg) {
+object::object(const object_schema* schema, object* next, void* arg)
+: meta(NULL),
+  car(NULL),
+  cdr(NULL) {
     this->init(schema, next, arg);
 }
 
@@ -20,7 +22,6 @@ void object::init(const object_schema* schema, object* next, void* arg) {
     this->schema = (object_schema*)schema;
     this->flags = 0;
     this->refcount = 1;
-    this->car = this->cdr = NULL;
     if (schema->init) schema->init(this, arg);
 }
 
@@ -31,11 +32,10 @@ object::~object() {
     DBG("}");
 }
 
-thread::thread(vm* vm, unsigned int vpid, void* handle) {
-    this->owner = vm;
-    this->vpid = vpid;
-    this->thread_handle = handle;
-}
+thread::thread(vm* vm, unsigned int vpid, void* handle)
+: owner(vm),
+  vpid(vpid),
+  thread_handle(handle) {}
 
 thread::~thread() {
     vm* vm = this->owner;
@@ -200,10 +200,10 @@ size_t vm::gc() {
     return freed;
 }
 
-vm::vm() {
-    this->first = NULL;
-    this->num_objects = 0;
-    this->threads = NULL;
+vm::vm()
+: first(NULL),
+  num_objects(0),
+  threads(NULL) {
     this->nil = this->allocate(&nil_schema);
 }
 

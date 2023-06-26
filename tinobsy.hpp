@@ -74,7 +74,7 @@ class object {
     // INTERNAL POINTER - DO NOT MODIFY - The most recent object allocated in the linked list of all objects.
     object* next;
     // A pointer to metadata about this object. Can be NULL.
-    object* meta = NULL;
+    object* meta;
     union {
         struct {
             union {
@@ -158,13 +158,13 @@ class thread {
 class vm {
     public:
     // The most recent object allocated.
-    object* first = NULL;
+    object* first;
     // The current number of objects that have been allocated.
-    size_t num_objects = 0;
+    size_t num_objects;
     // An object that can be used to represent the NIL value and differentiate it from a NULL pointer.
-    object* nil = NULL;
+    object* nil;
     // The linked list of all active threads.
-    thread* threads = NULL;
+    thread* threads;
 
     vm();
     ~vm();
