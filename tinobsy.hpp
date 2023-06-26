@@ -27,26 +27,27 @@
 
 namespace tinobsy {
 
-// What is stored in the cell of the object.
-typedef enum {
-    // There is nothing in the cell or the value is stored inline.
-    NOTHING,
-    // The cell points to another object.
-    OBJECT,
-    // The cell points to a block of memory that this object "owns".
-    OWNED_PTR
-} pointer_kind;
+// Forward declare
+class object;
+class thread;
+class vm;
+
+typedef void (*init_function)(object*, void*);
+typedef void (*mark_function)(object*);
+typedef void (*finalize_function)(object*);
 
 // Information about the contents of the object struct.
 class object_schema {
     public:
     // The "name" of the object's schema.
     char* name;
-    // The contents of the "car" cell.
-    pointer_kind car;
-    // The contents of the "cdr" cell.
-    pointer_kind cdr;
-    object_schema(const char* const name, const pointer_kind car, const pointer_kind cdr);
+    // The function to set up the object.
+    init_function init;
+    // The function to mark the object.
+    mark_function mark;
+    // The function to finalize the object.
+    finalize_function finalize;
+    object_schema(const char* const name, init_function init, mark_function mark, finalize_function finalize);
     ~object_schema();
 };
 
@@ -57,13 +58,6 @@ typedef uint16_t flag_field;
 typedef enum {
     GC_MARKED
 } flag;
-
-// The base object schema for everything in Tinobsy.
-class object;
-// The struct used to store thread-specific data for Tinobsy coroutines.
-class thread;
-// The main Tinobsy VM schema used to manage all of the objects and threads.
-class vm;
 
 // The minimum function pointer needed to call Tinobsy programs.
 typedef object* (*function_pointer)(thread* thread, object* self, object* args, object* env);
@@ -80,7 +74,7 @@ class object {
     // INTERNAL POINTER - DO NOT MODIFY - The most recent object allocated in the linked list of all objects.
     object* next;
     // A pointer to metadata about this object. Can be NULL.
-    object* meta;
+    object* meta = NULL;
     union {
         struct {
             union {
@@ -117,16 +111,16 @@ class object {
     // Clear a flag on an object.
     inline void clr_flag(flag f);
 
+    // Recursively marks the object, following pointers to other objects.
+    void mark();
+
     private:
-    object(const object_schema* schema, object* next);
+    object(const object_schema* schema, object* next, void* arg);
     ~object();
     // Finalize the object, that is, free any owned memory and decrement references to any pointed-to objects.
     void finalize();
 
-    // Recursively marks the object, following pointers to other objects.
-    void mark();
-
-    void init(const object_schema* schema, object* next);
+    void init(const object_schema* schema, object* next, void* arg);
 
     friend class vm;
 };
@@ -135,21 +129,21 @@ class object {
 class thread {
     public:
     // The "virtual process ID" used to identify this thread.
-    unsigned int vpid;
+    unsigned int vpid = 0;
     // The next thread in the linked list of all threads.
-    thread* next_thread;
+    thread* next_thread = NULL;
     // A pointer to the VM that created this thread.
     vm* owner;
     // The stack of objects that must not be collected by the garbage collector.
-    object* gc_stack;
+    object* gc_stack = NULL;
     // The current local environment (variables, etc).
-    object* env;
+    object* env = NULL;
     // NULL normally, but used to pass up an error when one is thrown.
-    object* error;
+    object* error = NULL;
     // The pointer to the current jmp_buf used to handle errors.
-    jmp_buf* trycatch;
+    jmp_buf* trycatch = NULL;
     // An opaque pointer to an OS-specific structure used to manage this thread.
-    void* thread_handle;
+    void* thread_handle = NULL;
     ~thread();
 
     // Raise an error on the thread by longjmp()'ing back to the last saved try-catch point. This function does not return.
@@ -164,22 +158,23 @@ class thread {
 class vm {
     public:
     // The most recent object allocated.
-    object* first;
+    object* first = NULL;
     // The current number of objects that have been allocated.
-    size_t num_objects;
+    size_t num_objects = 0;
     // An object that can be used to represent the NIL value and differentiate it from a NULL pointer.
-    object* nil;
+    object* nil = NULL;
     // The linked list of all active threads.
-    thread* threads;
+    thread* threads = NULL;
 
     vm();
     ~vm();
 
     // Allocate a new object on this VM.
-    object* allocate(const object_schema* schema);
+    object* allocate(const object_schema* schema, void* arg = NULL);
 
     // Garbage-collects all objects that don't have any active references, freeing their memory.
     size_t gc();
+    virtual void mark_globals();
 
     // Gets the next unused VPID for threads on this VM.
     unsigned int next_vpid();
@@ -188,8 +183,17 @@ class vm {
     thread* push_thread();
 };
 
+// Default functions
+namespace schema_functions {
+    void mark_cons(object*);
+    void finalize_cons(object*);
+
+    void init_str(object*, void*);
+    void finalize_str(object*);
+}
+
 // The typeinfo for the vm->nil member.
-object_schema nil_schema("nil", NOTHING, NOTHING);
+object_schema nil_schema("nil", NULL, NULL, NULL);
 
 #define SET(x, y) do { \
     (y)->incref(); \
@@ -207,10 +211,19 @@ object_schema nil_schema("nil", NOTHING, NOTHING);
     jmp_buf* prev = (t)->trycatch; \
     (t)->trycatch = &dynamic; \
     bool thrown = false; \
+    DBG("enter TRYCATCH macro"); \
     object* old_st = NULL; SET(old_st, (t)->gc_stack); \
     int sig = 0; \
-    if (!(sig = setjmp(dynamic))) { tc; } \
-    else { thrown = true; SET((t)->gc_stack, old_st); } \
+    if (!(sig = setjmp(dynamic))) { \
+        DBG("begin try block"); \
+        tc; \
+        DBG("no errors were thrown"); \
+    } \
+    else { \
+        DBG("an error was thrown, code is %i", sig); \
+        thrown = true; \
+        SET((t)->gc_stack, old_st); \
+    } \
     (t)->trycatch = prev; \
     if (thrown) { cc; } \
 } while (0)

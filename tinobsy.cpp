@@ -2,24 +2,26 @@
 
 namespace tinobsy {
 
-object_schema::object_schema(const char* const name, const pointer_kind car, const pointer_kind cdr) {
+object_schema::object_schema(const char* const name, init_function init, mark_function mark, finalize_function finalize) {
     this->name = (char*)name;
-    this->car = car;
-    this->cdr = cdr;
+    this->init = init;
+    this->mark = mark;
+    this->finalize = finalize;
 }
 
 object_schema::~object_schema() {}
 
-object::object(const object_schema* schema, object* next) {
-    this->init(schema, next);
+object::object(const object_schema* schema, object* next, void* arg) {
+    this->init(schema, next, arg);
 }
 
-void object::init(const object_schema* schema, object* next) {
+void object::init(const object_schema* schema, object* next, void* arg) {
     this->next = next;
     this->schema = (object_schema*)schema;
-    this->car = this->cdr = this->meta = NULL;
     this->flags = 0;
     this->refcount = 1;
+    this->car = this->cdr = NULL;
+    if (schema->init) schema->init(this, arg);
 }
 
 object::~object() {
@@ -33,8 +35,6 @@ thread::thread(vm* vm, unsigned int vpid, void* handle) {
     this->owner = vm;
     this->vpid = vpid;
     this->thread_handle = handle;
-    this->next_thread = NULL;
-    this->env = this->gc_stack = this->error = NULL;
 }
 
 thread::~thread() {
@@ -55,7 +55,7 @@ thread::~thread() {
     DBG("}");
 }
 
-object* vm::allocate(const object_schema* schema) {
+object* vm::allocate(const object_schema* schema, void* arg) {
     ASSERT(schema != NULL, "tried to initialize a null schema");
     DBG("vm::allocate() a %s", schema->name);
     object* newobject = NULL;
@@ -64,12 +64,12 @@ object* vm::allocate(const object_schema* schema) {
             DBG("reusing garbage");
             object* oldnext = newobject->next;
             memset(newobject, 0, sizeof(object));
-            newobject->init(schema, oldnext);
+            newobject->init(schema, oldnext, arg);
             return newobject;
         }
     }
     DBG("need new memory");
-    newobject = new object(schema, this->first);
+    newobject = new object(schema, this->first, arg);
     newobject->next = this->first;
     this->first = newobject;
     this->num_objects++;
@@ -82,10 +82,7 @@ void object::finalize() {
     if (xt == NULL) return; // Already finalized
     DBG("object::finalize() for a %s {", xt->name);
     this->meta->decref();
-    if (xt->car == OWNED_PTR) free(this->car_ptr);
-    else if (xt->car == OBJECT) this->car->decref();
-    if (xt->cdr == OWNED_PTR) free(this->cdr_ptr);
-    else if (xt->cdr == OBJECT) this->cdr->decref();
+    if (this->schema->finalize) this->schema->finalize(this);
     DBG("}");
     this->schema = NULL;
     this->car = this->cdr = NULL;
@@ -132,14 +129,16 @@ void object::mark() {
     object_schema* xt = x->schema;
     if (xt != NULL) {
         DBG("object::mark() a %s", xt->name);
-        x->meta->mark();
-        if (xt->car == OBJECT) x->car->mark();
-        if (xt->cdr == OBJECT) {
-            x = x->cdr;
-            goto mark;
-            // tail recursion
-        }
+        if (xt->mark) xt->mark(x);
+        x = x->meta;
+        goto mark;
+        // tail recursion
     }
+}
+
+void vm::mark_globals() {
+    DBG("marking globals");
+    this->nil->mark();
 }
 
 size_t vm::gc() {
@@ -150,8 +149,7 @@ size_t vm::gc() {
         t->env->mark();
         t->error->mark();
     }
-    DBG("marking globals");
-    this->nil->mark();
+    this->mark_globals();
     object** x = &this->first;
     DBG("garbage collect sweeping");
     size_t dangling = 0;
@@ -164,12 +162,12 @@ size_t vm::gc() {
                 object* p = this->first;
                 while (p != NULL) {
                     if (p->schema != NULL) {
-                        if (p->schema->car == OBJECT && p->car == u) {
+                        if (p->car == u) {
                             ASSERT(!p->tst_flag(GC_MARKED), "Unmarked object pointed to by marked object");
                             p->car = NULL;
                             realrefs++;
                         }
-                        if (p->schema->cdr == OBJECT && p->cdr == u) {
+                        if (p->cdr == u) {
                             ASSERT(!p->tst_flag(GC_MARKED), "Unmarked object pointed to by marked object");
                             p->cdr = NULL;
                             realrefs++;
@@ -178,7 +176,9 @@ size_t vm::gc() {
                     p = p->next;
                 }
                 if (realrefs != u->refcount) {
-                    dangling += u->refcount - realrefs;
+                    ssize_t diff = u->refcount - realrefs;
+                    if (diff > 0) dangling += diff;
+                    else DBG("%zu rogue number pointers", -diff);
                 }
                 else {
                     DBG("Cyclic garbage detected");
@@ -252,6 +252,31 @@ thread* vm::push_thread() {
     UNSET(this->gc_stack);
     error->decref();
     longjmp(*(this->trycatch), sig);
+}
+
+void schema_functions::mark_cons(object* x) {
+    DBG("{");
+    if (x->car) x->car->mark();
+    if (x->cdr) x->cdr->mark();
+    DBG("}");
+}
+
+void schema_functions::finalize_cons(object* x) {
+    DBG("{");
+    if (x->car) x->car->decref();
+    if (x->cdr) x->cdr->decref();
+    DBG("}");
+}
+
+void schema_functions::init_str(object* x, void* arg) {
+    DBG();
+    char* str = (char*)arg;
+    x->car_str = strdup(str);
+}
+
+void schema_functions::finalize_str(object* x) {
+    DBG();
+    free((void*)x->car_str);
 }
 
 }

@@ -24,7 +24,7 @@ delete vm;
 Once you have done that you can declare type schemas and allocate objects:
 
 ```c++
-tinobsy::object_schema my_type("MyType", NOTHING, NOTHING);
+tinobsy::object_schema my_type("MyType", ..., ..., ...); // see below for what to put in place of the ...'s
 auto my_object = vm->allocate(&my_type);
 ```
 
@@ -32,7 +32,7 @@ The object is still "attached" internally to the VM you created, so you don't ne
 
 ### objects
 
-`my_object->meta` points to another `tinobst::object*`, which can be used for metadata (superclass, properties, etc).
+`my_object->meta` points to another `tinobsy::object*`, which can be used for metadata (superclass, properties, etc).
 
 The payload of the object is a large `union`, which is divided into two `car` and `cdr` cells. (The terminology is taken from Lisp.)
 
@@ -43,13 +43,13 @@ The payload of the object is a large `union`, which is divided into two `car` an
 
 ### types
 
-Tinobsy places virtually no restrictions on what can be stored in an object. To be able to handle different types, the Tinobsy VM must be made aware of what is stored in each cell; this is done through `tinobsy::object_schema` objects. As stated above, the type schema's memory is not managed by the VM -- you have to manage it yourself.
+Tinobsy places virtually no restrictions on what can be stored in an object. To be able to handle different types, the Tinobsy VM must be made aware of what to do with the payload of the object; this is done through `tinobsy::object_schema` objects. As stated above, the type schema's memory is not managed by the VM -- you have to manage it yourself.
 
-They are simply a struct of three values: the type's name (`const char* const`), and two entries indicating how the `car` and `cdr` cells are used. The possible values for these are:
+They are simply a struct of four values: the type's name (`const char* const`), and three function pointers indicating what to do with the object during the three phases of the object's lifetime:
 
-* `OBJECT`, which means the cell points to another `tinobsy::object*`, and the garbage collector should count this as a reference for the other object, and mark the other object recursively.
-* `OWNED_PTR`, which means the cell points to a block of memory that the object "owns" (usually a `char*`, for e.g. a string or symbol), and it will be `free()`'d (*not* `delete`d) along with the object when it is garbage-collected.
-* `NOTHING`, which is the catch-all for any other use of the cell. It is used for numbers stored inline in the `tinobsy::object`, for externally-managed `void*` pointers that aren't `tinobsy::object*`s, or simply if the cell is not used.
+* The first function sets up the object when it is created. This can do anything, such as creating and assigning sub-objects, or allocating memory for a string. It is passed a `void*` pointer along with the object.
+* The second function takes care of marking the object. The garbage collector calls this when it wants to know what other objects this one points to, so it can determine what is garbage and what isn't. For all of the objects this object points to, call `subobject->mark()` on each.
+* The third function does the reverse of the first: freeing any allocated memory, and decrementing the reference counts of pointed-to objects. It is called when the object is about to be deleted by the garbage collector.
 
 ### garbage collection
 
@@ -59,7 +59,7 @@ Tinobsy has a hybrid reference-counting and mark-sweep garbage collector. The re
 
 When a fresh object is returned from `tinobsy::vm::allocate()`, its internal reference count is set to 1, corresponding to the C++ pointer it is assigned to.
 
-`tinobsy::object::incref()` and `tinobsy::object::decref()` take care of changing the reference count, and additionally, if an object's reference count ever reaches 0, the object is immediately freed (and reference counts updated recursively).
+`tinobsy::object::incref()` and `tinobsy::object::decref()` take care of changing the reference count, and additionally, if an object's reference count ever reaches 0, the object is immediately deleted (and reference counts updated recursively).
 
 To simplify the need to update reference counts on every assignment, `tinobsy.hpp` provides a macro `SET(x, y)`, which takes the place of `x = y` to additionally maintain proper reference counts, as well as `UNSET(x)` which is the same as `SET(x, NULL)` except the compiler won't complain about calling a method on NULL.
 
@@ -67,7 +67,7 @@ To simplify the need to update reference counts on every assignment, `tinobsy.hp
 
 Circular references are the Achilles' heel of reference-counting collectors, so Tinobsy also includes a mark-and-sweep garbage collector to be able to collect cyclic garbage.
 
-The garbage collector is invoked by the function `tinobsy::vm::gc()`. It marks everything reachable, sweeps everything that isn't, and returns the number of swept objects.
+The garbage collector is invoked by the function `tinobsy::vm::gc()`. It recursively calls `tinobsy::object::mark()` on each reachable object (using the `object_schema`'s mark-function), and then deletes all the objects that didn't get marked. It then returns the count of objects deleted.
 
 To protect intermediate structures from being garbage-collected, `tinobsy::thread`s include a `gc_stack` member for this purpose. This can be made to point to the temporary objects, so they will end up being marked.
 
@@ -90,6 +90,6 @@ TRYCATCH(t, {
     cleanup(t->error);
     // You can see what signal code was passed to raise()
     // by inspecting the "sig" variable
-    if (sig == 22) fprintf(stderr, "Catch-22!");
+    if (sig == 22) fprintf(stderr, "%s\n", "Catch-22!");
 });
 ```

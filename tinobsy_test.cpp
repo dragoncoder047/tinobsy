@@ -17,8 +17,8 @@ inline void divider() {
     printf("\n-------------------------------------------------------------\n\n");
 }
 
-object_schema nothing_type("nothing", NOTHING, NOTHING);
-object_schema atom_type("atom", OWNED_PTR, NOTHING);
+object_schema nothing_type("nothing", NULL, NULL, NULL);
+object_schema atom_type("atom", schema_functions::init_str, NULL, schema_functions::finalize_str);
 
 void test_threads_stack() {
     DBG("test threads stack");
@@ -46,7 +46,7 @@ void test_sweep() {
     ASSERT(VM->num_objects == oldobj, "did not sweep right objects");
 }
 
-object_schema cons_type("cons", OBJECT, OBJECT);
+object_schema cons_type("cons", NULL, schema_functions::mark_cons, schema_functions::finalize_cons);
 object* cons(vm* v, object* x, object* y) {
     ASSERT(x != NULL || y != NULL);
     object* cell = v->allocate(&cons_type);
@@ -102,8 +102,7 @@ void test_freeing_things() {
     char buffer[64];
     for (int i = 0; i < times; i++) {
         snprintf(buffer, sizeof(buffer), "%c%c%c%c%c%c", randchar(),randchar(),randchar(),randchar(),randchar(),randchar());
-        object* foo = VM->allocate(&atom_type);
-        foo->car_str = strdup(buffer);
+        object* foo = VM->allocate(&atom_type, buffer);
         DBG("Random atom is %s", buffer);
     }
     VM->gc();
@@ -127,8 +126,7 @@ void test_setjmp() {
     DBG("Test try-catch setjmp with error object");
     thread* t = VM->push_thread();
     TRYCATCH(t, {
-        object* x = VM->allocate(&atom_type);
-        x->car_str = strdup("foobar");
+        object* x = VM->allocate(&atom_type, (void*)"foobar");
         RAISE(t, x);
         ASSERT(false, "unreachable");
     }, {
@@ -175,6 +173,5 @@ int main() {
     divider();
     DBG("end of tests");
     delete VM;
-    divider();
     return 0;
 }
