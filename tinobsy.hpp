@@ -32,7 +32,7 @@ class object;
 class thread;
 class vm;
 
-typedef void (*init_function)(object*, void*);
+typedef void (*init_function)(object*, void*, void*, void*);
 typedef void (*mark_function)(object*);
 typedef void (*finalize_function)(object*);
 
@@ -40,7 +40,7 @@ typedef void (*finalize_function)(object*);
 class object_schema {
     public:
     // The "name" of the object's schema.
-    char* name;
+    const char* const name;
     // The function to set up the object.
     init_function init;
     // The function to mark the object.
@@ -66,7 +66,7 @@ typedef object* (*function_pointer)(thread* thread, object* self, object* args, 
 class object {
     public:
     // A pointer to this object's schema information. NULL if this object is a "tombstone" that has been finalized already.
-    object_schema* schema;
+    const object_schema* schema;
     // How many other things point to this object (C pointers or other objects)
     size_t refcount;
     // Flags about this object.
@@ -115,12 +115,12 @@ class object {
     void mark();
 
     private:
-    object(const object_schema* schema, object* next, void* arg);
+    object(const object_schema* schema, object* next, void* arg0, void* arg1, void* arg2);
     ~object();
     // Finalize the object, that is, free any owned memory and decrement references to any pointed-to objects.
     void finalize();
 
-    void init(const object_schema* schema, object* next, void* arg);
+    void init(const object_schema* schema, object* next, void* arg0, void* arg1, void* arg2);
 
     friend class vm;
 };
@@ -147,7 +147,7 @@ class thread {
     ~thread();
 
     // Raise an error on the thread by longjmp()'ing back to the last saved try-catch point. This function does not return.
-    [[noreturn]] void raise(object* error, int sig);
+    [[noreturn]] void raise(object* error, int sig = 1);
 
     private:
     thread(vm* vm, unsigned int vpid, void* handle);
@@ -170,7 +170,7 @@ class vm {
     ~vm();
 
     // Allocate a new object on this VM.
-    object* allocate(const object_schema* schema, void* arg = NULL);
+    object* allocate(const object_schema* schema, void* arg0 = NULL, void* arg1 = NULL, void* arg2 = NULL);
 
     // Garbage-collects all objects that don't have any active references, freeing their memory.
     size_t gc();
@@ -188,7 +188,7 @@ namespace schema_functions {
     void mark_cons(object*);
     void finalize_cons(object*);
 
-    void init_str(object*, void*);
+    void init_str(object*, void*, void*, void*);
     void finalize_str(object*);
 }
 
@@ -227,8 +227,6 @@ object_schema nil_schema("nil", NULL, NULL, NULL);
     (t)->trycatch = prev; \
     if (thrown) { cc; } \
 } while (0)
-
-#define RAISE(th, err) (th)->raise((err), 1)
 
 }
 

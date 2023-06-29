@@ -3,26 +3,26 @@
 namespace tinobsy {
 
 object_schema::object_schema(const char* const name, init_function init, mark_function mark, finalize_function finalize)
-: name((char*)name),
+: name(name),
   init(init),
   mark(mark),
   finalize(finalize) {}
 
 object_schema::~object_schema() {}
 
-object::object(const object_schema* schema, object* next, void* arg)
+object::object(const object_schema* schema, object* next, void* arg0, void* arg1, void* arg2)
 : meta(NULL),
   car(NULL),
   cdr(NULL) {
-    this->init(schema, next, arg);
+    this->init(schema, next, arg0, arg1, arg2);
 }
 
-void object::init(const object_schema* schema, object* next, void* arg) {
+void object::init(const object_schema* schema, object* next, void* arg0, void* arg1, void* arg2) {
     this->next = next;
     this->schema = (object_schema*)schema;
     this->flags = 0;
     this->refcount = 1;
-    if (schema->init) schema->init(this, arg);
+    if (schema->init) schema->init(this, arg0, arg1, arg2);
 }
 
 object::~object() {
@@ -55,7 +55,7 @@ thread::~thread() {
     DBG("}");
 }
 
-object* vm::allocate(const object_schema* schema, void* arg) {
+object* vm::allocate(const object_schema* schema, void* arg0, void* arg1, void* arg2) {
     ASSERT(schema != NULL, "tried to initialize a null schema");
     DBG("vm::allocate() a %s", schema->name);
     object* newobject = NULL;
@@ -64,12 +64,12 @@ object* vm::allocate(const object_schema* schema, void* arg) {
             DBG("reusing garbage");
             object* oldnext = newobject->next;
             memset(newobject, 0, sizeof(object));
-            newobject->init(schema, oldnext, arg);
+            newobject->init(schema, oldnext, arg0, arg1, arg2);
             return newobject;
         }
     }
     DBG("need new memory");
-    newobject = new object(schema, this->first, arg);
+    newobject = new object(schema, this->first, arg0, arg1, arg2);
     newobject->next = this->first;
     this->first = newobject;
     this->num_objects++;
@@ -78,7 +78,7 @@ object* vm::allocate(const object_schema* schema, void* arg) {
 
 void object::finalize() {
     if (this == NULL) return;
-    object_schema* xt = this->schema;
+    const object_schema* xt = this->schema;
     if (xt == NULL) return; // Already finalized
     DBG("object::finalize() for a %s {", xt->name);
     this->meta->decref();
@@ -126,7 +126,7 @@ void object::mark() {
     }
     if (x->tst_flag(GC_MARKED)) return;
     x->set_flag(GC_MARKED);
-    object_schema* xt = x->schema;
+    const object_schema* xt = x->schema;
     if (xt != NULL) {
         DBG("object::mark() a %s", xt->name);
         if (xt->mark) xt->mark(x);
@@ -268,9 +268,9 @@ void schema_functions::finalize_cons(object* x) {
     DBG("}");
 }
 
-void schema_functions::init_str(object* x, void* arg) {
+void schema_functions::init_str(object* x, void* arg0, void* _, void* __) {
     DBG();
-    char* str = (char*)arg;
+    char* str = (char*)arg0;
     x->car_str = strdup(str);
 }
 

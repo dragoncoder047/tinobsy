@@ -127,7 +127,7 @@ void test_setjmp() {
     thread* t = VM->push_thread();
     TRYCATCH(t, {
         object* x = VM->allocate(&atom_type, (void*)"foobar");
-        RAISE(t, x);
+        t->raise(x);
         ASSERT(false, "unreachable");
     }, {
         ASSERT(t->error != NULL && !strcmp(t->error->car_str, "foobar"), "bad error");

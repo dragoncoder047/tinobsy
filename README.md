@@ -47,7 +47,7 @@ Tinobsy places virtually no restrictions on what can be stored in an object. To 
 
 They are simply a struct of four values: the type's name (`const char* const`), and three function pointers indicating what to do with the object during the three phases of the object's lifetime:
 
-* The first function sets up the object when it is created. This can do anything, such as creating and assigning sub-objects, or allocating memory for a string. It is passed a `void*` pointer along with the object.
+* The first function sets up the object when it is created. This can do anything, such as creating and assigning sub-objects, or allocating memory for a string. It is passed 3 `void*` pointers along with the object (they don't all need to be used, and all default to NULL).
 * The second function takes care of marking the object. The garbage collector calls this when it wants to know what other objects this one points to, so it can determine what is garbage and what isn't. For all of the objects this object points to, call `subobject->mark()` on each.
 * The third function does the reverse of the first: freeing any allocated memory, and decrementing the reference counts of pointed-to objects. It is called when the object is about to be deleted by the garbage collector.
 
@@ -75,7 +75,7 @@ To protect intermediate structures from being garbage-collected, `tinobsy::threa
 
 Tinobsy threads have an included `jmp_buf*` member to allow for error handling. Note that this is a *pointer* to a `jump_buf`, not an actual `jmp_buf`, so you must allocate your own `jmp_buf`, assign the pointer, and pass the buffer to `setjmp()`.
 
-The function `tinobsy::thread::raise(tinobsy::object* error, int signal)` throws the error back to the `setjmp()`'ed point, using the `jmp_buf*` pointer stored in the `thread`. The `error` parameter is stored in the `thread->error` member to be inspected. The `signal` parameter is the code to be passed to `longjmp()`, which can be inspected (see below). There is also a macro `THROW(thread, error)` that expands to a call of `raise()` with the last parameter set to 1 (the most common value). **As with a bare `longjmp()`, the `jmp_buf` must have been initialized before use or bad things will happen!!**
+The function `tinobsy::thread::raise(tinobsy::object* error, int signal = 1)` throws the error back to the `setjmp()`'ed point, using the `jmp_buf*` pointer stored in the `thread`. The `error` parameter is stored in the `thread->error` member to be inspected. The `signal` parameter is the code to be passed to `longjmp()`, which can be inspected (see below). **As with a bare `longjmp()`, the `jmp_buf` must have been initialized before use or bad things will happen!!**
 
 The easiest way to handle the `setjmp()`, `jmp_buf`, and return code detection easily in Tinobsy is with the macro `TRYCATCH(thread, code_that_might_throw, code_to_handle_error)` macro. The last two parameters are **blocks of code** (pretty unusual for a macro). They are used like this:
 

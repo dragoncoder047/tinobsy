@@ -48,34 +48,34 @@
 [tinobsy.cpp:131-mark] object::mark() a nil
 [tinobsy.cpp:124-mark] NULL::mark()
 [tinobsy.cpp:154-gc] garbage collect sweeping
-[tinobsy.cpp:29-~object] object::~object() for a nothing begin {
+[tinobsy.cpp:30-~object] object::~object() for a nothing begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a nothing {
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a nothing begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a nothing begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a nothing {
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a nothing begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a nothing begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a nothing {
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a nothing begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a nothing begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a nothing {
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a nothing begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a nothing begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a nothing {
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a nothing begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a nothing begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a nothing {
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a nothing begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a nothing begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a nothing {
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
+[tinobsy.cpp:32-~object] }
 [tinobsy.cpp:199-gc] vm::gc() end, 1 objects, 7 freed, 7 dangling pointers }
 [tinobsy_test.cpp:46-test_sweep] Assertion succeeded: VM->num_objects == oldobj
 
@@ -655,107 +655,107 @@
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is gadwlb
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is vkquma
 [tinobsy.cpp:59-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is sdkrud
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is tbqckq
 [tinobsy.cpp:59-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is mlyins
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is mreayg
 [tinobsy.cpp:59-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is hnchzn
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is jggmlq
 [tinobsy.cpp:59-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is nkyoeb
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is etvydn
 [tinobsy.cpp:59-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is eqxlgz
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is xkvwgh
 [tinobsy.cpp:59-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is bugphs
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is sxhgzl
 [tinobsy.cpp:59-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is hnaczw
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is vfojac
 [tinobsy.cpp:59-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is pzwovp
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is urujhi
 [tinobsy.cpp:59-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:60-allocate] vm::allocate() a atom
 [tinobsy.cpp:71-allocate] need new memory
 [tinobsy.cpp:272-init_str] 
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is tnnfzj
+[tinobsy_test.cpp:106-test_freeing_things] Random atom is nwtxrn
 [tinobsy.cpp:146-gc] vm::gc() begin, 11 objects {
 [tinobsy.cpp:140-mark_globals] marking globals
 [tinobsy.cpp:131-mark] object::mark() a nil
 [tinobsy.cpp:124-mark] NULL::mark()
 [tinobsy.cpp:154-gc] garbage collect sweeping
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
-[tinobsy.cpp:29-~object] object::~object() for a atom begin {
+[tinobsy.cpp:32-~object] }
+[tinobsy.cpp:30-~object] object::~object() for a atom begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a atom {
 [tinobsy.cpp:278-finalize_str] 
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
+[tinobsy.cpp:32-~object] }
 [tinobsy.cpp:199-gc] vm::gc() end, 1 objects, 10 freed, 10 dangling pointers }
 [tinobsy_test.cpp:109-test_freeing_things] Check Valgrind output to make sure stuff was freed
 
@@ -780,12 +780,12 @@
 [tinobsy.cpp:166-gc] Assertion succeeded: !p->tst_flag(GC_MARKED)
 [tinobsy.cpp:171-gc] Assertion succeeded: !p->tst_flag(GC_MARKED)
 [tinobsy.cpp:184-gc] Cyclic garbage detected
-[tinobsy.cpp:29-~object] object::~object() for a cons begin {
+[tinobsy.cpp:30-~object] object::~object() for a cons begin {
 [tinobsy.cpp:83-finalize] object::finalize() for a cons {
 [tinobsy.cpp:265-finalize_cons] {
 [tinobsy.cpp:268-finalize_cons] }
 [tinobsy.cpp:86-finalize] }
-[tinobsy.cpp:31-~object] }
+[tinobsy.cpp:32-~object] }
 [tinobsy.cpp:199-gc] vm::gc() end, 1 objects, 1 freed, 0 dangling pointers }
 [tinobsy_test.cpp:122-test_reference_cycle] Assertion succeeded: VM->num_objects == oldobj
 
