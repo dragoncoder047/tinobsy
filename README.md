@@ -48,7 +48,7 @@ Tinobsy places virtually no restrictions on what can be stored in an object. To 
 They are simply a struct of four values: the type's name (`const char* const`), and four function pointers indicating what to do with the object during the three phases of the object's lifetime:
 
 * The first function sets up the object when it is created. This can do anything, such as creating and assigning sub-objects, or allocating memory for a string. It is passed 3 `void*` pointers along with the object (they don't all need to be used, and all default to NULL).
-* The third function is used for comparing objects for equality. It is passed two objects, and returns an `int` the same way `memcmp()` does.
+* The second function is used for comparing objects for equality. It is passed two objects, and returns an `int` the same way `memcmp()` does.
 * The third function takes care of marking the object. The garbage collector calls this when it wants to know what other objects this one points to, so it can determine what is in use and what is garbage. For all of the objects this object points to, call `subobject->mark()` on each.
 * The fourth function does the reverse of the first: freeing any allocated memory, and decrementing the reference counts of pointed-to objects. It is called when the object is about to be deleted by the garbage collector.
 
