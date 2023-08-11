@@ -17,8 +17,8 @@ inline void divider() {
     printf("\n-------------------------------------------------------------\n\n");
 }
 
-object_schema nothing_type("nothing", NULL, NULL, NULL);
-object_schema atom_type("atom", schema_functions::init_str, NULL, schema_functions::finalize_str);
+object_schema nothing_type("nothing", NULL, NULL, NULL, NULL);
+object_schema atom_type("atom", schema_functions::init_str, schema_functions::cmp_str, NULL, schema_functions::finalize_str);
 
 void test_threads_stack() {
     DBG("test threads stack");
@@ -46,7 +46,7 @@ void test_sweep() {
     ASSERT(VM->num_objects == oldobj, "did not sweep right objects");
 }
 
-object_schema cons_type("cons", NULL, schema_functions::mark_cons, schema_functions::finalize_cons);
+object_schema cons_type("cons", NULL, NULL, schema_functions::mark_cons, schema_functions::finalize_cons);
 object* cons(vm* v, object* x, object* y) {
     ASSERT(x != NULL || y != NULL);
     object* cell = v->allocate(&cons_type);
@@ -147,6 +147,23 @@ void test_catch_code() {
     delete t;
 }
 
+void initint(object* a, void* i, void* _, void* __) {
+    a->as_integer = *(int64_t*)i;
+}
+
+const object_schema Integer("int", initint, schema_functions::obj_memcmp, NULL, NULL);
+void test_interning() {
+    DBG("Test primitives are interned");
+    int64_t foo = 47;
+    object* a = VM->allocate(&Integer, &foo);
+    ASSERT(a->as_integer == 47, "did not copy right");
+    for (int i = 0; i < times; i++) {
+        object* b = VM->allocate(&Integer, &foo);
+        ASSERT(a == b, "not interned");
+    }
+    a->decref();
+}
+
 typedef void (*test)();
 test tests[] = {
     test_threads_stack,
@@ -158,6 +175,7 @@ test tests[] = {
     test_reference_cycle,
     test_setjmp,
     test_catch_code,
+    test_interning,
 };
 const int num_tests = sizeof(tests) / sizeof(tests[0]);
 

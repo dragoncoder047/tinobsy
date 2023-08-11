@@ -37,23 +37,28 @@ The object is still "attached" internally to the VM you created, so you don't ne
 The payload of the object is a large `union`, which is divided into two `car` and `cdr` cells. (The terminology is taken from Lisp.)
 
 * The `car` cell can be a `object*`, `void*`, `char*`, `int32_t`, or `float`.
-* Similarly, the `cdr` can be a `tobject*`, `void*`, `function_pointer`, `uint32_t`, or `float`.
-    * A `function_pointer` is a bare C function pointer (not a `std::function`), that takes 4 arguments `(tinobsy::thread* thread, tinobsy::object* self, tinobsy::object* args, tinobsy::object* env)` and returns a `tinobsy::object*`.
+* Similarly, the `cdr` can be a `tobject*`, `void*`, `function_pointer`, `int32_t`, `uint32_t`, or `float`.
+    * A `function_pointer` is a bare C function pointer (not a `std::function`), that takes two arguments `(tinobsy::thread* thread, void* context)` and returns a `void*`. The two pointers are `void*` because they are not actually used by Tinobsy and can be cast to anything you want.
 * Additionally, `int64_t` and `double` fields span both `car` and `cdr` fields.
 
 ### types
 
 Tinobsy places virtually no restrictions on what can be stored in an object. To be able to handle different types, the Tinobsy VM must be made aware of what to do with the payload of the object; this is done through `tinobsy::object_schema` objects. As stated above, the type schema's memory is not managed by the VM -- you have to manage it yourself.
 
-They are simply a struct of four values: the type's name (`const char* const`), and three function pointers indicating what to do with the object during the three phases of the object's lifetime:
+They are simply a struct of four values: the type's name (`const char* const`), and four function pointers indicating what to do with the object during the three phases of the object's lifetime:
 
 * The first function sets up the object when it is created. This can do anything, such as creating and assigning sub-objects, or allocating memory for a string. It is passed 3 `void*` pointers along with the object (they don't all need to be used, and all default to NULL).
-* The second function takes care of marking the object. The garbage collector calls this when it wants to know what other objects this one points to, so it can determine what is garbage and what isn't. For all of the objects this object points to, call `subobject->mark()` on each.
-* The third function does the reverse of the first: freeing any allocated memory, and decrementing the reference counts of pointed-to objects. It is called when the object is about to be deleted by the garbage collector.
+* The third function is used for comparing objects for equality. It is passed two objects, and returns an `int` the same way `memcmp()` does.
+* The third function takes care of marking the object. The garbage collector calls this when it wants to know what other objects this one points to, so it can determine what is in use and what is garbage. For all of the objects this object points to, call `subobject->mark()` on each.
+* The fourth function does the reverse of the first: freeing any allocated memory, and decrementing the reference counts of pointed-to objects. It is called when the object is about to be deleted by the garbage collector.
 
 ### garbage collection
 
 Tinobsy has a hybrid reference-counting and mark-sweep garbage collector. The reference-counting part runs concurrently when objects are allocated and assigned to each other, and the mark-sweep collector is invoked manually.
+
+#### interning
+
+If an object schema has the second (comparison) function defined, then objects of that type are automatically interned. If an object is allocated that would compare equal with an existing object of the same type, the new object is immediately deleted and the older object is returned instead. This is intended for primitive types such as strings and numbers.
 
 #### reference counting
 

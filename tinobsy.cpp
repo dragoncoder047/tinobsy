@@ -2,9 +2,10 @@
 
 namespace tinobsy {
 
-object_schema::object_schema(const char* const name, init_function init, mark_function mark, finalize_function finalize)
+object_schema::object_schema(const char* const name, init_function init, cmp_function cmp, mark_function mark, finalize_function finalize)
 : name(name),
   init(init),
+  cmp(cmp),
   mark(mark),
   finalize(finalize) {}
 
@@ -56,24 +57,36 @@ thread::~thread() {
 }
 
 object* vm::allocate(const object_schema* schema, void* arg0, void* arg1, void* arg2) {
-    ASSERT(schema != NULL, "tried to initialize a null schema");
+    ASSERT(schema != NULL, "tried to initialize with a null schema");
     DBG("vm::allocate() a %s", schema->name);
-    object* newobject = NULL;
-    for (newobject = this->first; newobject != NULL; newobject = newobject->next) {
-        if (newobject->schema == NULL) {
+    object* newobj = NULL;
+    for (newobj = this->first; newobj != NULL; newobj = newobj->next) {
+        if (newobj->schema == NULL) {
             DBG("reusing garbage");
-            object* oldnext = newobject->next;
-            memset(newobject, 0, sizeof(object));
-            newobject->init(schema, oldnext, arg0, arg1, arg2);
-            return newobject;
+            object* oldnext = newobj->next;
+            memset(newobj, 0, sizeof(object));
+            newobj->init(schema, oldnext, arg0, arg1, arg2);
+            return newobj;
         }
     }
     DBG("need new memory");
-    newobject = new object(schema, this->first, arg0, arg1, arg2);
-    newobject->next = this->first;
-    this->first = newobject;
+    newobj = new object(schema, this->first, arg0, arg1, arg2);
+    // Intern it?
+    if (schema->cmp) {
+        DBG("Trying to intern a %s", schema->name);
+        for (object* oldobj = this->first; oldobj != NULL; oldobj = oldobj->next) {
+            if (oldobj->schema == schema && schema->cmp(oldobj, newobj) == 0) {
+                DBG("Interned! %s", schema->name);
+                delete newobj;
+                oldobj->incref();
+                return oldobj;
+            }
+        }
+        DBG("New %s not interned", schema->name);
+    }
+    this->first = newobj;
     this->num_objects++;
-    return newobject;
+    return newobj;
 }
 
 void object::finalize() {
@@ -219,8 +232,7 @@ vm::~vm() {
         #endif
     }
     DBG("freed %zu threads", th);
-    this->nil->decref();
-    this->nil = NULL;
+    UNSET(this->nil);
     this->gc();
     ASSERT(this->num_objects == 0, "gc bugged");
 }
@@ -254,29 +266,41 @@ thread* vm::push_thread() {
     longjmp(*(this->trycatch), sig);
 }
 
-void schema_functions::mark_cons(object* x) {
+void schema_functions::mark_cons(object* self) {
     DBG("{");
-    if (x->car) x->car->mark();
-    if (x->cdr) x->cdr->mark();
+    if (self->car) self->car->mark();
+    if (self->cdr) self->cdr->mark();
     DBG("}");
 }
 
-void schema_functions::finalize_cons(object* x) {
+void schema_functions::finalize_cons(object* self) {
     DBG("{");
-    if (x->car) x->car->decref();
-    if (x->cdr) x->cdr->decref();
+    if (self->car) self->car->decref();
+    if (self->cdr) self->cdr->decref();
     DBG("}");
 }
 
-void schema_functions::init_str(object* x, void* arg0, void* _, void* __) {
+void schema_functions::init_str(object* self, void* arg0, void* _, void* __) {
     DBG();
     char* str = (char*)arg0;
-    x->car_str = strdup(str);
+    self->car_str = strdup(str);
 }
 
-void schema_functions::finalize_str(object* x) {
+void schema_functions::finalize_str(object* self) {
     DBG();
-    free((void*)x->car_str);
+    free((void*)self->car_str);
+}
+
+int schema_functions::obj_memcmp(object* a, object* b) {
+    DBG();
+    int x = memcmp(&a->as_integer, &b->as_integer, sizeof(int64_t));
+    if (x) return x;
+    return memcmp(&a->cdr, &b->cdr, sizeof(object*));
+}
+
+int schema_functions::cmp_str(object* a, object* b) {
+    DBG();
+    return strcmp(a->car_str, b->car_str);
 }
 
 }

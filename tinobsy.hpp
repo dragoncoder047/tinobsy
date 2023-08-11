@@ -33,6 +33,7 @@ class thread;
 class vm;
 
 typedef void (*init_function)(object*, void*, void*, void*);
+typedef int (*cmp_function)(object*, object*);
 typedef void (*mark_function)(object*);
 typedef void (*finalize_function)(object*);
 
@@ -43,11 +44,13 @@ class object_schema {
     const char* const name;
     // The function to set up the object.
     init_function init;
+    // The function to compare two objects of the same type when interning.
+    cmp_function cmp;
     // The function to mark the object.
     mark_function mark;
     // The function to finalize the object.
     finalize_function finalize;
-    object_schema(const char* const name, init_function init, mark_function mark, finalize_function finalize);
+    object_schema(const char* const name, init_function init, cmp_function cmp, mark_function mark, finalize_function finalize);
     ~object_schema();
 };
 
@@ -60,10 +63,12 @@ typedef enum {
 } flag;
 
 // The minimum function pointer needed to call Tinobsy programs.
-typedef object* (*function_pointer)(thread* thread, object* self, object* args, object* env);
+typedef void* (*function_pointer)(thread* thread, void* context);
 
 // The struct that makes up all Tinobsy objects.
 class object {
+    // INTERNAL POINTER - DO NOT MODIFY - The most recent object allocated in the linked list of all objects.
+    object* next;
     public:
     // A pointer to this object's schema information. NULL if this object is a "tombstone" that has been finalized already.
     const object_schema* schema;
@@ -71,8 +76,6 @@ class object {
     size_t refcount;
     // Flags about this object.
     flag_field flags;
-    // INTERNAL POINTER - DO NOT MODIFY - The most recent object allocated in the linked list of all objects.
-    object* next;
     // A pointer to metadata about this object. Can be NULL.
     object* meta;
     union {
@@ -88,6 +91,7 @@ class object {
                 object* cdr;
                 void* cdr_ptr;
                 function_pointer func;
+                int32_t cdr_int;
                 uint32_t cdr_uint;
                 float cdr_float;
             };
@@ -189,11 +193,14 @@ namespace schema_functions {
     void finalize_cons(object*);
 
     void init_str(object*, void*, void*, void*);
+    int cmp_str(object*, object*);
     void finalize_str(object*);
+
+    int obj_memcmp(object*, object*);
 }
 
 // The typeinfo for the vm->nil member.
-object_schema nil_schema("nil", NULL, NULL, NULL);
+object_schema nil_schema("nil", NULL, NULL, NULL, NULL);
 
 #define SET(x, y) do { \
     (y)->incref(); \
