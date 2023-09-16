@@ -1,6 +1,6 @@
 # tinobsy
 
-A tiny object system and garbage collector written in C. No included scripting language, but I'm working on one and will share it once Tinobsy is complete.
+A tiny object system and garbage collector written in C++. No included scripting language, but I'm working on one and will share it once Tinobsy is complete.
 
 ## features
 
