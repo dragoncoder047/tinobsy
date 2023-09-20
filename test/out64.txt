@@ -1,5 +1,5 @@
-[tinobsy_test.cpp:184-main] Begin Tinobsy test suite
-[tinobsy_test.cpp:185-main] sizeof(object) = 56, sizeof(thread) = 64, sizeof(vm) = 40
+[tinobsy_test.cpp:188-main] Begin Tinobsy test suite
+[tinobsy_test.cpp:189-main] sizeof(object) = 56, sizeof(thread) = 64, sizeof(vm) = 40
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a nil
 [tinobsy.cpp:72-allocate] need new memory
@@ -81,7 +81,7 @@
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:61-test_mark_no_sweep] test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly
+[tinobsy_test.cpp:65-test_mark_no_sweep] test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly
 [tinobsy.cpp:254-push_thread] vm::push_thread(), next vpid is 0
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a nothing
@@ -308,7 +308,7 @@
 [tinobsy.cpp:137-mark] NULL::mark()
 [tinobsy.cpp:167-gc] garbage collect sweeping
 [tinobsy.cpp:212-gc] vm::gc() end, 21 objects, 0 freed, 0 dangling pointers }
-[tinobsy_test.cpp:70-test_mark_no_sweep] Assertion succeeded: VM->num_objects == oldobj
+[tinobsy_test.cpp:74-test_mark_no_sweep] Assertion succeeded: VM->num_objects == oldobj
 [tinobsy.cpp:43-~thread] thread::~thread() no. 0 {
 [tinobsy.cpp:108-decref] object::decref() on a cons, now have 0 refs
 [tinobsy.cpp:96-finalize] object::finalize() for a cons {
@@ -394,7 +394,7 @@
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:75-test_reuse_garbage] test refcount collector: can reuse garbage
+[tinobsy_test.cpp:79-test_reuse_garbage] test refcount collector: can reuse garbage
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a nothing
 [tinobsy.cpp:65-allocate] reusing garbage
@@ -455,11 +455,11 @@
 [tinobsy.cpp:108-decref] object::decref() on a nothing, now have 0 refs
 [tinobsy.cpp:96-finalize] object::finalize() for a nothing {
 [tinobsy.cpp:99-finalize] }
-[tinobsy_test.cpp:81-test_reuse_garbage] Assertion succeeded: VM->num_objects - origobj < times
+[tinobsy_test.cpp:85-test_reuse_garbage] Assertion succeeded: VM->num_objects - origobj < times
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:85-test_refcounting] test refcount collector: refs are counted properly
+[tinobsy_test.cpp:89-test_refcounting] test refcount collector: refs are counted properly
 [tinobsy.cpp:254-push_thread] vm::push_thread(), next vpid is 0
 [tinobsy_test.cpp:51-cons] Assertion succeeded: x != NULL || y != NULL
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
@@ -578,7 +578,7 @@
 [tinobsy.cpp:117-incref] object::incref() on a cons, now have 2 refs
 [tinobsy.cpp:108-decref] object::decref() on a cons, now have 1 refs
 [tinobsy.cpp:108-decref] object::decref() on a cons, now have 1 refs
-[tinobsy_test.cpp:91-test_refcounting] Assertion succeeded: VM->nil->refcount - oldrefs == times
+[tinobsy_test.cpp:95-test_refcounting] Assertion succeeded: VM->nil->refcount - oldrefs == times
 [tinobsy.cpp:43-~thread] thread::~thread() no. 0 {
 [tinobsy.cpp:108-decref] object::decref() on a cons, now have 0 refs
 [tinobsy.cpp:96-finalize] object::finalize() for a cons {
@@ -650,14 +650,14 @@
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:101-test_freeing_things] Test owned pointers are freed
+[tinobsy_test.cpp:105-test_freeing_things] Test owned pointers are freed
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
 [tinobsy.cpp:284-init_str] 
 [tinobsy.cpp:76-allocate] Trying to intern a atom
 [tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is daatyv
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is cmqhnn
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
@@ -665,16 +665,7 @@
 [tinobsy.cpp:76-allocate] Trying to intern a atom
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is djocyi
-[tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
-[tinobsy.cpp:61-allocate] vm::allocate() a atom
-[tinobsy.cpp:72-allocate] need new memory
-[tinobsy.cpp:284-init_str] 
-[tinobsy.cpp:76-allocate] Trying to intern a atom
-[tinobsy.cpp:302-cmp_str] 
-[tinobsy.cpp:302-cmp_str] 
-[tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is ltmdkn
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is pqffuy
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
@@ -682,9 +673,8 @@
 [tinobsy.cpp:76-allocate] Trying to intern a atom
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
-[tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is stzbic
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is wfylex
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
@@ -693,9 +683,8 @@
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
-[tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is wyjfya
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is rotxwz
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
@@ -705,9 +694,8 @@
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
-[tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is zgsoty
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is nuycil
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
@@ -718,9 +706,8 @@
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
-[tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is ktxncb
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is bujvun
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
@@ -732,9 +719,8 @@
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
-[tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is juxato
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is yqqyfs
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
@@ -747,9 +733,8 @@
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
-[tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is tvanwf
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is mqwpcp
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
@@ -763,9 +748,24 @@
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
+[tinobsy.cpp:85-allocate] New atom not interned
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is aemqvy
+[tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
+[tinobsy.cpp:61-allocate] vm::allocate() a atom
+[tinobsy.cpp:72-allocate] need new memory
+[tinobsy.cpp:284-init_str] 
+[tinobsy.cpp:76-allocate] Trying to intern a atom
+[tinobsy.cpp:302-cmp_str] 
+[tinobsy.cpp:302-cmp_str] 
+[tinobsy.cpp:302-cmp_str] 
+[tinobsy.cpp:302-cmp_str] 
+[tinobsy.cpp:302-cmp_str] 
+[tinobsy.cpp:302-cmp_str] 
+[tinobsy.cpp:302-cmp_str] 
+[tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:302-cmp_str] 
 [tinobsy.cpp:85-allocate] New atom not interned
-[tinobsy_test.cpp:106-test_freeing_things] Random atom is kvssuc
+[tinobsy_test.cpp:110-test_freeing_things] Random atom is qqmzxe
 [tinobsy.cpp:159-gc] vm::gc() begin, 11 objects {
 [tinobsy.cpp:153-mark_globals] marking globals
 [tinobsy.cpp:144-mark] object::mark() a nil
@@ -822,11 +822,11 @@
 [tinobsy.cpp:99-finalize] }
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:212-gc] vm::gc() end, 1 objects, 10 freed, 10 dangling pointers }
-[tinobsy_test.cpp:109-test_freeing_things] Check Valgrind output to make sure stuff was freed
+[tinobsy_test.cpp:113-test_freeing_things] Check Valgrind output to make sure stuff was freed
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:113-test_reference_cycle] Test unreachable reference cycle gets collected
+[tinobsy_test.cpp:117-test_reference_cycle] Test unreachable reference cycle gets collected
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a cons
 [tinobsy.cpp:72-allocate] need new memory
@@ -835,8 +835,8 @@
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a cons, now have 3 refs
 [tinobsy.cpp:108-decref] object::decref() on a cons, now have 2 refs
-[tinobsy_test.cpp:119-test_reference_cycle] Assertion succeeded: a->schema != NULL
-[tinobsy_test.cpp:120-test_reference_cycle] Assertion succeeded: a->refcount > 0
+[tinobsy_test.cpp:123-test_reference_cycle] Assertion succeeded: a->schema != NULL
+[tinobsy_test.cpp:124-test_reference_cycle] Assertion succeeded: a->refcount > 0
 [tinobsy.cpp:159-gc] vm::gc() begin, 2 objects {
 [tinobsy.cpp:153-mark_globals] marking globals
 [tinobsy.cpp:144-mark] object::mark() a nil
@@ -852,14 +852,14 @@
 [tinobsy.cpp:99-finalize] }
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:212-gc] vm::gc() end, 1 objects, 1 freed, 0 dangling pointers }
-[tinobsy_test.cpp:122-test_reference_cycle] Assertion succeeded: VM->num_objects == oldobj
+[tinobsy_test.cpp:126-test_reference_cycle] Assertion succeeded: VM->num_objects == oldobj
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:126-test_setjmp] Test try-catch setjmp with error object
+[tinobsy_test.cpp:130-test_setjmp] Test try-catch setjmp with error object
 [tinobsy.cpp:254-push_thread] vm::push_thread(), next vpid is 0
-[tinobsy_test.cpp:128-test_setjmp] enter TRYCATCH macro
-[tinobsy_test.cpp:128-test_setjmp] begin try block
+[tinobsy_test.cpp:132-test_setjmp] enter TRYCATCH macro
+[tinobsy_test.cpp:132-test_setjmp] begin try block
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a atom
 [tinobsy.cpp:72-allocate] need new memory
@@ -871,8 +871,8 @@
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a atom, now have 2 refs
 [tinobsy.cpp:108-decref] object::decref() on a atom, now have 1 refs
-[tinobsy_test.cpp:128-test_setjmp] an error was thrown, code is 1
-[tinobsy_test.cpp:133-test_setjmp] Assertion succeeded: t->error != NULL && !strcmp(t->error->car_str, "foobar")
+[tinobsy_test.cpp:132-test_setjmp] an error was thrown, code is 1
+[tinobsy_test.cpp:137-test_setjmp] Assertion succeeded: t->error != NULL && !strcmp(t->error->car_str, "foobar")
 [tinobsy.cpp:43-~thread] thread::~thread() no. 0 {
 [tinobsy.cpp:108-decref] object::decref() on a atom, now have 0 refs
 [tinobsy.cpp:96-finalize] object::finalize() for a atom {
@@ -882,24 +882,24 @@
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:139-test_catch_code] Test try-catch setjmp wth custom error code
+[tinobsy_test.cpp:143-test_catch_code] Test try-catch setjmp wth custom error code
 [tinobsy.cpp:254-push_thread] vm::push_thread(), next vpid is 0
-[tinobsy_test.cpp:141-test_catch_code] enter TRYCATCH macro
-[tinobsy_test.cpp:141-test_catch_code] begin try block
+[tinobsy_test.cpp:145-test_catch_code] enter TRYCATCH macro
+[tinobsy_test.cpp:145-test_catch_code] begin try block
 [tinobsy.cpp:261-raise] thread::raise() on thread 0
 [tinobsy.cpp:262-raise] Assertion succeeded: this->trycatch != NULL
-[tinobsy_test.cpp:141-test_catch_code] an error was thrown, code is 22
-[tinobsy_test.cpp:145-test_catch_code] Assertion succeeded: sig == 22
+[tinobsy_test.cpp:145-test_catch_code] an error was thrown, code is 22
+[tinobsy_test.cpp:149-test_catch_code] Assertion succeeded: sig == 22
 [tinobsy.cpp:43-~thread] thread::~thread() no. 0 {
 [tinobsy.cpp:56-~thread] }
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:156-test_interning] Test primitives are interned
+[tinobsy_test.cpp:160-test_interning] Test primitives are interned
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:65-allocate] reusing garbage
-[tinobsy_test.cpp:159-test_interning] Assertion succeeded: a->as_integer == 47
+[tinobsy_test.cpp:163-test_interning] Assertion succeeded: a->as_integer == 47
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -912,7 +912,7 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 2 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -925,7 +925,7 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 3 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -938,7 +938,7 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 4 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -951,7 +951,7 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 5 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -964,7 +964,7 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 6 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -977,7 +977,7 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 7 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -990,7 +990,7 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 8 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -1003,7 +1003,7 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 9 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -1016,7 +1016,7 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 10 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:60-allocate] Assertion succeeded: schema != NULL
 [tinobsy.cpp:61-allocate] vm::allocate() a int
 [tinobsy.cpp:72-allocate] need new memory
@@ -1029,12 +1029,12 @@
 [tinobsy.cpp:33-~object] }
 [tinobsy.cpp:115-incref] Assertion succeeded: this->schema != NULL
 [tinobsy.cpp:117-incref] object::incref() on a int, now have 11 refs
-[tinobsy_test.cpp:162-test_interning] Assertion succeeded: a == b
+[tinobsy_test.cpp:166-test_interning] Assertion succeeded: a == b
 [tinobsy.cpp:108-decref] object::decref() on a int, now have 10 refs
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:192-main] end of tests
+[tinobsy_test.cpp:196-main] end of tests
 [tinobsy.cpp:224-~vm] vm::~vm()
 [tinobsy.cpp:234-~vm] freed 0 threads
 [tinobsy.cpp:108-decref] object::decref() on a nil, now have 0 refs

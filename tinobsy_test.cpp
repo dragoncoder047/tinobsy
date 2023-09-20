@@ -55,14 +55,18 @@ object* cons(vm* v, object* x, object* y) {
     return cell;
 }
 
-#define PUSH(vm, x, y) do{object* cell__=cons((vm),(x),(y));SET(y,cell__);(cell__)->decref();}while(0)
+void push(vm* v, object* thing, object*& stack) {
+    object* cell = cons(v, thing, stack);
+    SET(stack, cell);
+    cell->decref();
+}
 
 void test_mark_no_sweep() {
     DBG("test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly");
     thread* t = VM->push_thread();
     for (int i = 0; i < times; i++) {
         object* foo = VM->allocate(&nothing_type);
-        PUSH(VM, foo, t->gc_stack);
+        push(VM, foo, t->gc_stack);
         foo->decref(); // done with it
     }
     size_t oldobj = VM->num_objects;
@@ -86,7 +90,7 @@ void test_refcounting() {
     size_t oldrefs = VM->nil->refcount;
     thread* x = VM->push_thread();
     for (int i = 0; i < times; i++) {
-        PUSH(VM, VM->nil, x->gc_stack);
+        push(VM, VM->nil, x->gc_stack);
     }
     ASSERT(VM->nil->refcount - oldrefs == times, "nil not referenced %i times", times);
     delete x;
