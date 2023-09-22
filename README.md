@@ -6,7 +6,7 @@ A tiny object system and garbage collector written in C++. No included scripting
 
 * Infinitely possible types.
 * Lightweight. Each object is less than 100 bytes.
-* Garbage-collected. Includes both a reference-counting collector (for speed) and a full mark-and-sweep (to prevent memory leaks).
+* Garbage-collected. Includes a full mark-and-sweep collector.
 * Includes thread management support. (OS-agnostic, thread spawn/kill support not implemented here.)
 * Includes `setjmp`-based non-local control flow capabilities.
 * Two-file C++ header/source combination.
@@ -52,25 +52,17 @@ They are simply a struct of five values: the type's name (`const char* const`), 
 * The third function takes care of marking the object. The garbage collector calls this when it wants to know what other objects this one points to, so it can determine what is in use and what is garbage. For all of the objects this object points to, call `subobject->mark()` on each.
 * The fourth function does the reverse of the first: freeing any allocated memory, and decrementing the reference counts of pointed-to objects. It is called when the object is about to be deleted by the garbage collector.
 
+Any of them can be NULL if nothing needs to be done there.
+
 ### garbage collection
 
-Tinobsy has a hybrid reference-counting and mark-sweep garbage collector. The reference-counting part runs concurrently when objects are allocated and assigned to each other, and the mark-sweep collector is invoked manually.
+Tinobsy has a simple mark-and-sweep collector, based off of Bob Nystrom's [mark-sweep](https://github.com/munificent/mark-sweep) collector.
 
 #### interning
 
 If an object schema has the second (comparison) function defined, then objects of that type are automatically interned. If an object is allocated that would compare equal with an existing object of the same type, the new object is immediately deleted and the older object is returned instead. This is intended for primitive types such as strings and numbers.
 
-#### reference counting
-
-When a fresh object is returned from `tinobsy::vm::allocate()`, its internal reference count is set to 1, corresponding to the C++ pointer it is assigned to.
-
-`tinobsy::object::incref()` and `tinobsy::object::decref()` take care of changing the reference count, and additionally, if an object's reference count ever reaches 0, the object is immediately deleted (and reference counts updated recursively).
-
-To simplify the need to update reference counts on every assignment, `tinobsy.hpp` provides a macro `SET(x, y)`, which takes the place of `x = y` to additionally maintain proper reference counts, as well as `UNSET(x)` which is the same as `SET(x, NULL)` except the compiler won't complain about calling a method on NULL.
-
 #### mark-and-sweep
-
-Circular references are the Achilles' heel of reference-counting collectors, so Tinobsy also includes a mark-and-sweep garbage collector to be able to collect cyclic garbage.
 
 The garbage collector is invoked by the function `tinobsy::vm::gc()`. It recursively calls `tinobsy::object::mark()` on each reachable object (using the `object_schema`'s mark-function), and then deletes all the objects that didn't get marked. It then returns the count of objects deleted.
 
