@@ -72,8 +72,6 @@ class object {
     public:
     // A pointer to this object's schema information. NULL if this object is a "tombstone" that has been finalized already.
     const object_schema* schema;
-    // How many other things point to this object (C pointers or other objects)
-    size_t refcount;
     // Flags about this object.
     flag_field flags;
     // A pointer to metadata about this object. Can be NULL.
@@ -100,12 +98,6 @@ class object {
         double as_double;
     };
 
-    // Decrement the reference count of the object, and if it is now 0, finalize the object.
-    inline void decref();
-
-    // Increment the reference count of the object.
-    inline void incref();
-
     // Test if a flag is set on the object.
     inline bool tst_flag(flag f);
 
@@ -121,10 +113,6 @@ class object {
     private:
     object(const object_schema* schema, object* next, void* arg0, void* arg1, void* arg2);
     ~object();
-    // Finalize the object, that is, free any owned memory and decrement references to any pointed-to objects.
-    void finalize();
-
-    void init(const object_schema* schema, object* next, void* arg0, void* arg1, void* arg2);
 
     friend class vm;
 };
@@ -190,7 +178,6 @@ class vm {
 // Default functions
 namespace schema_functions {
     void mark_cons(object*);
-    void finalize_cons(object*);
 
     void init_str(object*, void*, void*, void*);
     int cmp_str(object*, object*);
@@ -202,24 +189,13 @@ namespace schema_functions {
 // The typeinfo for the vm->nil member.
 object_schema nil_schema("nil", NULL, NULL, NULL, NULL);
 
-#define SET(x, y) do { \
-    (y)->incref(); \
-    (x)->decref(); \
-    (x)=(y); \
-} while (0)
-
-#define UNSET(x) do { \
-    (x)->decref(); \
-    (x) = NULL; \
-} while (0)
-
 #define TRYCATCH(t, tc, cc) do { \
     jmp_buf dynamic; \
     jmp_buf* prev = (t)->trycatch; \
     (t)->trycatch = &dynamic; \
     bool thrown = false; \
     DBG("enter TRYCATCH macro"); \
-    object* old_st = NULL; SET(old_st, (t)->gc_stack); \
+    object* old_st = (t)->gc_stack; \
     int sig = 0; \
     if (!(sig = setjmp(dynamic))) { \
         DBG("begin try block"); \
@@ -229,7 +205,7 @@ object_schema nil_schema("nil", NULL, NULL, NULL, NULL);
     else { \
         DBG("an error was thrown, code is %i", sig); \
         thrown = true; \
-        SET((t)->gc_stack, old_st); \
+        (t)->gc_stack = old_st; \
     } \
     (t)->trycatch = prev; \
     if (thrown) { cc; } \

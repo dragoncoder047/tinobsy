@@ -14,22 +14,20 @@ object_schema::~object_schema() {}
 object::object(const object_schema* schema, object* next, void* arg0, void* arg1, void* arg2)
 : meta(NULL),
   car(NULL),
-  cdr(NULL) {
-    this->init(schema, next, arg0, arg1, arg2);
-}
-
-void object::init(const object_schema* schema, object* next, void* arg0, void* arg1, void* arg2) {
-    this->next = next;
-    this->schema = (object_schema*)schema;
-    this->flags = 0;
-    this->refcount = 1;
+  cdr(NULL),
+  next(next),
+  schema((const object_schema*)schema),
+  flags(0) {
     if (schema->init) schema->init(this, arg0, arg1, arg2);
 }
 
 object::~object() {
     if (this->schema == NULL) return;
     DBG("object::~object() for a %s begin {", this->schema->name);
-    this->finalize();
+    if (this == NULL) return;
+    const object_schema* xt = this->schema;
+    ASSERT(xt != NULL, "should not be finalized yet");
+    if (this->schema->finalize) this->schema->finalize(this);
     DBG("}");
 }
 
@@ -50,27 +48,13 @@ thread::~thread() {
             x = &(*x)->next_thread;
         }
     }
-    this->env->decref();
-    this->gc_stack->decref();
-    this->error->decref();
     DBG("}");
 }
 
 object* vm::allocate(const object_schema* schema, void* arg0, void* arg1, void* arg2) {
     ASSERT(schema != NULL, "tried to initialize with a null schema");
     DBG("vm::allocate() a %s", schema->name);
-    object* newobj = NULL;
-    for (newobj = this->first; newobj != NULL; newobj = newobj->next) {
-        if (newobj->schema == NULL) {
-            DBG("reusing garbage");
-            object* oldnext = newobj->next;
-            memset(newobj, 0, sizeof(object));
-            newobj->init(schema, oldnext, arg0, arg1, arg2);
-            return newobj;
-        }
-    }
-    DBG("need new memory");
-    newobj = new object(schema, this->first, arg0, arg1, arg2);
+    object* newobj = new object(schema, this->first, arg0, arg1, arg2);
     // Intern it?
     if (schema->cmp) {
         DBG("Trying to intern a %s", schema->name);
@@ -78,7 +62,6 @@ object* vm::allocate(const object_schema* schema, void* arg0, void* arg1, void* 
             if (oldobj->schema == schema && schema->cmp(oldobj, newobj) == 0) {
                 DBG("Interned! %s", schema->name);
                 delete newobj;
-                oldobj->incref();
                 return oldobj;
             }
         }
@@ -87,35 +70,6 @@ object* vm::allocate(const object_schema* schema, void* arg0, void* arg1, void* 
     this->first = newobj;
     this->num_objects++;
     return newobj;
-}
-
-void object::finalize() {
-    if (this == NULL) return;
-    const object_schema* xt = this->schema;
-    if (xt == NULL) return; // Already finalized
-    DBG("object::finalize() for a %s {", xt->name);
-    this->meta->decref();
-    if (this->schema->finalize) this->schema->finalize(this);
-    DBG("}");
-    this->schema = NULL;
-    this->car = this->cdr = NULL;
-    this->clr_flag(GC_MARKED);
-}
-
-inline void object::decref() {
-    if (this != NULL && this->refcount > 0 && this->schema != NULL) {
-        this->refcount--;
-        DBG("object::decref() on a %s, now have %zu refs", this->schema->name, this->refcount);
-        if (this->refcount <= 0) this->finalize();
-    }
-}
-
-inline void object::incref() {
-    if (this != NULL) {
-        ASSERT(this->schema != NULL, "<already finalized>::incref() happened");
-        this->refcount++;
-        DBG("object::incref() on a %s, now have %zu refs", this->schema->name, this->refcount);
-    }
 }
 
 inline bool object::tst_flag(flag f) {
@@ -137,7 +91,10 @@ void object::mark() {
         DBG("NULL::mark()");
         return;
     }
-    if (x->tst_flag(GC_MARKED)) return;
+    if (x->tst_flag(GC_MARKED)) {
+        DBG("Already marked (Reference cycle?)");
+        return;
+    }
     x->set_flag(GC_MARKED);
     const object_schema* xt = x->schema;
     if (xt != NULL) {
@@ -165,38 +122,9 @@ size_t vm::gc() {
     this->mark_globals();
     object** x = &this->first;
     DBG("garbage collect sweeping");
-    size_t dangling = 0;
     while (*x != NULL) {
         if (!(*x)->tst_flag(GC_MARKED)) {
             object* u = *x;
-            // Kill all pointers to this object
-            if (u->refcount > 0) {
-                size_t realrefs = 0;
-                object* p = this->first;
-                while (p != NULL) {
-                    if (p->schema != NULL) {
-                        if (p->car == u) {
-                            ASSERT(!p->tst_flag(GC_MARKED), "Unmarked object pointed to by marked object");
-                            p->car = NULL;
-                            realrefs++;
-                        }
-                        if (p->cdr == u) {
-                            ASSERT(!p->tst_flag(GC_MARKED), "Unmarked object pointed to by marked object");
-                            p->cdr = NULL;
-                            realrefs++;
-                        }
-                    }
-                    p = p->next;
-                }
-                if (realrefs != u->refcount) {
-                    ssize_t diff = u->refcount - realrefs;
-                    if (diff > 0) dangling += diff;
-                    else DBG("%zu rogue number pointers", -diff);
-                }
-                else {
-                    DBG("Cyclic garbage detected");
-                }
-            }
             *x = u->next;
             delete u;
             this->num_objects--;
@@ -205,11 +133,8 @@ size_t vm::gc() {
             x = &(*x)->next;
         }
     }
-    #ifndef TINOBSY_IGNORE_DANGLING_POINTERS
-    fprintf(stderr, "\nWARNING!! %zu dangling pointers detected!!\n", dangling);
-    #endif
     size_t freed = start - this->num_objects;
-    DBG("vm::gc() end, %zu objects, %zu freed, %zu dangling pointers }", this->num_objects, freed, dangling);
+    DBG("vm::gc() end, %zu objects, %zu freed }", this->num_objects, freed);
     return freed;
 }
 
@@ -232,7 +157,7 @@ vm::~vm() {
         #endif
     }
     DBG("freed %zu threads", th);
-    UNSET(this->nil);
+    this->nil = NULL;
     this->gc();
     ASSERT(this->num_objects == 0, "gc bugged");
 }
@@ -260,9 +185,8 @@ thread* vm::push_thread() {
 [[noreturn]] void thread::raise(object* error, int sig) {
     DBG("thread::raise() on thread %u", this->vpid);
     ASSERT(this->trycatch != NULL, "No try-catch set");
-    SET(this->error, error);
-    UNSET(this->gc_stack);
-    error->decref();
+    this->error = error;
+    this->gc_stack = NULL;
     longjmp(*(this->trycatch), sig);
 }
 
@@ -273,16 +197,9 @@ void schema_functions::mark_cons(object* self) {
     DBG("}");
 }
 
-void schema_functions::finalize_cons(object* self) {
-    DBG("{");
-    if (self->car) self->car->decref();
-    if (self->cdr) self->cdr->decref();
-    DBG("}");
-}
-
 void schema_functions::init_str(object* self, void* arg0, void* _, void* __) {
     DBG();
-    char* str = (char*)arg0;
+    const char* str = (const char*)arg0;
     self->car_str = strdup(str);
 }
 
@@ -292,14 +209,14 @@ void schema_functions::finalize_str(object* self) {
 }
 
 int schema_functions::obj_memcmp(object* a, object* b) {
-    DBG();
+    DBG("comparing objects at %p and %p", a, b);
     int x = memcmp(&a->as_integer, &b->as_integer, sizeof(int64_t));
     if (x) return x;
     return memcmp(&a->cdr, &b->cdr, sizeof(object*));
 }
 
 int schema_functions::cmp_str(object* a, object* b) {
-    DBG();
+    DBG("comparing %s to %s", a->car_str, b->car_str);
     return strcmp(a->car_str, b->car_str);
 }
 

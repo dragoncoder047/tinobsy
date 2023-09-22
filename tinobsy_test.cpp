@@ -46,19 +46,18 @@ void test_sweep() {
     ASSERT(VM->num_objects == oldobj, "did not sweep right objects");
 }
 
-object_schema cons_type("cons", NULL, NULL, schema_functions::mark_cons, schema_functions::finalize_cons);
+object_schema cons_type("cons", NULL, NULL, schema_functions::mark_cons, NULL);
 object* cons(vm* v, object* x, object* y) {
     ASSERT(x != NULL || y != NULL);
     object* cell = v->allocate(&cons_type);
-    SET(cell->car, x);
-    SET(cell->cdr, y);
+    cell->car = x;
+    cell->cdr = y;
     return cell;
 }
 
 void push(vm* v, object* thing, object*& stack) {
     object* cell = cons(v, thing, stack);
-    SET(stack, cell);
-    cell->decref();
+    stack = cell;
 }
 
 void test_mark_no_sweep() {
@@ -67,34 +66,11 @@ void test_mark_no_sweep() {
     for (int i = 0; i < times; i++) {
         object* foo = VM->allocate(&nothing_type);
         push(VM, foo, t->gc_stack);
-        foo->decref(); // done with it
     }
     size_t oldobj = VM->num_objects;
     VM->gc();
     ASSERT(VM->num_objects == oldobj, "swept some by mistake");
     delete t;
-}
-
-void test_reuse_garbage() {
-    DBG("test refcount collector: can reuse garbage");
-    size_t origobj = VM->num_objects;
-    for (int i = 0; i < times; i++) {
-        object* foo = VM->allocate(&nothing_type);
-        foo->decref();
-    }
-    ASSERT(VM->num_objects - origobj < times, "didn't reuse objects");
-}
-
-void test_refcounting() {
-    DBG("test refcount collector: refs are counted properly");
-    size_t oldrefs = VM->nil->refcount;
-    thread* x = VM->push_thread();
-    for (int i = 0; i < times; i++) {
-        push(VM, VM->nil, x->gc_stack);
-    }
-    ASSERT(VM->nil->refcount - oldrefs == times, "nil not referenced %i times", times);
-    delete x;
-    VM->gc();
 }
 
 char randchar() {
@@ -106,8 +82,8 @@ void test_freeing_things() {
     char buffer[64];
     for (int i = 0; i < times; i++) {
         snprintf(buffer, sizeof(buffer), "%c%c%c%c%c%c", randchar(),randchar(),randchar(),randchar(),randchar(),randchar());
-        object* foo = VM->allocate(&atom_type, buffer);
         DBG("Random atom is %s", buffer);
+        object* foo = VM->allocate(&atom_type, buffer);
     }
     VM->gc();
     DBG("Check Valgrind output to make sure stuff was freed");
@@ -117,11 +93,8 @@ void test_reference_cycle() {
     DBG("Test unreachable reference cycle gets collected");
     size_t oldobj = VM->num_objects;
     object* a = VM->allocate(&cons_type);
-    SET(a->car, a);
-    SET(a->cdr, a);
-    a->decref();
-    ASSERT(a->schema != NULL, "A shouldn't be finalized");
-    ASSERT(a->refcount > 0, "A is not in reference cycle");
+    a->car = a;
+    a->cdr = a;
     VM->gc();
     ASSERT(VM->num_objects == oldobj, "A was collected");
 }
@@ -165,7 +138,6 @@ void test_interning() {
         object* b = VM->allocate(&Integer, &foo);
         ASSERT(a == b, "not interned");
     }
-    a->decref();
 }
 
 typedef void (*test)();
@@ -173,8 +145,6 @@ test tests[] = {
     test_threads_stack,
     test_sweep,
     test_mark_no_sweep,
-    test_reuse_garbage,
-    test_refcounting,
     test_freeing_things,
     test_reference_cycle,
     test_setjmp,
