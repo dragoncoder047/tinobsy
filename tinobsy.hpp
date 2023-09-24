@@ -59,7 +59,7 @@ typedef uint16_t flag_field;
 
 // The enum of flags currently in use by Tinobsy.
 typedef enum {
-    GC_MARKED
+    GC_MARKED = 15; // One less than number of bits
 } flag;
 
 // The minimum function pointer needed to call Tinobsy programs.
