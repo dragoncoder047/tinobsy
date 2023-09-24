@@ -9,7 +9,15 @@
 
 using namespace tinobsy;
 
-vm* VM;
+class MyVM : public vm {
+    public:
+    object* stack;
+    void mark_globals() {
+        this->stack->mark();
+    }
+};
+
+MyVM* VM;
 const int times = 10;
 
 void divider();
@@ -19,17 +27,6 @@ inline void divider() {
 
 object_schema nothing_type("nothing", NULL, NULL, NULL, NULL);
 object_schema atom_type("atom", schema_functions::init_str, schema_functions::cmp_str, NULL, schema_functions::finalize_str);
-
-void test_threads_stack() {
-    DBG("test threads stack");
-    thread* a = VM->push_thread();
-    thread* b = VM->push_thread();
-    thread* c = VM->push_thread();
-    delete b;
-    delete c;
-    delete a;
-    ASSERT(VM->threads == NULL, "did not remove all threads");
-}
 
 void test_sweep() {
     DBG("test mark-sweep collector: objects are swept when not put into a thread");
@@ -46,55 +43,22 @@ void test_sweep() {
     ASSERT(VM->num_objects == oldobj, "did not sweep right objects");
 }
 
-object_schema cons_type("cons", NULL, NULL, schema_functions::mark_cons, schema_functions::finalize_cons);
-object* cons(vm* v, object* x, object* y) {
-    ASSERT(x != NULL || y != NULL);
-    object* cell = v->allocate(&cons_type);
-    SET(cell->car, x);
-    SET(cell->cdr, y);
-    return cell;
-}
+object_schema cons_type("cons", schema_functions::init_cons, NULL, schema_functions::mark_cons, schema_functions::finalize_cons);
 
 void push(vm* v, object* thing, object*& stack) {
-    object* cell = cons(v, thing, stack);
-    SET(stack, cell);
-    cell->decref();
+    object* cell = v->allocate(&cons_type, thing, stack);
+    stack = cell;
 }
 
 void test_mark_no_sweep() {
-    DBG("test mark-sweep collector: objects aren't swept when owned by a thread and threads are freed properly");
-    thread* t = VM->push_thread();
+    DBG("test mark-sweep collector: objects aren't swept when marked on globals");
     for (int i = 0; i < times; i++) {
         object* foo = VM->allocate(&nothing_type);
-        push(VM, foo, t->gc_stack);
-        foo->decref(); // done with it
+        push(VM, foo, VM->stack);
     }
     size_t oldobj = VM->num_objects;
     VM->gc();
     ASSERT(VM->num_objects == oldobj, "swept some by mistake");
-    delete t;
-}
-
-void test_reuse_garbage() {
-    DBG("test refcount collector: can reuse garbage");
-    size_t origobj = VM->num_objects;
-    for (int i = 0; i < times; i++) {
-        object* foo = VM->allocate(&nothing_type);
-        foo->decref();
-    }
-    ASSERT(VM->num_objects - origobj < times, "didn't reuse objects");
-}
-
-void test_refcounting() {
-    DBG("test refcount collector: refs are counted properly");
-    size_t oldrefs = VM->nil->refcount;
-    thread* x = VM->push_thread();
-    for (int i = 0; i < times; i++) {
-        push(VM, VM->nil, x->gc_stack);
-    }
-    ASSERT(VM->nil->refcount - oldrefs == times, "nil not referenced %i times", times);
-    delete x;
-    VM->gc();
 }
 
 char randchar() {
@@ -103,11 +67,11 @@ char randchar() {
 
 void test_freeing_things() {
     DBG("Test owned pointers are freed");
-    char buffer[64];
+    char buffer[64] = { 0 };
     for (int i = 0; i < times; i++) {
-        snprintf(buffer, sizeof(buffer), "%c%c%c%c%c%c", randchar(),randchar(),randchar(),randchar(),randchar(),randchar());
-        object* foo = VM->allocate(&atom_type, buffer);
+        for (int j = 0; j < 63; j++) buffer[j] = randchar();
         DBG("Random atom is %s", buffer);
+        object* foo = VM->allocate(&atom_type, buffer);
     }
     VM->gc();
     DBG("Check Valgrind output to make sure stuff was freed");
@@ -116,69 +80,35 @@ void test_freeing_things() {
 void test_reference_cycle() {
     DBG("Test unreachable reference cycle gets collected");
     size_t oldobj = VM->num_objects;
-    object* a = VM->allocate(&cons_type);
-    SET(a->car, a);
-    SET(a->cdr, a);
-    a->decref();
-    ASSERT(a->schema != NULL, "A shouldn't be finalized");
-    ASSERT(a->refcount > 0, "A is not in reference cycle");
+    object* a = VM->allocate(&cons_type, NULL, NULL);
+    a->cells[0].as_obj = a;
+    a->cells[1].as_obj = a;
     VM->gc();
-    ASSERT(VM->num_objects == oldobj, "A was collected");
+    ASSERT(VM->num_objects == oldobj, "a was not collected");
 }
 
-void test_setjmp() {
-    DBG("Test try-catch setjmp with error object");
-    thread* t = VM->push_thread();
-    TRYCATCH(t, {
-        object* x = VM->allocate(&atom_type, (void*)"foobar");
-        t->raise(x);
-        ASSERT(false, "unreachable");
-    }, {
-        ASSERT(t->error != NULL && !strcmp(t->error->car_str, "foobar"), "bad error");
-    });
-    delete t;
-}
-
-void test_catch_code() {
-    DBG("Test try-catch setjmp wth custom error code");
-    thread* t = VM->push_thread();
-    TRYCATCH(t, {
-        t->raise(NULL, 22);
-        ASSERT(false, "unreachable");
-    }, {
-        ASSERT(sig == 22, "didn't throw code 22");
-    });
-    delete t;
-}
-
-void initint(object* a, void* i, void* _, void* __) {
-    a->as_integer = *(int64_t*)i;
+void initint(object* a, va_list args) {
+    a->as_big_int = va_arg(args, int64_t);
 }
 
 const object_schema Integer("int", initint, schema_functions::obj_memcmp, NULL, NULL);
 void test_interning() {
     DBG("Test primitives are interned");
     int64_t foo = 47;
-    object* a = VM->allocate(&Integer, &foo);
-    ASSERT(a->as_integer == 47, "did not copy right");
+    object* a = VM->allocate(&Integer, foo);
+    ASSERT(a->as_big_int == 47, "did not copy right");
     for (int i = 0; i < times; i++) {
-        object* b = VM->allocate(&Integer, &foo);
+        object* b = VM->allocate(&Integer, foo);
         ASSERT(a == b, "not interned");
     }
-    a->decref();
 }
 
 typedef void (*test)();
 test tests[] = {
-    test_threads_stack,
     test_sweep,
     test_mark_no_sweep,
-    test_reuse_garbage,
-    test_refcounting,
     test_freeing_things,
     test_reference_cycle,
-    test_setjmp,
-    test_catch_code,
     test_interning,
 };
 const int num_tests = sizeof(tests) / sizeof(tests[0]);
@@ -186,8 +116,8 @@ const int num_tests = sizeof(tests) / sizeof(tests[0]);
 int main() {
     srand(time(NULL));
     DBG("Begin Tinobsy test suite");
-    DBG("sizeof(object) = %zu, sizeof(thread) = %zu, sizeof(vm) = %zu", sizeof(object), sizeof(thread), sizeof(vm));
-    VM = new vm();
+    DBG("sizeof(object) = %zu, sizeof(vm) = %zu", sizeof(object), sizeof(vm));
+    VM = new MyVM();
     for (int i = 0; i < num_tests; i++) {
         divider();
         tests[i]();
