@@ -57,7 +57,7 @@ typedef uint16_t flag_field;
 
 // The enum of flags currently in use by Tinobsy.
 typedef enum {
-    GC_MARKED = 15; // One less than number of bits
+    GC_MARKED = 15, // One less than number of bits
 } flag;
 
 typedef union {

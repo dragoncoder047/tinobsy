@@ -115,8 +115,8 @@ void schema_fuintions::init_cons(object* self, va_list args) {
 
 void schema_functions::mark_cons(object* self) {
     DBG("{");
-    self->cells[0]->mark();
-    self->cells[1]->mark();
+    self->cells[0].as_obj->mark();
+    self->cells[1].as_obj->mark();
     DBG("}");
 }
 
@@ -132,11 +132,11 @@ void schema_functions::init_str(object* self, va_list args) {
 
 void schema_functions::finalize_str(object* self) {
     DBG();
-    free((void*)self->car_str);
+    free((void*)self->as_chars);
 }
 
 int schema_functions::obj_memcmp(object* a, object* b) {
-    DBG("comparing objects at %p and %p: %llu, %llu", a, b, a->as_big_int, b->as_big_int);
+    DBG("comparing objects at %p and %p: %lu, %lu", a, b, a->as_big_int, b->as_big_int);
     return a->as_big_int - b->as_big_int;
 }
 
