@@ -11,14 +11,10 @@ object_schema::object_schema(const char* const name, init_function init, cmp_fun
 
 object_schema::~object_schema() {}
 
-object::object(const object_schema* schema, object* next, void* arg0, void* arg1, void* arg2)
-: meta(NULL),
-  car(NULL),
-  cdr(NULL),
-  next(next),
-  schema((const object_schema*)schema),
-  flags(0) {
-    if (schema->init) schema->init(this, arg0, arg1, arg2);
+object::object(const object_schema* schema, va_list args)
+: next(next),
+  schema((const object_schema*)schema) {
+    if (schema->init) schema->init(this, args);
 }
 
 object::~object() {
@@ -31,30 +27,12 @@ object::~object() {
     DBG("}");
 }
 
-thread::thread(vm* vm, unsigned int vpid, void* handle)
-: owner(vm),
-  vpid(vpid),
-  thread_handle(handle) {}
-
-thread::~thread() {
-    vm* vm = this->owner;
-    DBG("thread::~thread() no. %u {", this->vpid);
-    thread** x = &vm->threads;
-    while (*x != NULL) {
-        if (*x == this) {
-            *x = this->next_thread;
-            break;
-        } else {
-            x = &(*x)->next_thread;
-        }
-    }
-    DBG("}");
-}
-
-object* vm::allocate(const object_schema* schema, void* arg0, void* arg1, void* arg2) {
+object* vm::allocate(const object_schema* schema, ...) {
+    va_list args;
+    va_start(args, schema);
     ASSERT(schema != NULL, "tried to initialize with a null schema");
     DBG("vm::allocate() a %s", schema->name);
-    object* newobj = new object(schema, this->first, arg0, arg1, arg2);
+    object* newobj = new object(schema, this->first, args);
     // Intern it?
     if (schema->cmp) {
         DBG("Trying to intern a %s", schema->name);
@@ -62,6 +40,7 @@ object* vm::allocate(const object_schema* schema, void* arg0, void* arg1, void* 
             if (oldobj->schema == schema && schema->cmp(oldobj, newobj) == 0) {
                 DBG("Interned! %s", schema->name);
                 delete newobj;
+                va_end(args);
                 return oldobj;
             }
         }
@@ -69,19 +48,8 @@ object* vm::allocate(const object_schema* schema, void* arg0, void* arg1, void* 
     }
     this->first = newobj;
     this->num_objects++;
+    va_end(args);
     return newobj;
-}
-
-inline bool object::tst_flag(flag f) {
-    return this != NULL && (this->flags & (1<<f)) != 0;
-}
-
-inline void object::set_flag(flag f) {
-    if (this != NULL) this->flags |= 1 << f;
-}
-
-inline void object::clr_flag(flag f) {
-    if (this != NULL) this->flags &= ~(1 << f);
 }
 
 void object::mark() {
@@ -106,19 +74,9 @@ void object::mark() {
     }
 }
 
-void vm::mark_globals() {
-    DBG("marking globals");
-    this->nil->mark();
-}
-
 size_t vm::gc() {
     size_t start = this->num_objects;
     DBG("vm::gc() begin, %zu objects {", start);
-    for (thread* t = this->threads; t != NULL; t = t->next_thread) {
-        t->gc_stack->mark();
-        t->env->mark();
-        t->error->mark();
-    }
     this->mark_globals();
     object** x = &this->first;
     DBG("garbage collect sweeping");
@@ -138,69 +96,38 @@ size_t vm::gc() {
     return freed;
 }
 
-vm::vm()
-: first(NULL),
-  num_objects(0),
-  threads(NULL) {
-    this->nil = this->allocate(&nil_schema);
-}
-
 vm::~vm() {
-    DBG("vm::~vm()");
-    #ifdef TINOBSY_DEBUG
-    size_t th = 0;
-    #endif
-    while (this->threads != NULL) {
-        delete this->threads;
-        #ifdef TINOBSY_DEBUG
-        th++;
-        #endif
+    DBG("vm::~vm() {");
+    while (this->first != NULL) {
+        object* die = this->first;
+        this->first = this->first->next;
+        delete die;
     }
-    DBG("freed %zu threads", th);
-    this->nil = NULL;
-    this->gc();
-    ASSERT(this->num_objects == 0, "gc bugged");
+    DBG("}");
 }
 
-unsigned int vm::next_vpid() {
-    unsigned int p = 0;
-    while (true) {
-        for (thread* t = this->threads; t != NULL; t = t->next_thread) {
-            if (t->vpid == p) goto next;
-        }
-        return p;
-        next:
-        p++;
-    }
-}
-
-thread* vm::push_thread() {
-    thread* new_ = new thread(this, this->next_vpid(), NULL);
-    DBG("vm::push_thread(), next vpid is %u", new_->vpid);
-    new_->next_thread = this->threads;
-    this->threads = new_;
-    return new_;
-}
-
-[[noreturn]] void thread::raise(object* error, int sig) {
-    DBG("thread::raise() on thread %u", this->vpid);
-    ASSERT(this->trycatch != NULL, "No try-catch set");
-    this->error = error;
-    this->gc_stack = NULL;
-    longjmp(*(this->trycatch), sig);
+void schema_fuintions::init_cons(object* self, va_list args) {
+    DBG();
+    self->cells = new cell[2];
+    self->cells[0].as_obj = va_arg(args, object*);
+    self->cells[1].as_obj = va_arg(args, object*);
 }
 
 void schema_functions::mark_cons(object* self) {
     DBG("{");
-    if (self->car) self->car->mark();
-    if (self->cdr) self->cdr->mark();
+    self->cells[0]->mark();
+    self->cells[1]->mark();
     DBG("}");
 }
 
-void schema_functions::init_str(object* self, void* arg0, void* _, void* __) {
+void schema_functions::finalize_cons(object* self) {
     DBG();
-    const char* str = (const char*)arg0;
-    self->car_str = strdup(str);
+    delete[] self->cells;
+}
+
+void schema_functions::init_str(object* self, va_list args) {
+    DBG();
+    self->as_chars = strdup(va_arg(args, char*));
 }
 
 void schema_functions::finalize_str(object* self) {
@@ -209,15 +136,13 @@ void schema_functions::finalize_str(object* self) {
 }
 
 int schema_functions::obj_memcmp(object* a, object* b) {
-    DBG("comparing objects at %p and %p", a, b);
-    int x = memcmp(&a->as_integer, &b->as_integer, sizeof(int64_t));
-    if (x) return x;
-    return memcmp(&a->cdr, &b->cdr, sizeof(object*));
+    DBG("comparing objects at %p and %p: %llu, %llu", a, b, a->as_big_int, b->as_big_int);
+    return a->as_big_int - b->as_big_int;
 }
 
 int schema_functions::cmp_str(object* a, object* b) {
-    DBG("comparing %s to %s", a->car_str, b->car_str);
-    return strcmp(a->car_str, b->car_str);
+    DBG("comparing %s to %s", a->as_chars, b->as_chars);
+    return strcmp(a->as_chars, b->as_chars);
 }
 
 }
