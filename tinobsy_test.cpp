@@ -67,7 +67,7 @@ char randchar() {
 
 void test_freeing_things() {
     DBG("Test owned pointers are freed");
-    char buffer[64];
+    char buffer[64] = { 0 };
     for (int i = 0; i < times; i++) {
         for (int j = 0; j < 63; j++) buffer[j] = randchar();
         DBG("Random atom is %s", buffer);
