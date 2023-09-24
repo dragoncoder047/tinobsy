@@ -14,7 +14,7 @@ class MyVM : public vm {
     void mark_globals() {
         this->stack->mark();
     }
-}
+};
 
 MyVM* VM;
 const int times = 10;
@@ -58,7 +58,6 @@ void test_mark_no_sweep() {
     size_t oldobj = VM->num_objects;
     VM->gc();
     ASSERT(VM->num_objects == oldobj, "swept some by mistake");
-    delete t;
 }
 
 char randchar() {
@@ -96,7 +95,7 @@ void test_interning() {
     DBG("Test primitives are interned");
     int64_t foo = 47;
     object* a = VM->allocate(&Integer, foo);
-    ASSERT(a->as_integer == 47, "did not copy right");
+    ASSERT(a->as_big_int == 47, "did not copy right");
     for (int i = 0; i < times; i++) {
         object* b = VM->allocate(&Integer, foo);
         ASSERT(a == b, "not interned");
@@ -116,7 +115,7 @@ const int num_tests = sizeof(tests) / sizeof(tests[0]);
 int main() {
     srand(time(NULL));
     DBG("Begin Tinobsy test suite");
-    DBG("sizeof(object) = %zu, sizeof(thread) = %zu, sizeof(vm) = %zu", sizeof(object), sizeof(thread), sizeof(vm));
+    DBG("sizeof(object) = %zu, sizeof(vm) = %zu", sizeof(object), sizeof(vm));
     VM = new MyVM();
     for (int i = 0; i < num_tests; i++) {
         divider();

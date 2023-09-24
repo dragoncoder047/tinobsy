@@ -70,7 +70,7 @@ typedef union {
 
 // The struct that makes up all Tinobsy objects.
 class object {
-    const object* next;
+    object* next;
     public:
     // A pointer to this object's schema information. Cannot be NULL.
     const object_schema* schema;

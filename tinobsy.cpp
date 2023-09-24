@@ -11,7 +11,7 @@ object_schema::object_schema(const char* const name, init_function init, cmp_fun
 
 object_schema::~object_schema() {}
 
-object::object(const object_schema* schema, va_list args)
+object::object(const object_schema* schema, object* next, va_list args)
 : next(next),
   schema((const object_schema*)schema) {
     if (schema->init) schema->init(this, args);
@@ -106,7 +106,7 @@ vm::~vm() {
     DBG("}");
 }
 
-void schema_fuintions::init_cons(object* self, va_list args) {
+void schema_functions::init_cons(object* self, va_list args) {
     DBG();
     self->cells = new cell[2];
     self->cells[0].as_obj = va_arg(args, object*);
