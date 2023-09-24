@@ -10,6 +10,7 @@
 using namespace tinobsy;
 
 class MyVM : public vm {
+    public:
     object* stack;
     void mark_globals() {
         this->stack->mark();
