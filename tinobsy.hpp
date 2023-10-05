@@ -66,6 +66,7 @@ typedef union {
     uint32_t as_uint;
     float as_float;
     void* as_ptr;
+    char* as_chars;
 } cell;
 
 // The struct that makes up all Tinobsy objects.
