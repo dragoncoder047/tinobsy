@@ -5,7 +5,11 @@
 #include <cctype>
 #include <cstdint>
 #include <cstring>
-#include <cstdarg>
+#include <ccomplex>
+
+#ifndef TINOBSY_CHUNK_SIZE
+#define TINOBSY_CHUNK_SIZE 128
+#endif
 
 #ifdef TINOBSY_DEBUG
 #define DBG(s, ...) printf("[%s:%i-%s] " s "\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__)
@@ -19,9 +23,11 @@
         DBG("Assertion succeeded: %s", #cond); \
     } \
 } while(0)
+#define TODO(nm) do { DBG("%s: %s", #nm, strerror(ENOSYS)); errno = ENOSYS; perror(#nm); exit(74); } while (0)
 #else
 #define DBG(...)
 #define ASSERT(...)
+#define TODO(nm)
 #endif
 
 namespace tinobsy {
@@ -29,27 +35,19 @@ namespace tinobsy {
 // Forward declare
 class object;
 class vm;
-
-typedef void (*init_function)(object* self, va_list args);
-typedef int (*cmp_function)(object* a, object* b);
-typedef void (*mark_function)(object* self);
-typedef void (*finalize_function)(object* self);
+class chunk;
 
 // Information about the contents of the object struct.
-class object_schema {
+class object_type {
     public:
-    // The "name" of the object's schema.
+    // The "name" of the object's type.
     const char* const name;
-    // The function to set up the object.
-    init_function init;
-    // The function to compare two objects of the same type when interning.
-    cmp_function cmp;
-    // The function to mark the object.
-    mark_function mark;
-    // The function to finalize the object.
-    finalize_function finalize;
-    object_schema(const char* const name, init_function init, cmp_function cmp, mark_function mark, finalize_function finalize);
-    ~object_schema();
+    // The function to mark the object Returns a pointer to allow tail-recursion optimization.
+    object* (*mark)(vm*, object*);
+    void (*free)(object*);
+    void (*print)(object* obj, object* stream);
+    object_type(const char* const name, object* (*mark)(vm*, object*), void (*free)(object*), void (*print)(object* obj, object* stream));
+    ~object_type() = default;
 };
 
 // A bit-field to store flags information.
@@ -60,32 +58,22 @@ typedef enum {
     GC_MARKED = 15, // One less than number of bits
 } flag;
 
-typedef union {
-    object* as_obj;
-    int32_t as_int;
-    uint32_t as_uint;
-    float as_float;
-    void* as_ptr;
-    char* as_chars;
-} cell;
-
 // The struct that makes up all Tinobsy objects.
 class object {
-    object* next;
     public:
-    // A pointer to this object's schema information. Cannot be NULL.
-    const object_schema* schema;
+    // A pointer to this object's type information. Cannot be NULL.
+    object_type* type = NULL;
     // Flags about this object.
     flag_field flags = 0;
     // A pointer to metadata about this object. Can be NULL.
-    object* meta = NULL;
+    union { object* meta = NULL; object* car; };
     // The object's payload -- can be anything.
     union {
         void* as_ptr = NULL;
         char* as_chars;
-        cell* cells;
         int64_t as_big_int;
         double as_double;
+        object* as_obj; object* cdr;
         #ifdef _Complex
         float _Complex as_complex;
         #endif
@@ -106,47 +94,58 @@ class object {
         if (this != NULL) this->flags &= ~(1 << f);
     };
 
-    // Recursively marks the object, following pointers to other objects.
-    void mark();
-
+    object()  = default;
+    ~object() = default;
     private:
-    object(const object_schema* schema, object* next, va_list args);
-    ~object();
+    void clean_up();
 
+    friend class vm;
+};
+
+// Chunks of memory, to reduce the frequency of free() and calloc() calls.
+class chunk {
+    chunk* next = NULL;
+    object d[TINOBSY_CHUNK_SIZE];
+    chunk() = default;
+    chunk(chunk* next) : next(next) {};
+    bool is_all_marked();
     friend class vm;
 };
 
 // The struct used to manage all objects and threads.
 class vm {
     public:
-    // The most recent object allocated.
-    object* first = NULL;
-    // The current number of objects that have been allocated.
-    size_t num_objects = 0;
+    // The list of all chunks allocated
+    chunk* chunks = NULL;
+    // The current number of chunks that have been allocated.
+    size_t n_chunks = 0;
+    // The list of free objects
+    object* freelist = NULL;
+    // The number of free objects available
+    size_t freespace = 0;
 
     vm() = default;
     ~vm();
 
     // Allocate a new object on this VM.
-    object* allocate(const object_schema* schema, ...);
+    object* alloc(const object_type*);
 
-    // Garbage-collects all objects that don't have any active references, freeing their memory.
+    // Garbage-collects all objects that don't have any active references.
+    // Then deletes all the chunks that don't contain any in-use objects.
     size_t gc();
     virtual void mark_globals() {};
+
+    void markobject(object*);
+
+    private:
+    void release(object*);
 };
 
 // Default functions
-namespace schema_functions {
-    void init_cons(object*, va_list);
-    void mark_cons(object*);
-    void finalize_cons(object*);
+object* markcons(vm*, object*);
 
-    void init_str(object*, va_list);
-    int cmp_str(object*, object*);
-    void finalize_str(object*);
-
-    int obj_memcmp(object*, object*);
-}
+#define car(x) ((x)->car)
+#define cdr(x) ((x)->cdr)
 
 }
 

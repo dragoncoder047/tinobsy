@@ -4,7 +4,6 @@
 #include <time.h>
 #include <setjmp.h>
 #define TINOBSY_DEBUG
-#define TINOBSY_IGNORE_DANGLING_POINTERS
 #include "tinobsy.hpp"
 
 using namespace tinobsy;
@@ -13,7 +12,7 @@ class MyVM : public vm {
     public:
     object* stack;
     void mark_globals() {
-        this->stack->mark();
+        this->markobject(this->stack);
     }
 };
 
@@ -25,40 +24,42 @@ inline void divider() {
     printf("\n-------------------------------------------------------------\n\n");
 }
 
-object_schema nothing_type("nothing", NULL, NULL, NULL, NULL);
-object_schema atom_type("atom", schema_functions::init_str, schema_functions::cmp_str, NULL, schema_functions::finalize_str);
+object_type nothing_type("nil", NULL, NULL, NULL);
+object_type atom_type("atom", NULL, NULL, NULL);
 
 void test_sweep() {
     DBG("test mark-sweep collector: objects are swept when not put into a thread");
-    size_t oldobj = VM->num_objects;
-    VM->allocate(&nothing_type);
-    VM->allocate(&nothing_type);
-    VM->allocate(&nothing_type);
-    VM->allocate(&nothing_type);
-    VM->allocate(&nothing_type);
-    VM->allocate(&nothing_type);
-    VM->allocate(&nothing_type);
+    size_t oldobj = VM->freespace;
+    VM->alloc(&nothing_type);
+    VM->alloc(&nothing_type);
+    VM->alloc(&nothing_type);
+    VM->alloc(&nothing_type);
+    VM->alloc(&nothing_type);
+    VM->alloc(&nothing_type);
+    VM->alloc(&nothing_type);
     DBG("Begin sweep of everything");
     VM->gc();
-    ASSERT(VM->num_objects == oldobj, "did not sweep right objects");
+    ASSERT(VM->freespace == oldobj, "did not sweep right objects %zu %zu", VM->freespace, oldobj);
 }
 
-object_schema cons_type("cons", schema_functions::init_cons, NULL, schema_functions::mark_cons, schema_functions::finalize_cons);
+object_type cons_type("cons", markcons, NULL, NULL);
 
 void push(vm* v, object* thing, object*& stack) {
-    object* cell = v->allocate(&cons_type, thing, stack);
+    object* cell = v->alloc(&cons_type);
+    cell->car = thing;
+    cell->cdr = stack;
     stack = cell;
 }
 
 void test_mark_no_sweep() {
     DBG("test mark-sweep collector: objects aren't swept when marked on globals");
     for (int i = 0; i < times; i++) {
-        object* foo = VM->allocate(&nothing_type);
+        object* foo = VM->alloc(&nothing_type);
         push(VM, foo, VM->stack);
     }
-    size_t oldobj = VM->num_objects;
+    size_t oldobj = VM->freespace;
     VM->gc();
-    ASSERT(VM->num_objects == oldobj, "swept some by mistake");
+    ASSERT(VM->freespace == oldobj, "swept some by mistake");
 }
 
 char randchar() {
@@ -71,7 +72,8 @@ void test_freeing_things() {
     for (int i = 0; i < times; i++) {
         for (int j = 0; j < 63; j++) buffer[j] = randchar();
         DBG("Random atom is %s", buffer);
-        object* foo = VM->allocate(&atom_type, buffer);
+        object* foo = VM->alloc(&atom_type);
+        TODO(allocate string (void)buffer;);
     }
     VM->gc();
     DBG("Check Valgrind output to make sure stuff was freed");
@@ -79,26 +81,29 @@ void test_freeing_things() {
 
 void test_reference_cycle() {
     DBG("Test unreachable reference cycle gets collected");
-    size_t oldobj = VM->num_objects;
-    object* a = VM->allocate(&cons_type, NULL, NULL);
-    a->cells[0].as_obj = a;
-    a->cells[1].as_obj = a;
+    size_t oldobj = VM->freespace;
+    object* a = VM->alloc(&cons_type);
+    a->car = a;
+    a->cdr = a;
     VM->gc();
-    ASSERT(VM->num_objects == oldobj, "a was not collected");
+    ASSERT(VM->freespace == oldobj, "a was not collected");
 }
 
-void initint(object* a, va_list args) {
-    a->as_big_int = va_arg(args, int64_t);
+const object_type Integer("int", NULL, NULL, NULL);
+
+object* makeint(vm* vm, int64_t z) {
+    object* x = vm->alloc(&Integer);
+    x->as_big_int = z;
+    return x;
 }
 
-const object_schema Integer("int", initint, schema_functions::obj_memcmp, NULL, NULL);
 void test_interning() {
     DBG("Test primitives are interned");
     int64_t foo = 47;
-    object* a = VM->allocate(&Integer, foo);
+    object* a = makeint(VM, foo);
     ASSERT(a->as_big_int == 47, "did not copy right");
     for (int i = 0; i < times; i++) {
-        object* b = VM->allocate(&Integer, foo);
+        object* b = makeint(VM, foo);
         ASSERT(a == b, "not interned");
     }
 }
