@@ -1,4 +1,5 @@
 #include "tinobsy.hpp"
+#include <functional>
 
 namespace tinobsy {
 
@@ -55,6 +56,10 @@ void vm::markobject(object* o) {
         goto MARK;
     }
     DBG("Marking a %s", t->name);
+    if (!t->mark) {
+        DBG("No MARK pointer, returning...");
+        return;
+    }
     o = t->mark(this, o);
     goto MARK;
 }
@@ -68,12 +73,10 @@ size_t vm::gc() {
     this->freelist = NULL;
     this->freespace = 0;
     size_t freed_chunks = 0;
-    for (chunk** c = &this->chunks; c; c = &(*c)->next) {
-        DBG("Chunk %zu {", ci);
+    for (chunk** c = &this->chunks; c && *c; c = &(*c)->next) {
         bool is_empty = true;
         object* freelist_here = this->freelist;
         for (size_t i = 0; i < TINOBSY_CHUNK_SIZE; i++) {
-            DBG("Checking object %zu of chunk %zu", i, ci);
             object* o = &(*c)->d[i];
             if (!o->tst_flag(GC_MARKED)) this->release(o);
             else {
@@ -94,7 +97,7 @@ size_t vm::gc() {
         DBG("}");
         ci++;
     }
-    size_t freed = this->freespace - start;
+    size_t freed = this->freespace + TINOBSY_CHUNK_SIZE * freed_chunks - start;
     DBG("vm::gc() after sweeping objects, %zu objects freed, %zu chunks freed", freed, freed_chunks);
     return freed;
 }
@@ -103,16 +106,36 @@ void vm::release(object* o) {
     if (!o) return;
     if (o->type && o->type->free) o->type->free(o);
     memset(o, 0, sizeof(object));
-    o->as_obj = this->freelist;
+    cdr(o) = this->freelist;
     this->freelist = o;
     this->freespace++;
 }
 
 vm::~vm() {
     DBG("vm::~vm() {");
-    TODO(sweep all);
+    while (this->chunks) {
+        chunk* c = this->chunks;
+        for (size_t i = 0; i < TINOBSY_CHUNK_SIZE; i++) {
+            this->release(&c->d[i]);
+        }
+        this->chunks = c->next;
+        delete c;
+    }
     DBG("}");
 }
+
+void vm::iter_objects(bool (*func)(object*, void*), void* arg, bool all) {
+    chunk* c = this->chunks;
+    while (c) {
+        for (size_t i = 0; i < TINOBSY_CHUNK_SIZE; i++) {
+            if (!all && c->d[i].type == NULL) continue;
+            bool done = func(&c->d[i], arg);
+            if (done) return;
+        }
+        c = c->next;
+    }
+}
+
 
 object* markcons(vm* vm, object* self) {
     // Error on this line WTF??

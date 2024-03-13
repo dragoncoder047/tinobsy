@@ -8,24 +8,51 @@
 
 using namespace tinobsy;
 
+
+object_type cons_type("cons", markcons, NULL, NULL);
 class MyVM : public vm {
     public:
     object* stack;
     void mark_globals() {
         this->markobject(this->stack);
     }
+    void push(object* thing, object*& stack) {
+        object* cell = this->alloc(&cons_type);
+        cell->car = thing;
+        cell->cdr = stack;
+        stack = cell;
+    }
+    void push(object* thing) {
+        push(thing, this->stack);
+    }
 };
 
 MyVM* VM;
 const int times = 10;
+size_t fails = 0;
+#define TEST(cond, ...) do { \
+    if (!(cond)) { \
+        DBG("Test failed: %s", #cond); \
+        DBG(__VA_ARGS__); \
+        fprintf(stderr, "Test failed %s\n", #cond); \
+        fails++; \
+    } else { \
+        DBG("Test succeeded: %s", #cond); \
+    } \
+} while(0)
 
 void divider();
+
 inline void divider() {
     printf("\n-------------------------------------------------------------\n\n");
 }
 
+void free_string(object* self) {
+    free(self->as_chars);
+}
+
 object_type nothing_type("nil", NULL, NULL, NULL);
-object_type atom_type("atom", NULL, NULL, NULL);
+object_type atom_type("atom", NULL, free_string, NULL);
 
 void test_sweep() {
     DBG("test mark-sweep collector: objects are swept when not put into a thread");
@@ -39,27 +66,18 @@ void test_sweep() {
     VM->alloc(&nothing_type);
     DBG("Begin sweep of everything");
     VM->gc();
-    ASSERT(VM->freespace == oldobj, "did not sweep right objects %zu %zu", VM->freespace, oldobj);
-}
-
-object_type cons_type("cons", markcons, NULL, NULL);
-
-void push(vm* v, object* thing, object*& stack) {
-    object* cell = v->alloc(&cons_type);
-    cell->car = thing;
-    cell->cdr = stack;
-    stack = cell;
+    TEST(VM->freespace == oldobj, "did not sweep right objects %zu %zu", VM->freespace, oldobj);
 }
 
 void test_mark_no_sweep() {
     DBG("test mark-sweep collector: objects aren't swept when marked on globals");
     for (int i = 0; i < times; i++) {
         object* foo = VM->alloc(&nothing_type);
-        push(VM, foo, VM->stack);
+        VM->push(foo);
     }
     size_t oldobj = VM->freespace;
     VM->gc();
-    ASSERT(VM->freespace == oldobj, "swept some by mistake");
+    TEST(VM->freespace == oldobj, "swept some by mistake");
 }
 
 char randchar() {
@@ -73,7 +91,7 @@ void test_freeing_things() {
         for (int j = 0; j < 63; j++) buffer[j] = randchar();
         DBG("Random atom is %s", buffer);
         object* foo = VM->alloc(&atom_type);
-        TODO(allocate string (void)buffer;);
+        foo->as_chars = strdup(buffer);
     }
     VM->gc();
     DBG("Check Valgrind output to make sure stuff was freed");
@@ -86,12 +104,24 @@ void test_reference_cycle() {
     a->car = a;
     a->cdr = a;
     VM->gc();
-    ASSERT(VM->freespace == oldobj, "a was not collected");
+    TEST(VM->freespace == oldobj, "a was not collected");
 }
 
 const object_type Integer("int", NULL, NULL, NULL);
 
 object* makeint(vm* vm, int64_t z) {
+    typedef struct { object* found; int64_t num; } f;
+    f foo = {.num = z};
+    vm->iter_objects([](object* obj, void* arg) -> bool {
+        f* foo = (f*)arg;
+        DBG("Interning, searching a %s", obj->type->name);
+        if (obj->type == &Integer && foo->num == obj->as_big_int) {
+            foo->found = obj;
+            return true;
+        }
+        return false;
+    }, &foo, false);
+    if (foo.found) return foo.found;
     object* x = vm->alloc(&Integer);
     x->as_big_int = z;
     return x;
@@ -104,7 +134,7 @@ void test_interning() {
     ASSERT(a->as_big_int == 47, "did not copy right");
     for (int i = 0; i < times; i++) {
         object* b = makeint(VM, foo);
-        ASSERT(a == b, "not interned");
+        TEST(a == b, "not interned");
     }
 }
 
@@ -121,14 +151,15 @@ const int num_tests = sizeof(tests) / sizeof(tests[0]);
 int main() {
     srand(time(NULL));
     DBG("Begin Tinobsy test suite");
-    DBG("sizeof(object) = %zu, sizeof(vm) = %zu", sizeof(object), sizeof(vm));
+    DBG("sizeof(object) = %zu, sizeof(vm) = %zu, sizeof(chunk) = %zu", sizeof(object), sizeof(vm), sizeof(chunk));
     VM = new MyVM();
     for (int i = 0; i < num_tests; i++) {
         divider();
         tests[i]();
     }
     divider();
-    DBG("end of tests");
+    DBG("end of tests. Total %zu fails", fails);
+    fprintf(stderr, "%zu tests failed\n", fails);
     delete VM;
     return 0;
 }

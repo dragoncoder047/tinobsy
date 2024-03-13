@@ -1,41 +1,15 @@
-==20147== Memcheck, a memory error detector
-==20147== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==20147== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==20147== Command: ./ttest64
-==20147== 
-==20147== Jump to the invalid address stated on the next line
-==20147==    at 0x0: ???
-==20147==    by 0x109A85: tinobsy::markcons(tinobsy::vm*, tinobsy::object*) (tinobsy.cpp:119)
-==20147==    by 0x109641: tinobsy::vm::markobject(tinobsy::object*) (tinobsy.cpp:58)
-==20147==    by 0x10A69A: MyVM::mark_globals() (tinobsy_test.cpp:15)
-==20147==    by 0x1096CA: tinobsy::vm::gc() (tinobsy.cpp:65)
-==20147==    by 0x109D63: test_mark_no_sweep() (tinobsy_test.cpp:61)
-==20147==    by 0x10A444: main (tinobsy_test.cpp:128)
-==20147==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==20147== 
-==20147== 
-==20147== Process terminating with default action of signal 11 (SIGSEGV): dumping core
-==20147==  Bad permissions for mapped region at address 0x0
-==20147==    at 0x0: ???
-==20147==    by 0x109A85: tinobsy::markcons(tinobsy::vm*, tinobsy::object*) (tinobsy.cpp:119)
-==20147==    by 0x109641: tinobsy::vm::markobject(tinobsy::object*) (tinobsy.cpp:58)
-==20147==    by 0x10A69A: MyVM::mark_globals() (tinobsy_test.cpp:15)
-==20147==    by 0x1096CA: tinobsy::vm::gc() (tinobsy.cpp:65)
-==20147==    by 0x109D63: test_mark_no_sweep() (tinobsy_test.cpp:61)
-==20147==    by 0x10A444: main (tinobsy_test.cpp:128)
-==20147== 
-==20147== HEAP SUMMARY:
-==20147==     in use at exit: 4,152 bytes in 2 blocks
-==20147==   total heap usage: 5 allocs, 3 frees, 85,056 bytes allocated
-==20147== 
-==20147== LEAK SUMMARY:
-==20147==    definitely lost: 0 bytes in 0 blocks
-==20147==    indirectly lost: 0 bytes in 0 blocks
-==20147==      possibly lost: 0 bytes in 0 blocks
-==20147==    still reachable: 4,152 bytes in 2 blocks
-==20147==         suppressed: 0 bytes in 0 blocks
-==20147== Rerun with --leak-check=full to see details of leaked memory
-==20147== 
-==20147== For lists of detected and suppressed errors, rerun with: -s
-==20147== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-Segmentation fault (core dumped)
+==11930== Memcheck, a memory error detector
+==11930== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==11930== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==11930== Command: ./ttest64
+==11930== 
+0 tests failed
+==11930== 
+==11930== HEAP SUMMARY:
+==11930==     in use at exit: 0 bytes in 0 blocks
+==11930==   total heap usage: 15 allocs, 15 frees, 85,696 bytes allocated
+==11930== 
+==11930== All heap blocks were freed -- no leaks are possible
+==11930== 
+==11930== For lists of detected and suppressed errors, rerun with: -s
+==11930== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

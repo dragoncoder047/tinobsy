@@ -1,5 +1,5 @@
 [tinobsy_test.cpp:153-main] Begin Tinobsy test suite
-[tinobsy_test.cpp:154-main] sizeof(object) = 32, sizeof(vm) = 40, sizeof(chunk) = 4104
+[tinobsy_test.cpp:154-main] sizeof(object) = 20, sizeof(vm) = 20, sizeof(chunk) = 2564
 
 -------------------------------------------------------------
 
@@ -87,25 +87,25 @@
 -------------------------------------------------------------
 
 [tinobsy_test.cpp:88-test_freeing_things] Test owned pointers are freed
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is pahxpmohjzcspnpwlpoxjcrhqpsgulpjynagmxrhjqqmmsekxffaojeoefvooin
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is nmdzixsqrnvddmoyxqkdaixynsbmxbcznpduymoabyvstilqipgzkpqkxmjgnfp
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is fisruipnbpqnodwwugjzvpbusatcxfvixpselvqjyrjjhzkbialyzhfuekwvumt
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is bnbyyvfhcxguwcnwtojmwwqlcmasnmbbmxttzkcggpchuzldrodtpdnufoxfpkd
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is qakyrficxasawytmggzvippfsrjipjfdquzycqqjfdegzuhixprwlhjyligrbeh
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is ofjguaabnclhefigklebrjvduuuzlmoqgnkcarlondmemizlwcjudgllvqfgmck
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is maoyosynnzegdpuvrkmisjbjottgrorycgarwkrwfyhmgbcxgbrmfqknivddukk
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is gvosusyhszjgxmifqtyijcwokenurzmkhitvxpfitybmytdipzgwgldyxafbrdk
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is wirtobppahwsynimhuegzyuzgtyeamvguwxhntqazwvneyqzstiushqwcitouev
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is ccczkiomsfndlrnqgzjhiawhtfttkzbgjxporkpktirmdtwebzxitbvasejtcfl
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is hrluevugkaajgklievjpaussrlkswzpjbevwnthjgeoezesnqeiaaxnfdhwhpay
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is dowvfxitqgomrdeysvmlqmjaazrggjoeqsngyixyneiwjpoeyavipfxzubpvhzw
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is odrsfoeyvtfwqkgnkjitewelhkzyerddljbynqavummujgupuhfpjhwopvhfwwq
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is jtwuppqgirbacilmgtvnfslozkzhudlvjxemyrjdohvyvjyfcrsagrcivgnewkw
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is ckbqkmdgosfgrwbfodqzyjvfwlegcrgkbgzghutbzlgbcsdybgnttxkygcvdmar
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is kfrzlosulqenmxydkobenebiqfyegnrosprykjsdjhakakywmtymutuolssodgj
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is nnndjtkfqswmudsddmdjupafbypsuvgtvhzdzdqcbwxyjizepuxhhttgajqjdjc
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is bmcyksjytuhbjurziiwujignmmpafqefmnllsobkgghuvleymrfhawjdrmvjwqr
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is oyjbwebvwnzujqelpohqmzihybkvsazchpllfhkgjdxodvwnulqispmkujhzqah
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is wnccdtcrxplwoayfdorrxtzoicunvirmimbzylbwrkefeirjkuzgahnxdixagbd
 [tinobsy.cpp:13-alloc] vm::alloc() a atom
 [tinobsy.cpp:69-gc] vm::gc() begin, 98 objects free / 128 objects total (1 chunks) {
 [tinobsy.cpp:58-markobject] Marking a cons

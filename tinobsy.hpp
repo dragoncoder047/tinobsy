@@ -12,13 +12,14 @@
 #endif
 
 #ifdef TINOBSY_DEBUG
+#include <sysexits.h>
 #define DBG(s, ...) printf("[%s:%i-%s] " s "\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__)
 #define ASSERT(cond, ...) do { \
     if (!(cond)) { \
         DBG("Assertion failed: %s", #cond); \
         DBG(__VA_ARGS__); \
-        fprintf(stderr, "Assert failed, causing a deliberate segfault now.\n"); \
-        *((int*)0) = 1; \
+        fprintf(stderr, "Assertion failed %s\n", #cond); \
+        exit(EX_SOFTWARE); \
     } else { \
         DBG("Assertion succeeded: %s", #cond); \
     } \
@@ -136,6 +137,7 @@ class vm {
     virtual void mark_globals() {};
 
     void markobject(object*);
+    void iter_objects(bool (*)(object*, void*), void*, bool = true);
 
     private:
     void release(object*);
