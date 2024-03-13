@@ -101,8 +101,7 @@ void test_reference_cycle() {
     DBG("Test unreachable reference cycle gets collected");
     size_t oldobj = VM->freespace;
     object* a = VM->alloc(&cons_type);
-    a->car = a;
-    a->cdr = a;
+    car(a) = cdr(a) = a;
     VM->gc();
     TEST(VM->freespace == oldobj, "a was not collected");
 }
@@ -110,18 +109,7 @@ void test_reference_cycle() {
 const object_type Integer("int", NULL, NULL, NULL);
 
 object* makeint(vm* vm, int64_t z) {
-    typedef struct { object* found; int64_t num; } f;
-    f foo = {.num = z};
-    vm->iter_objects([](object* obj, void* arg) -> bool {
-        f* foo = (f*)arg;
-        DBG("Interning, searching a %s", obj->type->name);
-        if (obj->type == &Integer && foo->num == obj->as_big_int) {
-            foo->found = obj;
-            return true;
-        }
-        return false;
-    }, &foo, false);
-    if (foo.found) return foo.found;
+    INTERN(vm, int64_t, &Integer, z);
     object* x = vm->alloc(&Integer);
     x->as_big_int = z;
     return x;

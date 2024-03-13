@@ -1,438 +1,1616 @@
-[tinobsy_test.cpp:153-main] Begin Tinobsy test suite
-[tinobsy_test.cpp:154-main] sizeof(object) = 32, sizeof(vm) = 40, sizeof(chunk) = 4104
+[tinobsy_test.cpp:141-main] Begin Tinobsy test suite
+[tinobsy_test.cpp:142-main] sizeof(object) = 32, sizeof(vm) = 40, sizeof(chunk) = 4104
 
 -------------------------------------------------------------
 
 [tinobsy_test.cpp:58-test_sweep] test mark-sweep collector: objects are swept when not put into a thread
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:15-alloc] out of freespace, trying to expand chunk list...
-[tinobsy.cpp:30-alloc] successfully added 1 chunk (128 objects)
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:14-alloc] out of freespace, trying to expand chunk list...
+[tinobsy.cpp:29-alloc] successfully added 1 chunk (128 objects)
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
 [tinobsy_test.cpp:67-test_sweep] Begin sweep of everything
-[tinobsy.cpp:69-gc] vm::gc() begin, 121 objects free / 128 objects total (1 chunks) {
-[tinobsy.cpp:44-markobject] Marking NULL
-[tinobsy.cpp:71-gc] garbage collect sweeping objects
-[tinobsy.cpp:88-gc] Whole chunk is empty
-[tinobsy.cpp:97-gc] }
-[tinobsy.cpp:101-gc] vm::gc() after sweeping objects, 7 objects freed, 1 chunks freed
+[tinobsy.cpp:68-gc] vm::gc() begin, 121 objects free / 128 objects total (1 chunks) {
+[tinobsy.cpp:43-markobject] Marking NULL
+[tinobsy.cpp:70-gc] garbage collect sweeping objects
+[tinobsy.cpp:87-gc] Whole chunk is empty
+[tinobsy.cpp:96-gc] }
+[tinobsy.cpp:100-gc] vm::gc() after sweeping objects, 7 objects freed, 1 chunks freed
 [tinobsy_test.cpp:69-test_sweep] Test succeeded: VM->freespace == oldobj
 
 -------------------------------------------------------------
 
 [tinobsy_test.cpp:73-test_mark_no_sweep] test mark-sweep collector: objects aren't swept when marked on globals
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:15-alloc] out of freespace, trying to expand chunk list...
-[tinobsy.cpp:30-alloc] successfully added 1 chunk (128 objects)
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a nil
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:69-gc] vm::gc() begin, 108 objects free / 128 objects total (1 chunks) {
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:44-markobject] Marking NULL
-[tinobsy.cpp:71-gc] garbage collect sweeping objects
-[tinobsy.cpp:97-gc] }
-[tinobsy.cpp:101-gc] vm::gc() after sweeping objects, 0 objects freed, 0 chunks freed
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:14-alloc] out of freespace, trying to expand chunk list...
+[tinobsy.cpp:29-alloc] successfully added 1 chunk (128 objects)
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:12-alloc] vm::alloc() a nil
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:68-gc] vm::gc() begin, 108 objects free / 128 objects total (1 chunks) {
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:43-markobject] Marking NULL
+[tinobsy.cpp:70-gc] garbage collect sweeping objects
+[tinobsy.cpp:96-gc] }
+[tinobsy.cpp:100-gc] vm::gc() after sweeping objects, 0 objects freed, 0 chunks freed
 [tinobsy_test.cpp:80-test_mark_no_sweep] Test succeeded: VM->freespace == oldobj
 
 -------------------------------------------------------------
 
 [tinobsy_test.cpp:88-test_freeing_things] Test owned pointers are freed
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is pahxpmohjzcspnpwlpoxjcrhqpsgulpjynagmxrhjqqmmsekxffaojeoefvooin
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is fisruipnbpqnodwwugjzvpbusatcxfvixpselvqjyrjjhzkbialyzhfuekwvumt
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is qakyrficxasawytmggzvippfsrjipjfdquzycqqjfdegzuhixprwlhjyligrbeh
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is maoyosynnzegdpuvrkmisjbjottgrorycgarwkrwfyhmgbcxgbrmfqknivddukk
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is wirtobppahwsynimhuegzyuzgtyeamvguwxhntqazwvneyqzstiushqwcitouev
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is hrluevugkaajgklievjpaussrlkswzpjbevwnthjgeoezesnqeiaaxnfdhwhpay
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is odrsfoeyvtfwqkgnkjitewelhkzyerddljbynqavummujgupuhfpjhwopvhfwwq
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is ckbqkmdgosfgrwbfodqzyjvfwlegcrgkbgzghutbzlgbcsdybgnttxkygcvdmar
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is nnndjtkfqswmudsddmdjupafbypsuvgtvhzdzdqcbwxyjizepuxhhttgajqjdjc
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is oyjbwebvwnzujqelpohqmzihybkvsazchpllfhkgjdxodvwnulqispmkujhzqah
-[tinobsy.cpp:13-alloc] vm::alloc() a atom
-[tinobsy.cpp:69-gc] vm::gc() begin, 98 objects free / 128 objects total (1 chunks) {
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:44-markobject] Marking NULL
-[tinobsy.cpp:71-gc] garbage collect sweeping objects
-[tinobsy.cpp:97-gc] }
-[tinobsy.cpp:101-gc] vm::gc() after sweeping objects, 10 objects freed, 0 chunks freed
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is tyvhdpcsdvdxzlizouzfvjnnneeewxyomrbfdlmnksxayryjpwrikrikiazpuqk
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is irgchoxjwiasdgzemxiisdgtxqbrobvlqdfkxpivllptoepinlgsyyhmidtjsqo
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is sgbyoudunultgvhvcodufkvgmolkxxwiondluwwuizavhqxdauzbqhswmylcmzy
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is pzzrmxuyewkqzkxyrenqehfyklbgzlctshodsjkhlphsesjujkoxovqmgmjoxsg
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is yenxghsyixblmaoiqmhcosbpqvwajfnnkblidyfcedfwvbobmbxppklsfxbupct
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is exnaormrysloijluhjqnwklgigsfbozeyzgfvfztqfgprijxmlleafjkwwuwsmr
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is jlkujuwvogfklxpgceibgxfibjfnwgwxoxqqqrbakaesufqwkpnyyfgeyrwukte
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is wmeewywdmfjazrdvbcveqpzrjvtvjawkprzfsvmdpkvtxsekunviphdmflnremc
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is gtjwkhernzeyffiizuyekvgzpukhpldbvtqjzezlcbmaduzognauvwwoilblask
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy_test.cpp:92-test_freeing_things] Random atom is ohknpzxrjkewuaxgmcqikwomsenydpbvmjcadhfeokrgwqeqcypdukgzzdmivnt
+[tinobsy.cpp:12-alloc] vm::alloc() a atom
+[tinobsy.cpp:68-gc] vm::gc() begin, 98 objects free / 128 objects total (1 chunks) {
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:43-markobject] Marking NULL
+[tinobsy.cpp:70-gc] garbage collect sweeping objects
+[tinobsy.cpp:96-gc] }
+[tinobsy.cpp:100-gc] vm::gc() after sweeping objects, 10 objects freed, 0 chunks freed
 [tinobsy_test.cpp:97-test_freeing_things] Check Valgrind output to make sure stuff was freed
 
 -------------------------------------------------------------
 
 [tinobsy_test.cpp:101-test_reference_cycle] Test unreachable reference cycle gets collected
-[tinobsy.cpp:13-alloc] vm::alloc() a cons
-[tinobsy.cpp:69-gc] vm::gc() begin, 107 objects free / 128 objects total (1 chunks) {
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:58-markobject] Marking a cons
-[tinobsy.cpp:58-markobject] Marking a nil
-[tinobsy.cpp:60-markobject] No MARK pointer, returning...
-[tinobsy.cpp:44-markobject] Marking NULL
-[tinobsy.cpp:71-gc] garbage collect sweeping objects
-[tinobsy.cpp:97-gc] }
-[tinobsy.cpp:101-gc] vm::gc() after sweeping objects, 1 objects freed, 0 chunks freed
-[tinobsy_test.cpp:107-test_reference_cycle] Test succeeded: VM->freespace == oldobj
+[tinobsy.cpp:12-alloc] vm::alloc() a cons
+[tinobsy.cpp:68-gc] vm::gc() begin, 107 objects free / 128 objects total (1 chunks) {
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:57-markobject] Marking a cons
+[tinobsy.cpp:57-markobject] Marking a nil
+[tinobsy.cpp:59-markobject] No MARK pointer, returning...
+[tinobsy.cpp:43-markobject] Marking NULL
+[tinobsy.cpp:70-gc] garbage collect sweeping objects
+[tinobsy.cpp:96-gc] }
+[tinobsy.cpp:100-gc] vm::gc() after sweeping objects, 1 objects freed, 0 chunks freed
+[tinobsy_test.cpp:106-test_reference_cycle] Test succeeded: VM->freespace == oldobj
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:131-test_interning] Test primitives are interned
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy.cpp:13-alloc] vm::alloc() a int
-[tinobsy_test.cpp:134-test_interning] Assertion succeeded: a->as_big_int == 47
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a nil
-[tinobsy_test.cpp:117-operator()] Interning, searching a cons
-[tinobsy_test.cpp:117-operator()] Interning, searching a int
-[tinobsy_test.cpp:137-test_interning] Test succeeded: a == b
+[tinobsy_test.cpp:119-test_interning] Test primitives are interned
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:12-alloc] vm::alloc() a int
+[tinobsy_test.cpp:122-test_interning] Assertion succeeded: a->as_big_int == 47
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a nil
+[tinobsy.cpp:132-get_existing_object] Interning, searching a cons
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a (uninitialized)
+[tinobsy.cpp:132-get_existing_object] Interning, searching a int
+[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:161-main] end of tests. Total 0 fails
-[tinobsy.cpp:115-~vm] vm::~vm() {
-[tinobsy.cpp:124-~vm] }
+[tinobsy_test.cpp:149-main] end of tests. Total 0 fails
+[tinobsy.cpp:114-~vm] vm::~vm() {
+[tinobsy.cpp:123-~vm] }

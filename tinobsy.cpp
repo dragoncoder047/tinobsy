@@ -1,5 +1,4 @@
 #include "tinobsy.hpp"
-#include <functional>
 
 namespace tinobsy {
 
@@ -124,21 +123,27 @@ vm::~vm() {
     DBG("}");
 }
 
-void vm::iter_objects(bool (*func)(object*, void*), void* arg, bool all) {
+template <class field_type>
+object* vm::get_existing_object(object_type* sch, field_type val, bool (*cmp)(field_type, field_type)) {
     chunk* c = this->chunks;
     while (c) {
         for (size_t i = 0; i < TINOBSY_CHUNK_SIZE; i++) {
-            if (!all && c->d[i].type == NULL) continue;
-            bool done = func(&c->d[i], arg);
-            if (done) return;
+            object* obj = &c->d[i];
+            DBG("Interning, searching a %s", obj->type ? obj->type->name : "(uninitialized)");
+            if (obj->type != sch) continue;
+            if (cmp(val, (field_type)(obj->as_ptr))) return obj;
         }
         c = c->next;
     }
+    return NULL;
 }
 
+template <class type>
+bool op_eq(type a, type b) {
+    return a == b;
+}
 
 object* markcons(vm* vm, object* self) {
-    // Error on this line WTF??
     vm->markobject(car(self));
     return cdr(self);
 }

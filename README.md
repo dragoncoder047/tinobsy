@@ -50,9 +50,34 @@ Any of them can be NULL if nothing needs to be done there.
 
 Tinobsy has a simple mark-and-sweep collector, based partly off of Bob Nystrom's [mark-sweep](https://github.com/munificent/mark-sweep) collector and partly off of David Johnson-Davies' [uLisp](http://www.ulisp.com/show?1BD3) garbage collector.
 
-<!-- #### interning
+#### interning
 
-If an object type has the second (comparison) function defined, then objects of that type are automatically interned. If an object is allocated that would compare equal with an existing object of the same type, the new object is immediately deleted and the older object is returned instead. This is intended for primitive types such as strings and numbers. -->
+Allocating an object with `alloc()` doesn't actually initialize the fields of the object -- you have to write your own functions to do that yourself. If the object is an "atomic" type such as a string or number that doesn't point to any other Tinobsy objects (i.e. the mark function is/can be NULL), you can intern the object. The helper function `vm->get_existing_object<type>(schema, value, cmp_func)` returns the existing object, that has the same schema as the one passed in, and also the same value (the `as_ptr` member is cast to the templated-in type and compared to the value using the function), or NULL if the object doesn't exist yet. There is a convenience function `op_eq<type>(type, type)` that can be used as the comparison function for types that store their values inline. For example:
+
+```cpp
+object_schema Example("example", NULL, free_example, print_example);
+object* make_example(vm* vm, struct example value) {
+    object* x = vm->get_existing_object<struct example>(&Example, value, op_eq<struct example>);
+    if (!x) {
+        x = vm->alloc(&Example);
+        /* magic stuff to initialize the object */
+    }
+    return x;
+}
+```
+
+There is also a preprocessor macro `INTERN(vm, typ, sch, val)` and `INTERN_PTR(vm, typ, sch, val, cmp)` that are just sugar for checking this function and then returning early if the object exists -- the above function could be simplified to:
+
+```cpp
+object_schema Example("example", NULL, free_example, print_example);
+object* make_example(vm* vm, struct example value) {
+    INTERN(vm, struct example, &Example, value);
+    /* if we get here it means a new object must be created */
+    object* x = vm->alloc(&Example);
+    /* magic stuff to initialize the object */
+    return x;
+}
+```
 
 #### mark-and-sweep
 

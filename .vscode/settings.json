@@ -28,5 +28,10 @@
         "ttstflag",
         "ttype",
         "vpid"
-    ]
+    ],
+    "files.associations": {
+        "*.tmpl": "jinja-html",
+        "*.html": "html",
+        "complex": "cpp"
+    }
 }

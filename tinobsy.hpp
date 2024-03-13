@@ -137,17 +137,29 @@ class vm {
     virtual void mark_globals() {};
 
     void markobject(object*);
-    void iter_objects(bool (*)(object*, void*), void*, bool = true);
+
+    template <class field_type>
+    object* get_existing_object(object_type*, field_type, bool (*)(field_type, field_type));
 
     private:
     void release(object*);
 };
+
+template <class type>
+bool op_eq(type, type);
 
 // Default functions
 object* markcons(vm*, object*);
 
 #define car(x) ((x)->car)
 #define cdr(x) ((x)->cdr)
+
+#define INTERN(vm, typ, sch, val) INTERN_PTR((vm), typ, (sch), (val), op_eq<typ>)
+
+#define INTERN_PTR(vm, typ, sch, val, cmp) do { \
+    object* maybe = (vm)->get_existing_object<typ>((::tinobsy::object_type*)(sch), (val), (cmp)); \
+    if (maybe) return maybe; \
+} while (0)
 
 }
 
