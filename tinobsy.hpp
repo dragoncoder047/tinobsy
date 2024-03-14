@@ -154,7 +154,7 @@ object* markcons(vm*, object*);
 #define car(x) ((x)->car)
 #define cdr(x) ((x)->cdr)
 
-#define INTERN(vm, typ, sch, val) INTERN_PTR((vm), typ, (sch), (val), op_eq<typ>)
+#define INTERN(vm, typ, sch, val) INTERN_PTR((vm), typ, (sch), (val), ::tinobsy::op_eq<typ>)
 
 #define INTERN_PTR(vm, typ, sch, val, cmp) do { \
     object* maybe = (vm)->get_existing_object<typ>((::tinobsy::object_type*)(sch), (val), (cmp)); \
