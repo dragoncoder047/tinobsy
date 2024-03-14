@@ -129,9 +129,11 @@ object* vm::get_existing_object(object_type* sch, field_type val, bool (*cmp)(fi
     while (c) {
         for (size_t i = 0; i < TINOBSY_CHUNK_SIZE; i++) {
             object* obj = &c->d[i];
-            DBG("Interning, searching a %s", obj->type ? obj->type->name : "(uninitialized)");
             if (obj->type != sch) continue;
-            if (cmp(val, (field_type)(obj->as_ptr))) return obj;
+            if (cmp(val, (field_type)(obj->as_ptr))) {
+                DBG("found equal object");
+                return obj;
+            }
         }
         c = c->next;
     }
