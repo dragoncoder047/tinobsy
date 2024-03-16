@@ -12,24 +12,27 @@
 #endif
 
 #ifdef TINOBSY_DEBUG
+#undef TINOBSY_DEBUG
+#define TINOBSY_DEBUG 1
+#else
+#define TINOBSY_DEBUG 0
+#endif
+
 #include <sysexits.h>
-#define DBG(s, ...) printf("[%s:%i-%s] " s "\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__)
+#define DBG(s, ...) do { if (TINOBSY_DEBUG) printf("[%s:%i-%s] " s "\n", __FILE__, __LINE__, __func__, ##__VA_ARGS__); } while (0)
 #define ASSERT(cond, ...) do { \
-    if (!(cond)) { \
-        DBG("Assertion failed: %s", #cond); \
-        DBG(__VA_ARGS__); \
-        fprintf(stderr, "Assertion failed %s\n", #cond); \
-        exit(EX_SOFTWARE); \
-    } else { \
-        DBG("Assertion succeeded: %s", #cond); \
+    if (TINOBSY_DEBUG) { \
+        if (!(cond)) { \
+            DBG("Assertion failed: %s", #cond); \
+            DBG(__VA_ARGS__); \
+            fprintf(stderr, "Assertion failed %s\n", #cond); \
+            exit(EX_SOFTWARE); \
+        } else { \
+            DBG("Assertion succeeded: %s", #cond); \
+        } \
     } \
 } while(0)
 #define TODO(nm) do { DBG("%s: %s", #nm, strerror(ENOSYS)); errno = ENOSYS; perror(#nm); exit(74); } while (0)
-#else
-#define DBG(...)
-#define ASSERT(...)
-#define TODO(nm)
-#endif
 
 namespace tinobsy {
 
