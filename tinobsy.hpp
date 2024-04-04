@@ -29,7 +29,7 @@
         if (!(cond)) { \
             DBG("Assertion FAILED: %s", #cond); \
             DBG(__VA_ARGS__); \
-            fprintf(stderr, "Assertion %s (in %s, line %i of %s) FAILED\n", #cond, __WHERE__, __FILE__, __LINE__); \
+            fprintf(stderr, "Assertion %s (in %s, line %i of %s) FAILED\n", #cond, __WHERE__, __LINE__, __FILE__); \
             abort(); \
         } else { \
             DBG("Assertion succeeded: %s", #cond); \
