@@ -1,218 +1,218 @@
-[tinobsy_test.cpp:141-main] Begin Tinobsy test suite
-[tinobsy_test.cpp:142-main] sizeof(object) = 32, sizeof(vm) = 40, sizeof(chunk) = 4104
+[main tinobsy_test.cpp:141] Begin Tinobsy test suite
+[main tinobsy_test.cpp:142] sizeof(object) = 32, sizeof(vm) = 40, sizeof(chunk) = 4104
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:58-test_sweep] test mark-sweep collector: objects are swept when not put into a thread
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:14-alloc] out of freespace, trying to expand chunk list...
-[tinobsy.cpp:29-alloc] successfully added 1 chunk (128 objects)
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy_test.cpp:67-test_sweep] Begin sweep of everything
-[tinobsy.cpp:68-gc] vm::gc() begin, 121 objects free / 128 objects total (1 chunks) {
-[tinobsy.cpp:43-markobject] Marking NULL
-[tinobsy.cpp:70-gc] garbage collect sweeping objects
-[tinobsy.cpp:87-gc] Whole chunk is empty
-[tinobsy.cpp:96-gc] }
-[tinobsy.cpp:100-gc] vm::gc() after sweeping objects, 7 objects freed, 1 chunks freed
-[tinobsy_test.cpp:69-test_sweep] Test succeeded: VM->freespace == oldobj
+[test_sweep tinobsy_test.cpp:58] test mark-sweep collector: objects are swept when not put into a thread
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:14] out of freespace, trying to expand chunk list...
+[alloc tinobsy.cpp:29] successfully added 1 chunk (128 objects)
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[test_sweep tinobsy_test.cpp:67] Begin sweep of everything
+[gc tinobsy.cpp:68] vm::gc() begin, 121 objects free / 128 objects total (1 chunks) {
+[markobject tinobsy.cpp:43] Marking NULL
+[gc tinobsy.cpp:70] garbage collect sweeping objects
+[gc tinobsy.cpp:87] Whole chunk is empty
+[gc tinobsy.cpp:96] }
+[gc tinobsy.cpp:100] vm::gc() after sweeping objects, 7 objects freed, 1 chunks freed
+[test_sweep tinobsy_test.cpp:69] Test succeeded: VM->freespace == oldobj
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:73-test_mark_no_sweep] test mark-sweep collector: objects aren't swept when marked on globals
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:14-alloc] out of freespace, trying to expand chunk list...
-[tinobsy.cpp:29-alloc] successfully added 1 chunk (128 objects)
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:12-alloc] vm::alloc() a nil
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:68-gc] vm::gc() begin, 108 objects free / 128 objects total (1 chunks) {
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:43-markobject] Marking NULL
-[tinobsy.cpp:70-gc] garbage collect sweeping objects
-[tinobsy.cpp:96-gc] }
-[tinobsy.cpp:100-gc] vm::gc() after sweeping objects, 0 objects freed, 0 chunks freed
-[tinobsy_test.cpp:80-test_mark_no_sweep] Test succeeded: VM->freespace == oldobj
+[test_mark_no_sweep tinobsy_test.cpp:73] test mark-sweep collector: objects aren't swept when marked on globals
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:14] out of freespace, trying to expand chunk list...
+[alloc tinobsy.cpp:29] successfully added 1 chunk (128 objects)
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[alloc tinobsy.cpp:12] vm::alloc() a nil
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[gc tinobsy.cpp:68] vm::gc() begin, 108 objects free / 128 objects total (1 chunks) {
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:43] Marking NULL
+[gc tinobsy.cpp:70] garbage collect sweeping objects
+[gc tinobsy.cpp:96] }
+[gc tinobsy.cpp:100] vm::gc() after sweeping objects, 0 objects freed, 0 chunks freed
+[test_mark_no_sweep tinobsy_test.cpp:80] Test succeeded: VM->freespace == oldobj
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:88-test_freeing_things] Test owned pointers are freed
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is acnknwybahmekbwxpbkxttjaoyvjudtjptapuhojuixmtnxfbfawkedeioljvnu
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is yrlgppvwhybhpcsnxnavlhovnlggjgbckhsqwprjgwimnlmzzakfmmpbzmdpfsu
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is iqkpwefxjjwkjvjskqeuwrkmnlfiinfgquntafnerwzcmaplasngkkfhpemkegy
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is tbyoiloabarzsfttqktgovrqiimnpfufasnltutrlintbeabxjstgjtvbrvukec
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is wjzcvqmmxpnquearvrjwkuyhrsdsejoyueretetnfemztsnrjjuovfmwnfgetbo
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is amfhykzyybuqrlmoohglgtxheitisrkntthpcogqicrahezmkpxifgblcrmpojp
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is dxnckosxkobwbmvmlozebiwhtujhguqqenbvoojmzhrljwkapadpzfqqzkkimlp
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is tluqwklediytbpviloxrtpturcbdvhvqotqscxfiwcgqtaonxteqfuulrtymcre
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is yitlymugqwewigsyskisthlmlntxcpvrlecbwrgtulifilzxpqyhlmgdmxubytq
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy_test.cpp:92-test_freeing_things] Random atom is npbbawsgitbcfkjielglajobkyygadjocjuizznemcmdfhchodpltxkcmbdsstx
-[tinobsy.cpp:12-alloc] vm::alloc() a atom
-[tinobsy.cpp:68-gc] vm::gc() begin, 98 objects free / 128 objects total (1 chunks) {
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:43-markobject] Marking NULL
-[tinobsy.cpp:70-gc] garbage collect sweeping objects
-[tinobsy.cpp:96-gc] }
-[tinobsy.cpp:100-gc] vm::gc() after sweeping objects, 10 objects freed, 0 chunks freed
-[tinobsy_test.cpp:97-test_freeing_things] Check Valgrind output to make sure stuff was freed
+[test_freeing_things tinobsy_test.cpp:88] Test owned pointers are freed
+[test_freeing_things tinobsy_test.cpp:92] Random atom is hwrdlzcpmryvcomwcnybokutkxbcowgmtzsmfuodshaoqaacokxlormebvbimsi
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[test_freeing_things tinobsy_test.cpp:92] Random atom is rixtxwhogtlbttiwhqviomudvepurbfitpfndeowiqnfiihvifrkddtajhjxdyr
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[test_freeing_things tinobsy_test.cpp:92] Random atom is lhjlrzqterthafuuxzsgiblljpaavjhjiypaqpkedbxvsetivjcyhhbymokbquf
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[test_freeing_things tinobsy_test.cpp:92] Random atom is pgvcgodzvdfcmkmuhhtcizldxeuztdifqyphhbadsbiagoktqcwijccfnwutjhl
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[test_freeing_things tinobsy_test.cpp:92] Random atom is jbridqkqdjpnilhfldgwypvlpnqggjuufpjwsiemqsniyhxbtanpzbrybrzszmz
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[test_freeing_things tinobsy_test.cpp:92] Random atom is oapdbzgmzwmeignuloirrtuowargytpjgzegglfpzgseessbclennppwcdkekql
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[test_freeing_things tinobsy_test.cpp:92] Random atom is icvbpgdlaqydyjmtskudkhcxdpshediditpzxnstnzzrplicdgirytnxhspxblu
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[test_freeing_things tinobsy_test.cpp:92] Random atom is inkqzhfbgujzlsrfbzveqeqxzdrfsvcxvfvheahlligdlkwkdmxdwviboaavouj
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[test_freeing_things tinobsy_test.cpp:92] Random atom is ichvmwfxzbouhwppfprmamuiazxorenabhpvjvjazqlswwxgdbjbnvuokejctky
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[test_freeing_things tinobsy_test.cpp:92] Random atom is wugqbflpuzrkxufszdwlsmqckrgdpizfhafgbymrqebcsaoumpqaaqiwychhest
+[alloc tinobsy.cpp:12] vm::alloc() a atom
+[gc tinobsy.cpp:68] vm::gc() begin, 98 objects free / 128 objects total (1 chunks) {
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:43] Marking NULL
+[gc tinobsy.cpp:70] garbage collect sweeping objects
+[gc tinobsy.cpp:96] }
+[gc tinobsy.cpp:100] vm::gc() after sweeping objects, 10 objects freed, 0 chunks freed
+[test_freeing_things tinobsy_test.cpp:97] Check Valgrind output to make sure stuff was freed
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:101-test_reference_cycle] Test unreachable reference cycle gets collected
-[tinobsy.cpp:12-alloc] vm::alloc() a cons
-[tinobsy.cpp:68-gc] vm::gc() begin, 107 objects free / 128 objects total (1 chunks) {
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:57-markobject] Marking a cons
-[tinobsy.cpp:57-markobject] Marking a nil
-[tinobsy.cpp:59-markobject] No MARK pointer, returning...
-[tinobsy.cpp:43-markobject] Marking NULL
-[tinobsy.cpp:70-gc] garbage collect sweeping objects
-[tinobsy.cpp:96-gc] }
-[tinobsy.cpp:100-gc] vm::gc() after sweeping objects, 1 objects freed, 0 chunks freed
-[tinobsy_test.cpp:106-test_reference_cycle] Test succeeded: VM->freespace == oldobj
+[test_reference_cycle tinobsy_test.cpp:101] Test unreachable reference cycle gets collected
+[alloc tinobsy.cpp:12] vm::alloc() a cons
+[gc tinobsy.cpp:68] vm::gc() begin, 107 objects free / 128 objects total (1 chunks) {
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:57] Marking a cons
+[markobject tinobsy.cpp:57] Marking a nil
+[markobject tinobsy.cpp:59] No MARK pointer, returning...
+[markobject tinobsy.cpp:43] Marking NULL
+[gc tinobsy.cpp:70] garbage collect sweeping objects
+[gc tinobsy.cpp:96] }
+[gc tinobsy.cpp:100] vm::gc() after sweeping objects, 1 objects freed, 0 chunks freed
+[test_reference_cycle tinobsy_test.cpp:106] Test succeeded: VM->freespace == oldobj
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:119-test_interning] Test primitives are interned
-[tinobsy.cpp:12-alloc] vm::alloc() a int
-[tinobsy_test.cpp:122-test_interning] Assertion succeeded: a->as_big_int == 47
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
-[tinobsy.cpp:134-get_existing_object] found equal object
-[tinobsy_test.cpp:125-test_interning] Test succeeded: a == b
+[test_interning tinobsy_test.cpp:119] Test primitives are interned
+[alloc tinobsy.cpp:12] vm::alloc() a int
+[test_interning tinobsy_test.cpp:122] Assertion succeeded: a->as_big_int == 47
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
+[get_existing_object tinobsy.cpp:134] found equal object
+[test_interning tinobsy_test.cpp:125] Test succeeded: a == b
 
 -------------------------------------------------------------
 
-[tinobsy_test.cpp:149-main] end of tests. Total 0 fails
-[tinobsy.cpp:114-~vm] vm::~vm() {
-[tinobsy.cpp:123-~vm] }
+[main tinobsy_test.cpp:149] end of tests. Total 0 fails
+[~vm tinobsy.cpp:114] vm::~vm() {
+[~vm tinobsy.cpp:123] }
