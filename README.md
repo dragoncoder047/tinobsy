@@ -90,7 +90,7 @@ The garbage collector is invoked by the function `tinobsy::vm::gc()`. It recursi
 
 #### globals
 
-> [!DANGER]
+> [!CAUTION]
 > A bare `tinobsy::vm` has no globals and nothing is marked by default when you call `gc()`, so *everything* will be collected unless you manually mark objects first.
 
 The `tinobsy::vm` class has a virtual function `mark_globals()` that the garbage collector always calls before it collects. You can implement this method in a subclass to be able to mark the additional global members you added to the subclass.
