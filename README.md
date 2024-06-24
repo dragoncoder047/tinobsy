@@ -40,8 +40,8 @@ Tinobsy places virtually no restrictions on what can be stored in an object. To 
 
 They are simply a struct of four values: the type's name (`const char* const`), and four function pointers indicating what to do with the object during the three phases of the object's lifetime:
 
-* The first function takes care of marking the object. The garbage collector calls this when it wants to know what other objects this one points to, so it can determine what is in use and what is garbage. It is passed a pointer to the VM and a pointer to the object to be marked. For all of the `tinobsy::object`s this one points to, call `vm->object(obj)` on each. The last object can be returned instead of marked, to optimize tail-recursion.
-* The second function does the reverse of the first: freeing any allocated memory. It is called when the object is about to be unloaded by the garbage collector.
+* The first function takes care of marking the object. The garbage collector calls this when it wants to know what other objects this one points to, so it can determine what is in use and what is garbage. It is passed a pointer to the VM and a pointer to the object to be marked. For all of the `tinobsy::object`s this one points to, call `vm->markobject(obj)` on each. The last object can be returned instead of marked, to optimize tail-recursion.
+* The second function implements the second half of garbage collection: freeing any allocated memory when the object really is garbage. It is called just before the garbage collector de-initializes the object (the object won't be `delete`d right away for optimization reasons, but it's a very bad idea to keep pointers to a "dead" object).
 * The third function is not really used by Tinobsy, but will probably be useful when implementing a scripting language around Tinobsy: it is passed two objects, and is intended to be used to "print" the first object onto the second object "stream".
 
 Any of them can be NULL if nothing needs to be done there.
@@ -50,17 +50,21 @@ Any of them can be NULL if nothing needs to be done there.
 
 Tinobsy has a simple mark-and-sweep collector, based partly off of Bob Nystrom's [mark-sweep](https://github.com/munificent/mark-sweep) collector and partly off of David Johnson-Davies' [uLisp](http://www.ulisp.com/show?1BD3) garbage collector.
 
+> [!CAUTION]
+> Tinobsy doesn't make any guesses as to when is a good time to automatically collect -- you have to do it manually. Do this by calling `vm->gc()` at a point where you know there aren't any temporary objects that are still being referred to by C++ variables hanging around that would be corrupted if the garbage collector "pulled the rug" on those objects.
+
 #### interning
 
 Allocating an object with `alloc()` doesn't actually initialize the fields of the object -- you have to write your own functions to do that yourself. If the object is an "atomic" type such as a string or number that doesn't point to any other Tinobsy objects (i.e. the mark function is/can be NULL), you can intern the object. The helper function `vm->get_existing_object<type>(schema, value, cmp_func)` returns the existing object, that has the same schema as the one passed in, and also the same value (the `as_ptr` member is cast to the templated-in type and compared to the value using the function), or NULL if the object doesn't exist yet. There is a convenience function `op_eq<type>(type, type)` that can be used as the comparison function for types that store their values inline. For example:
 
 ```cpp
-object_schema Example("example", NULL, free_example, print_example);
-object* make_example(vm* vm, struct example value) {
-    object* x = vm->get_existing_object<struct example>(&Example, value, op_eq<struct example>);
+object_schema MyBits("mybits", NULL, free_mybits, print_mybits);
+object* make_mybits(vm* vm, struct mybits value) {
+    object* x = vm->get_existing_object<struct mybits>(&Example, value, op_eq<struct mybits>);
     if (!x) {
-        x = vm->alloc(&Example);
-        /* magic stuff to initialize the object */
+        x = vm->alloc(&MyBits);
+        x->as_ptr = calloc(1, sizeof(struct mybits));
+        memcpy((void*)&value, (void*)x->as_ptr, sizeof(struct mybits));
     }
     return x;
 }
@@ -69,12 +73,13 @@ object* make_example(vm* vm, struct example value) {
 There is also a preprocessor macro `INTERN(vm, typ, sch, val)` and `INTERN_PTR(vm, typ, sch, val, cmp)` that are just sugar for checking this function and then returning early if the object exists -- the above function could be simplified to:
 
 ```cpp
-object_schema Example("example", NULL, free_example, print_example);
-object* make_example(vm* vm, struct example value) {
-    INTERN(vm, struct example, &Example, value);
+object_schema MyBits("mybits", NULL, free_mybits, print_mybits);
+object* make_mybits(vm* vm, struct mybits value) {
+    INTERN(vm, struct mybits, &MyBits, value);
     /* if we get here it means a new object must be created */
-    object* x = vm->alloc(&Example);
-    /* magic stuff to initialize the object */
+    object* x = vm->alloc(&MyBits);
+    x->as_ptr = calloc(1, sizeof(struct mybits));
+    memcpy((void*)&value, (void*)x->as_ptr, sizeof(struct mybits));
     return x;
 }
 ```
@@ -85,6 +90,7 @@ The garbage collector is invoked by the function `tinobsy::vm::gc()`. It recursi
 
 #### globals
 
-WARNING: A bare `tinobsy::vm` has no globals and nothing is marked by default when you call `gc()`, so *everything* will be collected unless you manually mark objects first.
+> [!WARNING]
+> A bare `tinobsy::vm` has no globals and nothing is marked by default when you call `gc()`, so *everything* will be collected unless you manually mark objects first.
 
 The `tinobsy::vm` class has a virtual function `mark_globals()` that the garbage collector always calls before it collects. You can implement this method in a subclass to be able to mark the additional global members you added to the subclass.
