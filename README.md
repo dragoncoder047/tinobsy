@@ -50,7 +50,7 @@ Any of them can be NULL if nothing needs to be done there.
 
 Tinobsy has a simple mark-and-sweep collector, based partly off of Bob Nystrom's [mark-sweep](https://github.com/munificent/mark-sweep) collector and partly off of David Johnson-Davies' [uLisp](http://www.ulisp.com/show?1BD3) garbage collector.
 
-> [!CAUTION]
+> [!NOTE]
 > Tinobsy doesn't make any guesses as to when is a good time to automatically collect -- you have to do it manually. Do this by calling `vm->gc()` at a point where you know there aren't any temporary objects that are still being referred to by C++ variables hanging around that would be corrupted if the garbage collector "pulled the rug" on those objects.
 
 #### interning
@@ -90,7 +90,7 @@ The garbage collector is invoked by the function `tinobsy::vm::gc()`. It recursi
 
 #### globals
 
-> [!WARNING]
+> [!DANGER]
 > A bare `tinobsy::vm` has no globals and nothing is marked by default when you call `gc()`, so *everything* will be collected unless you manually mark objects first.
 
 The `tinobsy::vm` class has a virtual function `mark_globals()` that the garbage collector always calls before it collects. You can implement this method in a subclass to be able to mark the additional global members you added to the subclass.
