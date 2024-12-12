@@ -55,13 +55,13 @@ Tinobsy has a simple mark-and-sweep collector, based partly off of Bob Nystrom's
 
 #### interning
 
-Allocating an object with `alloc()` doesn't actually initialize the fields of the object -- you have to write your own functions to do that yourself. If the object is an "atomic" type such as a string or number that doesn't point to any other Tinobsy objects (i.e. the mark function is/can be NULL), you can intern the object. The helper function `vm->get_existing_object<type>(schema, value, cmp_func)` returns the existing object, that has the same schema as the one passed in, and also the same value (the `as_ptr` member is cast to the templated-in type and compared to the value using the function), or NULL if the object doesn't exist yet. There is a convenience function `op_eq<type>(type, type)` that can be used as the comparison function for types that store their values inline. For example:
+Allocating an object with `vm->alloc()` doesn't actually initialize the fields of the object -- you have to write your own functions to do that yourself. If the object is an "atomic" type such as a string or number that doesn't point to any other Tinobsy objects (i.e. the mark function is/can be NULL), you can intern the object. The helper function `vm->get_existing_object<type>(obj_type, value, cmp_func)` returns the existing object, that has the same `object_type` as the one passed in, and also the same value (the `as_ptr` member is cast to the templated-in type and compared to the value using the function), or NULL if the object doesn't exist yet. There is a convenience function `op_eq<type>(type, type)` that can be used as the comparison function for types that store their values inline. For example:
 
 ```cpp
-object_schema MyBits("mybits", NULL, free_mybits, print_mybits);
-object* make_mybits(vm* vm, struct mybits value) {
-    object* x = vm->get_existing_object<struct mybits>(&Example, value, op_eq<struct mybits>);
-    if (!x) {
+tinobsy::object_type MyBits("mybits", NULL, free_mybits, print_mybits);
+tinobsy::object* make_mybits(tinobsy::vm* vm, struct mybits value) {
+    auto x = vm->get_existing_object<struct mybits>(&Example, value, op_eq<struct mybits>);
+    if (x == NULL) {
         x = vm->alloc(&MyBits);
         x->as_ptr = calloc(1, sizeof(struct mybits));
         memcpy((void*)&value, (void*)x->as_ptr, sizeof(struct mybits));
@@ -73,11 +73,11 @@ object* make_mybits(vm* vm, struct mybits value) {
 There is also a preprocessor macro `INTERN(vm, typ, sch, val)` and `INTERN_PTR(vm, typ, sch, val, cmp)` that are just sugar for checking this function and then returning early if the object exists -- the above function could be simplified to:
 
 ```cpp
-object_schema MyBits("mybits", NULL, free_mybits, print_mybits);
-object* make_mybits(vm* vm, struct mybits value) {
+tinobsy::object_type MyBits("mybits", NULL, free_mybits, print_mybits);
+tinobsy::object* make_mybits(tinobsy::vm* vm, struct mybits value) {
     INTERN(vm, struct mybits, &MyBits, value);
     /* if we get here it means a new object must be created */
-    object* x = vm->alloc(&MyBits);
+    auto x = vm->alloc(&MyBits);
     x->as_ptr = calloc(1, sizeof(struct mybits));
     memcpy((void*)&value, (void*)x->as_ptr, sizeof(struct mybits));
     return x;
@@ -86,7 +86,7 @@ object* make_mybits(vm* vm, struct mybits value) {
 
 #### mark-and-sweep
 
-The garbage collector is invoked by the function `tinobsy::vm::gc()`. It recursively calls `tinobsy::vm::markobject()` on each reachable object (using the `object_type`'s mark-function), and then saves all the objects that didn't get marked in a free-object list for reuse. Internally, Tinobsy allocates objects in chunks of 128 (which can be overridden with the compile constant `TINOBSY_CHUNK_SIZE`). Whenever the garbage collector notices that a chunk is completely empty, it deletes the chunk. The main garbage collection function returns the count of objects deleted.
+The garbage collector is invoked by the function `tinobsy::vm::gc()`. It recursively calls `tinobsy::vm::markobject()` on each reachable object (using the `object_type`'s mark-function), and then saves all the objects that didn't get marked in a free-object list for reuse. Internally, Tinobsy allocates objects in chunks (which default to 128 objects; the size is configurable with the compile-time constant `TINOBSY_CHUNK_SIZE`). Whenever the garbage collector notices that a chunk is completely empty, it `delete`s the chunk. The main garbage collection function returns the count of objects freed (not chunks deleted).
 
 #### globals
 
